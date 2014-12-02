@@ -1,6 +1,8 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,10 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxAuthActivity;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
@@ -21,17 +25,17 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.ParkingLotsTable;
 
 public class ParkingLotsActivity extends ActionBarActivity {
 
-    private static final String TAG = "PARKING_LOTS_ACTIVITY";
+    /*private static final String TAG = "PARKING_LOTS_ACTIVITY";
 
-    private static final String APP_KEY = "avpur29bk1xsrye";
-    private static final String APP_SECRET = "1d94tetjd15mt1s";
-    private static final String APP_TOKEN = "wew0_ddOKZ8AAAAAAAAAHtrH1sQCDYwV9h4hiZIONqsfZI1oPhbgNLf04bpfZ4Ae";
+    private static final String APP_KEY = "2t0sxcmlop91dal";
+    private static final String APP_SECRET = "biel5w67o22tinj";
+    private static final String APP_TOKEN = "wew0_ddOKZ8AAAAAAAAAIWrCMolyHAs-3Xuuhdmgmbr_cPpqO_6pzdUZxvgPhn0l";
 
     private static final int REQUEST_LINK_TO_DBX = 0;
 
-    /* Initializing managers vars */
+    // Initializing managers vars
     DbxAccountManager accountManager;
-    ESTGParkingApplication app;
+    ESTGParkingApplication app;*/
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -40,26 +44,30 @@ public class ParkingLotsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_parking_lots);
 
+        /*this.app.onCreate();
         this.app = ESTGParkingApplication.getInstance();
 
         setContentView(R.layout.activity_parking_lots);
 
         accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
 
+        accountManager.startLink(ParkingLotsActivity.this, REQUEST_LINK_TO_DBX);
+
         // Set up the datastore manager
         if (accountManager.hasLinkedAccount()) {
             try {
                 // Use Dropbox datastores
-                app.datastoreManager = DbxDatastoreManager.forAccount(accountManager.getLinkedAccount());
+                this.app.datastoreManager = DbxDatastoreManager.forAccount(accountManager.getLinkedAccount());
             } catch (DbxException.Unauthorized e) {
                 System.out.println("Account was unlinked remotely");
             }
         }
-        else {//if (app.datastoreManager == null) {
+        if (this.app.datastoreManager == null) {
             // Account isn't linked yet, use local datastores
-            app.datastoreManager = DbxDatastoreManager.localManager(accountManager);
-        }
+            this.app.datastoreManager = DbxDatastoreManager.localManager(accountManager);
+        }*/
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -92,10 +100,33 @@ public class ParkingLotsActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    /*@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_LINK_TO_DBX) {
+            if (resultCode == Activity.RESULT_OK) {
+                DbxAccount account = accountManager.getLinkedAccount();
+                try {
+                    // Migrate any local datastores to the linked account
+                    this.app.datastoreManager.migrateToAccount(account);
+                    // Now use Dropbox datastores
+                    this.app.datastoreManager = DbxDatastoreManager.forAccount(account);
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // Link failed or was cancelled by the user
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }*/
 
 }

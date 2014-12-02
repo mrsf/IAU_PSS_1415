@@ -1,7 +1,10 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastoreManager;
 
 /**
@@ -11,7 +14,9 @@ import com.dropbox.sync.android.DbxDatastoreManager;
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
 
-    public DbxDatastoreManager datastoreManager;
+    private SharedPreferences appConfigurations;
+
+    private DbxDatastoreManager datastoreManager;
 
     private static ESTGParkingApplication singleton;
 
@@ -22,7 +27,16 @@ public class ESTGParkingApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        this.appConfigurations = PreferenceManager
+                .getDefaultSharedPreferences(this);
         singleton = this;
     }
 
+    public DbxDatastoreManager getDatastoreManager() {
+        return datastoreManager;
+    }
+
+    public void setDatastoreManager(DbxDatastoreManager datastoreManager) {
+        this.datastoreManager = datastoreManager;
+    }
 }
