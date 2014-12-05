@@ -66,7 +66,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.PercorseActivity"
+            android:name=".RouteActivity"
             android:label="@string/title_activity_percorse" >
         </activity>
         <activity

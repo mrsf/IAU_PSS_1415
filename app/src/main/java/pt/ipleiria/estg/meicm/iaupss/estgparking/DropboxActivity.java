@@ -15,12 +15,9 @@ import com.dropbox.sync.android.DbxException;
 public class DropboxActivity extends ActionBarActivity {
 
     private static final String TAG = "DROPBOX_ACTIVITY";
-    private static final String APP_KEY = "2t0sxcmlop91dal";
-    private static final String APP_SECRET = "biel5w67o22tinj";
     private static int REQUEST_LINK_TO_DBX = 0;
 
     private ESTGParkingApplication app;
-    private DbxAccountManager accountManager;
 
     private DbxAccountManager.AccountListener accountListener = new DbxAccountManager.AccountListener() {
 
@@ -55,9 +52,9 @@ public class DropboxActivity extends ActionBarActivity {
 
         this.app = ESTGParkingApplication.getInstance();
 
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
-        }
+        }*/
     }
 
     @Override
@@ -65,7 +62,7 @@ public class DropboxActivity extends ActionBarActivity {
 
         super.onPause();
 
-        this.accountManager.addListener(accountListener);
+        this.app.getAccountManager().addListener(accountListener);
     }
 
     @Override
@@ -73,8 +70,8 @@ public class DropboxActivity extends ActionBarActivity {
 
         super.onResume();
 
-        this.accountManager.addListener(accountListener);
-        this.accountListener.onLinkedAccountChange(accountManager, accountManager.getLinkedAccount());
+        this.app.getAccountManager().addListener(accountListener);
+        this.accountListener.onLinkedAccountChange(app.getAccountManager(), app.getAccountManager().getLinkedAccount());
     }
 
     @Override

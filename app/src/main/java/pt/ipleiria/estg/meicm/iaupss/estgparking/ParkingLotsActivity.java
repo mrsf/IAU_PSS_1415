@@ -13,14 +13,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxAuthActivity;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxPrincipal;
+import com.dropbox.sync.android.DbxRecord;
+import com.dropbox.sync.android.DbxTable;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.ParkingLotsTable;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
 
 
 public class ParkingLotsActivity extends ActionBarActivity {
@@ -34,8 +42,8 @@ public class ParkingLotsActivity extends ActionBarActivity {
     private static final int REQUEST_LINK_TO_DBX = 0;
 
     // Initializing managers vars
-    DbxAccountManager accountManager;
-    ESTGParkingApplication app;*/
+    DbxAccountManager accountManager;*/
+    private ESTGParkingApplication app;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -45,6 +53,35 @@ public class ParkingLotsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parking_lots);
+
+        this.app = ESTGParkingApplication.getInstance();
+
+        List<ParkingLot> parkingLots = this.app.getParkingLotRepository().fetchParkingLots();
+
+
+        //try {
+            /* criar a base de dados */
+            /*DbxDatastore datastore = this.app.getDatastoreManager().openOrCreateDatastore(".XKY75But_i5IprjZEcRGSc0V1tPq5iuO3-XBq4KJa7c");
+            datastore.setRole(DbxPrincipal.PUBLIC, DbxDatastore.Role.EDITOR);
+            datastore.sync();*/
+
+            //DbxDatastore datastore = this.app.getDatastoreManager().openDatastore(".XKY75But_i5IprjZEcRGSc0V1tPq5iuO3-XBq4KJa7c");
+
+            /* criar tabela e inserir registo */
+            /*DbxTable parkingLots = datastore.getTable("parking_lots");
+            DbxRecord parkingLot = parkingLots.insert().set("nome", "Lote 2").set("descricao", "A frente do edificio D")
+                    .set("latitude", 38.14043).set("longitude", -8.23675);
+            datastore.sync();*/
+        /*} catch (DbxException e) {
+            e.printStackTrace();
+        }*/
+
+        /*LinkedList<ParkingLot> parkingLotList = new LinkedList<ParkingLot>();
+        for(Iterator<DbxRecord> result = records.iterator(); result.hasNext();) {
+            ParkingLot pLot = new ParkingLot(result.next());
+            parkingLotList.add(pLot);
+            Log.i("TESTE", pLot.getName() + " | " + pLot.getDescription() + " | " + pLot.getLatitude() + " | " + pLot.getLongitude());
+        }
 
         /*this.app.onCreate();
         this.app = ESTGParkingApplication.getInstance();
@@ -80,7 +117,7 @@ public class ParkingLotsActivity extends ActionBarActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new ParkingLotAdapter(null);//myDataset);
+        mAdapter = new ParkingLotAdapter(parkingLots);//myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
 
