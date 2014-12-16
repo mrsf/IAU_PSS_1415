@@ -25,7 +25,8 @@
         </activity>
         <activity
             android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingLotsActivity"
-            android:label="@string/title_activity_parking_lots" >
+            android:label="@string/title_activity_parking_lots"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.SettingsActivity"
@@ -37,7 +38,7 @@
             android:name="com.dropbox.client2.android.AuthActivity"
             android:launchMode="singleTask" >
             <intent-filter>
-                <data android:scheme="db-2t0sxcmlop91dal" />
+                <data android:scheme="db-va8yje80i09ga1t" />
 
                 <action android:name="android.intent.action.VIEW" />
 

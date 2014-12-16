@@ -9,6 +9,7 @@ import com.dropbox.sync.android.DbxTable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -47,6 +48,10 @@ public class ParkingLotsTable {
             return mRecord.getDouble("longitude");
         }
 
+        public String getImagePath() {
+            return mRecord.getString("image_path");
+        }
+
         public void delete() throws DbxException {
             mRecord.deleteRecord();
             mDatastore.sync();
@@ -56,15 +61,16 @@ public class ParkingLotsTable {
 
     public ParkingLotsTable(DbxDatastore datastore) {
         mDatastore = datastore;
-        mTable = datastore.getTable("ParkingLots");
+        mTable = datastore.getTable("ParkingLot");
     }
 
-    public void createParkingLot(String name, String description, double latitude, double longitude) throws DbxException {
+    public void createParkingLot(String name, String description, double latitude, double longitude, String imagePath) throws DbxException {
         DbxFields parkingLotFields = new DbxFields()
                 .set("nome", name)
                 .set("descricao", description)
                 .set("latitude", latitude)
-                .set("longitude", longitude);
+                .set("longitude", longitude)
+                .set("image_path", imagePath);
         mTable.insert(parkingLotFields);
         mDatastore.sync();
     }

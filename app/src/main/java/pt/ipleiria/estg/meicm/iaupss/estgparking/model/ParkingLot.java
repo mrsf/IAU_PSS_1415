@@ -11,14 +11,17 @@ public class ParkingLot {
     private String description;
     private double latitude;
     private double longitude;
+    private String imagePath;
 
     public ParkingLot() {}
 
-    public ParkingLot(String name, String description, double latitude, double longitude) {
-        this.setName(name);
-        this.setDescription(description);
-        this.setLatitude(latitude);
-        this.setLongitude(longitude);
+    public ParkingLot(String name, String description, double latitude, double longitude, String imagePath) {
+
+        this.name = name;
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.imagePath = imagePath;
     }
 
     public String getName() {
@@ -37,6 +40,10 @@ public class ParkingLot {
         return longitude;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -51,5 +58,9 @@ public class ParkingLot {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

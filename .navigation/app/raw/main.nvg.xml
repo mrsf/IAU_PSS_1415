@@ -22,14 +22,6 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        xmlResourceName = "menu_dropbox"/>
-      <point      
-        x = "1600"      
-        y = "0"/>
-    </statePointEntry>
-    <statePointEntry>
-      <state      
-        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
         xmlResourceName = "menu_login"/>
       <point      
         x = "480"      
@@ -38,17 +30,49 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.PercorseActivity"/>
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingLotsActivity"/>
       <point      
-        x = "3520"      
+        x = "2400"      
         y = "480"/>
     </statePointEntry>
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingLotsActivity"/>
+        className = "com.dropbox.client2.android.AuthActivity"/>
       <point      
-        x = "2400"      
+        x = "480"      
+        y = "2880"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.RouteActivity"/>
+      <point      
+        x = "500"      
+        y = "5620"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity"/>
+      <point      
+        x = "3840"      
+        y = "2880"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_dropbox"/>
+      <point      
+        x = "1600"      
+        y = "0"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.PercorseActivity"/>
+      <point      
+        x = "3520"      
         y = "480"/>
     </statePointEntry>
     <statePointEntry>
@@ -81,22 +105,6 @@
         className = "pt.ipleiria.estg.meicm.iaupss.estgparking.SettingsActivity"/>
       <point      
         x = "1600"      
-        y = "2880"/>
-    </statePointEntry>
-    <statePointEntry>
-      <state      
-        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.dropbox.client2.android.AuthActivity"/>
-      <point      
-        x = "480"      
-        y = "2880"/>
-    </statePointEntry>
-    <statePointEntry>
-      <state      
-        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity"/>
-      <point      
-        x = "3840"      
         y = "2880"/>
     </statePointEntry>
   </locations>

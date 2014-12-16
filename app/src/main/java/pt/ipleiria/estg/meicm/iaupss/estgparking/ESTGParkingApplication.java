@@ -15,8 +15,8 @@ import com.dropbox.sync.android.DbxException;
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
 
-    private static final String APP_KEY = "2t0sxcmlop91dal";
-    private static final String APP_SECRET = "biel5w67o22tinj";
+    private static final String APP_KEY = "va8yje80i09ga1t";
+    private static final String APP_SECRET = "pak1a4lgec50mh9";
 
     //private SharedPreferences appConfigurations;
 
@@ -47,23 +47,31 @@ public class ESTGParkingApplication extends Application {
         return accountManager;
     }
 
+    public IParkingLotRepository getParkingLotRepository() {
+        this.initDatastore();
+        this.parkingLotRepository = new ParkingLotRepository(this.datastore);
+        return parkingLotRepository;
+    }
+
     public void setDatastoreManager(DbxDatastoreManager datastoreManager) {
         this.datastoreManager = datastoreManager;
     }
 
     public DbxDatastore getDatastore() {
+        return datastore;
+    }
+
+    public void initDatastore() {
         if(this.datastore == null) {
             try {
-                this.datastore = this.datastoreManager.openDatastore(".XKY75But_i5IprjZEcRGSc0V1tPq5iuO3-XBq4KJa7c");
+                this.datastore = this.getDatastoreManager().openDatastore(".hhSgxW6D63kRmT-eiB69OuFN6jP8SydcsQopEJ1QGFs");
             } catch (DbxException e) {
                 e.printStackTrace();
             }
         }
-        return datastore;
     }
 
-    public IParkingLotRepository getParkingLotRepository() {
-        this.parkingLotRepository = new ParkingLotRepository(getDatastore());
-        return parkingLotRepository;
+    public DbxDatastoreManager getDatastoreManager() {
+        return datastoreManager;
     }
 }
