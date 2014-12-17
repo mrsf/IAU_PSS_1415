@@ -14,22 +14,22 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication"
+        android:name=".ESTGParkingApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingLotsActivity"
+            android:name=".ParkingLotsActivity"
             android:label="@string/title_activity_parking_lots"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.SettingsActivity"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
         <!-- Dropbox Datastore API -->
@@ -54,7 +54,7 @@
             android:label="Dropbox Sync" />
         <!-- Dropbox Datastore API -->
         <activity
-            android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         </activity>
@@ -71,13 +71,17 @@
             android:label="@string/title_activity_percorse" >
         </activity>
         <activity
-            android:name="pt.ipleiria.estg.meicm.iaupss.estgparking.DropboxActivity"
+            android:name=".DropboxActivity"
             android:label="@string/title_activity_dropbox" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".LotDetailsActivity"
+            android:label="@string/title_activity_lot_details" >
         </activity>
     </application>
 

@@ -16,10 +16,12 @@ import com.dropbox.sync.android.DbxTable;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.ParkingLotsTable;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
 
 /**
@@ -38,23 +40,24 @@ public class ParkingLotRepository implements IParkingLotRepository {
     @Override
     public List<ParkingLot> fetchParkingLots() {
 
-        LinkedList<DbxRecord> records = new LinkedList<DbxRecord>();
+        List<ParkingLotsTable.ParkingLotRecord> records = new ArrayList<ParkingLotsTable.ParkingLotRecord>();
         try {
             datastore.sync();
-            records.addAll(datastore.getTable("parking_lot").query().asList());
+            ParkingLotsTable lotsTable = new ParkingLotsTable(datastore);
+            records.addAll(lotsTable.getParkingLotsSorted());
         } catch (DbxException e) {
             e.printStackTrace();
         }
 
         LinkedList<ParkingLot> parkingLotList = new LinkedList<ParkingLot>();
 
-        for(DbxRecord record: records) {
+        for(ParkingLotsTable.ParkingLotRecord record: records) {
             ParkingLot pLot = new ParkingLot();
-            pLot.setName(record.getString("nome"));
-            pLot.setDescription(record.getString("descricao"));
-            pLot.setLatitude(record.getDouble("latitude"));
-            pLot.setLongitude(record.getDouble("longitude"));
-            pLot.setImagePath(record.getString("image_path"));
+            pLot.setName(record.getName());
+            pLot.setDescription(record.getDescription());
+            pLot.setLatitude(record.getLatitude());
+            pLot.setLongitude(record.getLongitude());
+            pLot.setImagePath(record.getImagePath());
 
             parkingLotList.add(pLot);
             Log.i("TESTE", pLot.getName() + " | " + pLot.getDescription() + " | " + pLot.getLatitude() + " | " + pLot.getLongitude());

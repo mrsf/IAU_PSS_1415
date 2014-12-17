@@ -61,7 +61,7 @@ public class ParkingLotsTable {
 
     public ParkingLotsTable(DbxDatastore datastore) {
         mDatastore = datastore;
-        mTable = datastore.getTable("ParkingLot");
+        mTable = datastore.getTable("parking_lot");
     }
 
     public void createParkingLot(String name, String description, double latitude, double longitude, String imagePath) throws DbxException {
