@@ -59,7 +59,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
@@ -242,7 +241,7 @@ public class LoginActivity extends FragmentActivity
                 .build();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
-        app.setmGoogleApiClient(mGoogleApiClient);
+        app.setGoogleApiClient(mGoogleApiClient);
 
         Button shareButton = (Button) findViewById(R.id.share_button);
         shareButton.setOnClickListener(new View.OnClickListener() {

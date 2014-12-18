@@ -38,7 +38,7 @@ public class ProfileActivity extends Activity {
 
         ESTGParkingApplication app = ESTGParkingApplication.getInstance();
 
-        GoogleApiClient googleApiClient = app.getmGoogleApiClient();
+        GoogleApiClient googleApiClient = app.getGoogleApiClient();
 
         setContentView(R.layout.activity_profile);
 
