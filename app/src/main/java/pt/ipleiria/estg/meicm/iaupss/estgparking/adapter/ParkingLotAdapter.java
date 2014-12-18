@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.adapter;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,7 +29,7 @@ public class ParkingLotAdapter extends RecyclerView.Adapter<ParkingLotViewHolder
 
         this.exec = (ThreadPoolExecutor) AsyncTask.THREAD_POOL_EXECUTOR;
         this.exec.setCorePoolSize(1);
-        this.exec.setMaximumPoolSize(5);
+        this.exec.setMaximumPoolSize(6);
 
         this.lots = lots;
         this.cache = cache;

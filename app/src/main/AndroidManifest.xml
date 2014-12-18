@@ -26,6 +26,7 @@
         <activity
             android:name=".ParkingLotsActivity"
             android:label="@string/title_activity_parking_lots"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -81,7 +82,12 @@
         </activity>
         <activity
             android:name=".LotDetailsActivity"
-            android:label="@string/title_activity_lot_details" >
+            android:label="@string/title_activity_lot_details"
+            android:parentActivityName=".ParkingLotsActivity">
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ParkingLotsActivity" />
         </activity>
     </application>
 

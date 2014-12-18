@@ -149,7 +149,12 @@ public class ParkingLotsActivity extends ActionBarActivity implements DbxDatasto
         super.onPause();
         this.app.getDatastore().removeSyncStatusListener(this);
         this.app.getDatastore().close();
-        this.app.getDatastoreManager().shutDown();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        System.exit(0);
     }
 
     @Override
