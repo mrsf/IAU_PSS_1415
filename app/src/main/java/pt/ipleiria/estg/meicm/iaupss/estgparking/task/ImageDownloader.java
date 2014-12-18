@@ -16,7 +16,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ImageCache;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.SynchronizedDownloadList;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.DownloadTask;
 
 /**

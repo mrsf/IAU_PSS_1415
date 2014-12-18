@@ -2,8 +2,8 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.util.LruCache;
 import android.util.Log;
+import android.util.LruCache;
 
 import java.io.File;
 import java.util.zip.CRC32;

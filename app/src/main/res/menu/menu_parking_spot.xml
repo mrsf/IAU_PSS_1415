@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Settings, should always be in the overflow -->
+    <item android:id="@+id/action_parking_spot_show_path"
+        android:title="Ver trajeto"
+        android:showAsAction="never" />
+    </menu>

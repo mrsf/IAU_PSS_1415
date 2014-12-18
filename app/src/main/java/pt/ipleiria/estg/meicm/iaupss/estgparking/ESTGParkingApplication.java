@@ -7,6 +7,12 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import com.facebook.Session;
+
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IParkingLotRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ParkingLotRepository;
 
 /**
  * Created by francisco on 20-11-2014.
@@ -15,19 +21,25 @@ import com.dropbox.sync.android.DbxException;
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
 
-    private static final String APP_KEY = "va8yje80i09ga1t";
-    private static final String APP_SECRET = "pak1a4lgec50mh9";
-
-    //private SharedPreferences appConfigurations;
-
     private DbxAccountManager accountManager;
     private DbxAccount account;
     private DbxDatastoreManager datastoreManager;
     private DbxDatastore datastore;
 
+    private static final String APP_KEY = "va8yje80i09ga1t";
+    private static final String APP_SECRET = "pak1a4lgec50mh9";
+
     private IParkingLotRepository parkingLotRepository;
 
     private static ESTGParkingApplication singleton;
+
+    /* Client used to interact with Google APIs. */
+    private GoogleApiClient mGoogleApiClient;
+
+
+    private Session facebookSession;
+
+    private String currentUserActivity;
 
     public static ESTGParkingApplication getInstance() {
         return singleton;
@@ -42,6 +54,32 @@ public class ESTGParkingApplication extends Application {
 
         this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
     }
+
+    public GoogleApiClient getmGoogleApiClient() {
+        return mGoogleApiClient;
+    }
+
+    public void setmGoogleApiClient(GoogleApiClient mGoogleApiClient) {
+        this.mGoogleApiClient = mGoogleApiClient;
+    }
+
+    public String getCurrentUserActivity() {
+        return currentUserActivity;
+    }
+
+    public void setCurrentUserActivity(String currentUserActivity) {
+        this.currentUserActivity = currentUserActivity;
+    }
+
+    public Session getFacebookSession() {
+        return facebookSession;
+    }
+
+    public void setFacebookSession(Session facebookSession) {
+        this.facebookSession = facebookSession;
+    }
+    //private SharedPreferences appConfigurations;
+
 
     public DbxAccountManager getAccountManager() {
         return accountManager;
