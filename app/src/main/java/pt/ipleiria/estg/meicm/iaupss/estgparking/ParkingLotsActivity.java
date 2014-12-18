@@ -39,7 +39,6 @@ public class ParkingLotsActivity extends ActionBarActivity implements DbxDatasto
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private SynchronizedDownloadList downloadList;
     private ImageDownloader imageDownloader;
     private ImageCache imageCache;
 
@@ -52,7 +51,6 @@ public class ParkingLotsActivity extends ActionBarActivity implements DbxDatasto
         setContentView(R.layout.activity_parking_lots);
 
         this.app = ESTGParkingApplication.getInstance();
-        this.downloadList = new SynchronizedDownloadList();
         this.imageDownloader = new ImageDownloader(imageCache);
         this.imageCache = new ImageCache();
 
@@ -63,15 +61,19 @@ public class ParkingLotsActivity extends ActionBarActivity implements DbxDatasto
             datastore.setRole(DbxPrincipal.PUBLIC, DbxDatastore.Role.EDITOR);
             datastore.sync();
             // criar tabela e inserir registo
-            DbxTable parkingLots = datastore.getTable("parking_lot");
-            parkingLots.insert().set("nome", "Lote 1").set("descricao", "À frente do edifício A.")
-                    .set("latitude", 38.14043).set("longitude", -8.23675).set("image_path", "https://www.dropbox.com/s/22p8mlxaugrt2ry/lote1.jpg?dl=1");
-            datastore.sync();
-            parkingLots.insert().set("nome", "Lote 2").set("descricao", "À frente do edifício B.")
-                    .set("latitude", 38.14061).set("longitude", -8.23876).set("image_path", "https://www.dropbox.com/s/9pytcrks0em4547/lote2.jpg?dl=1");
-            datastore.sync();
-            parkingLots.insert().set("nome", "Lote 3").set("descricao", "À frente do edifício C.")
-                    .set("latitude", 38.14321).set("longitude", -8.24071).set("image_path", "https://www.dropbox.com/s/9pytcrks0em4547/lote2.jpg?dl=1");
+            DbxTable parkingLots = datastore.getTable("parking_section");
+            parkingLots.insert().set("nome", "Secção 1").set("descricao", "Situada no lote 1-1.")
+                    .set("latitude", 38.14045).set("longitude", -8.23677).set("lotacao", 6)
+                    .set("ocupacao", 0.8).set("id_lote", "MwwNmD84GPZNYbxXzeI3PQ");
+            parkingLots.insert().set("nome", "Secção 2").set("descricao", "Situada no lote 1-2.")
+                    .set("latitude", 38.14046).set("longitude", -8.23679).set("lotacao", 8)
+                    .set("ocupacao", 1.0).set("id_lote", "MwwNmD84GPZNYbxXzeI3PQ");
+            parkingLots.insert().set("nome", "Secção 3").set("descricao", "Situada no lote 1-3.")
+                    .set("latitude", 38.14047).set("longitude", -8.23681).set("lotacao", 8)
+                    .set("ocupacao", 0.2).set("id_lote", "MwwNmD84GPZNYbxXzeI3PQ");
+            parkingLots.insert().set("nome", "Secção 4").set("descricao", "Situada no lote 1-4.")
+                    .set("latitude", 38.14048).set("longitude", -8.23683).set("lotacao", 4)
+                    .set("ocupacao", 0.0).set("id_lote", "MwwNmD84GPZNYbxXzeI3PQ");
             datastore.sync();
         } catch (DbxException e) {
             e.printStackTrace();
@@ -100,7 +102,7 @@ public class ParkingLotsActivity extends ActionBarActivity implements DbxDatasto
             /* criar tabela e inserir registo */
             /*DbxTable parkingLots = datastore.getTable("parking_lots");
             DbxRecord parkingLot = parkingLots.insert().set("nome", "Lote 2").set("descricao", "A frente do edificio D")
-                    .set("latitude", 38.14043).set("longitude", -8.23675);
+                    .set("latitude", 38.14043).set("longitude", -8.23675).set("image_path", "");
             datastore.sync();*/
         /*} catch (DbxException e) {
             e.printStackTrace();
