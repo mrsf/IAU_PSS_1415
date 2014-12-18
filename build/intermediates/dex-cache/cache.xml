@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.facebook.android/facebook/3.20.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2b2c0bf7568c1aa6b39bb8b4e25ef296dd2fa53b">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-0b0ec9925cc6543aa252f3127427e1c2bac3accf.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.facebook.android/facebook/3.20.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="eefb52eb1b47dfb665f33a548a6159bdff6c4881">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-0b0ec9925cc6543aa252f3127427e1c2bac3accf.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/libs/dropbox-sync-sdk-android.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="27c6a602b8af65c4bd4741af2be12686d561d02c">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/dropbox-sync-sdk-android-11a6f85d84524d5a23eb7c4bf764b495088e5524.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.1.2/91c20388c9a45f62b5ed8fe0502bb76ff6251fc7/bolts-android-1.1.2.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="91c20388c9a45f62b5ed8fe0502bb76ff6251fc7">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/bolts-android-1.1.2-d6bdc811502573f368d2fe68ceb4aceb7b3bb9a8.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.11/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="0f700f6802ba1a1f1fa7ac26d5db0666a89d75a6">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-1db0a5d32cd6b5fd96fff5ef967850b77a38e5b6.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.11/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f700f6802ba1a1f1fa7ac26d5db0666a89d75a6">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-1db0a5d32cd6b5fd96fff5ef967850b77a38e5b6.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-458cb70979d17481e0ba897e39553123e3e6c497.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4796f18d3750bf2bfa078407a94a7f9db35b440d">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-8184f536d7137678849f2ff315b7e5adc2b24975.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/android-sdks/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-cb6e83aabc1bcdfac5bd5f4d0bb2f29eb65511d7.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.1.2/91c20388c9a45f62b5ed8fe0502bb76ff6251fc7/bolts-android-1.1.2.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="91c20388c9a45f62b5ed8fe0502bb76ff6251fc7">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/bolts-android-1.1.2-d6bdc811502573f368d2fe68ceb4aceb7b3bb9a8.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/android-sdks/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-cb6e83aabc1bcdfac5bd5f4d0bb2f29eb65511d7.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-8179d18002bff63b808e57e397e35297543e7f12.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-8179d18002bff63b808e57e397e35297543e7f12.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-b37bdd1ec19969515bf7dea55bff539bbf46ef31.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/classes-458cb70979d17481e0ba897e39553123e3e6c497.jar" />
+    </item>
+    <item
+        jar="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/pedro/estg/iau-pss/estg-parking/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-b37bdd1ec19969515bf7dea55bff539bbf46ef31.jar" />
+    </item>
+
+</items>
