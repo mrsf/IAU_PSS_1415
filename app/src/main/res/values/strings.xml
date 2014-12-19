@@ -73,9 +73,8 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_parking_spot">Localização do veículo</string>
     <string name="title_activity_facebook_post_photo">FacebookPostPhoto</string>
-    <string name="title_activity_dropbox">Dropbox</string>
     <string name="title_activity_parking_lots">Lotes de Estacionamento</string>
-<<<<<<< HEAD
+
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_percorse">Percurso</string>
 
@@ -85,7 +84,5 @@
     <string name="title_activity_dropbox">Conta Dropbox</string>
     <string name="title_activity_lot_details">Detalhes do Lote</string>
     <string name="title_activity_parking_sections">Secções</string>
-=======
->>>>>>> master
 
 </resources>
