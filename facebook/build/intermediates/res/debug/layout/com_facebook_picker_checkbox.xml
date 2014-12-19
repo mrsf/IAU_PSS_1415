@@ -23,4 +23,4 @@
     android:focusable="false"
     android:clickable="false"
     android:button="@drawable/com_facebook_button_check" />
-<!-- From: file:/Users/pedro/estg/iau-pss/estg-parking/facebook/res/layout/com_facebook_picker_checkbox.xml -->
+<!-- From: file:/home/francisco/MEI_CM/IAU_PSS/Projeto/IAU_PSS_1415/facebook/res/layout/com_facebook_picker_checkbox.xml -->

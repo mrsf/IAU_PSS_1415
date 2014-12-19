@@ -25,4 +25,4 @@
     <item android:state_focused="true"                                                             android:drawable="@drawable/com_facebook_picker_list_focused" />
 
 </selector>
-<!-- From: file:/Users/pedro/estg/iau-pss/estg-parking/facebook/res/drawable/com_facebook_picker_list_selector.xml --><!-- From: file:/Users/pedro/estg/iau-pss/estg-parking/facebook/build/intermediates/bundles/debug/res/drawable/com_facebook_picker_list_selector.xml -->
+<!-- From: file:/home/francisco/MEI_CM/IAU_PSS/Projeto/IAU_PSS_1415/facebook/res/drawable/com_facebook_picker_list_selector.xml --><!-- From: file:/home/francisco/MEI_CM/IAU_PSS/Projeto/IAU_PSS_1415/facebook/build/intermediates/bundles/debug/res/drawable/com_facebook_picker_list_selector.xml -->

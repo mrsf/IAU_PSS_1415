@@ -18,4 +18,4 @@
   <item android:state_checked="true" android:drawable="@drawable/com_facebook_button_check_on" />
   <item android:drawable="@drawable/com_facebook_button_check_off" />
 </selector>
-<!-- From: file:/Users/pedro/estg/iau-pss/estg-parking/facebook/res/drawable/com_facebook_button_check.xml --><!-- From: file:/Users/pedro/estg/iau-pss/estg-parking/facebook/build/intermediates/bundles/debug/res/drawable/com_facebook_button_check.xml -->
+<!-- From: file:/home/francisco/MEI_CM/IAU_PSS/Projeto/IAU_PSS_1415/facebook/res/drawable/com_facebook_button_check.xml --><!-- From: file:/home/francisco/MEI_CM/IAU_PSS/Projeto/IAU_PSS_1415/facebook/build/intermediates/bundles/debug/res/drawable/com_facebook_button_check.xml -->

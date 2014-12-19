@@ -61,4 +61,4 @@
             android:layout_marginRight="10dip"
             android:layout_toLeftOf="@id/com_facebook_picker_divider"/>
 </RelativeLayout>
-<!-- From: file:/Users/pedro/estg/iau-pss/estg-parking/facebook/res/layout/com_facebook_picker_title_bar.xml --><!-- From: file:/Users/pedro/estg/iau-pss/estg-parking/facebook/build/intermediates/bundles/debug/res/layout/com_facebook_picker_title_bar.xml -->
+<!-- From: file:/home/francisco/MEI_CM/IAU_PSS/Projeto/IAU_PSS_1415/facebook/res/layout/com_facebook_picker_title_bar.xml --><!-- From: file:/home/francisco/MEI_CM/IAU_PSS/Projeto/IAU_PSS_1415/facebook/build/intermediates/bundles/debug/res/layout/com_facebook_picker_title_bar.xml -->
