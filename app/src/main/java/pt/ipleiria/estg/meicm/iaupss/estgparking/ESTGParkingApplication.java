@@ -34,10 +34,7 @@ public class ESTGParkingApplication extends Application {
     private static ESTGParkingApplication singleton;
 
     /* Client used to interact with Google APIs. */
-    private GoogleApiClient mGoogleApiClient;
-
-
-    private Session facebookSession;
+    private GoogleApiClient googleApiClient;
 
     private String currentUserActivity;
 
@@ -55,12 +52,12 @@ public class ESTGParkingApplication extends Application {
         this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
     }
 
-    public GoogleApiClient getmGoogleApiClient() {
-        return mGoogleApiClient;
+    public GoogleApiClient getGoogleApiClient() {
+        return googleApiClient;
     }
 
-    public void setmGoogleApiClient(GoogleApiClient mGoogleApiClient) {
-        this.mGoogleApiClient = mGoogleApiClient;
+    public void setGoogleApiClient(GoogleApiClient googleApiClient) {
+        this.googleApiClient = googleApiClient;
     }
 
     public String getCurrentUserActivity() {
@@ -70,16 +67,6 @@ public class ESTGParkingApplication extends Application {
     public void setCurrentUserActivity(String currentUserActivity) {
         this.currentUserActivity = currentUserActivity;
     }
-
-    public Session getFacebookSession() {
-        return facebookSession;
-    }
-
-    public void setFacebookSession(Session facebookSession) {
-        this.facebookSession = facebookSession;
-    }
-    //private SharedPreferences appConfigurations;
-
 
     public DbxAccountManager getAccountManager() {
         return accountManager;
