@@ -12,7 +12,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.facebook.Session;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IParkingLotRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IParkingSectionRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ParkingLotRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ParkingSectionRepository;
 
 /**
  * Created by francisco on 20-11-2014.
@@ -30,6 +32,7 @@ public class ESTGParkingApplication extends Application {
     private static final String APP_SECRET = "pak1a4lgec50mh9";
 
     private IParkingLotRepository parkingLotRepository;
+    private IParkingSectionRepository parkingSectionRepository;
 
     private static ESTGParkingApplication singleton;
 
@@ -76,6 +79,12 @@ public class ESTGParkingApplication extends Application {
         this.initDatastore();
         this.parkingLotRepository = new ParkingLotRepository(this.datastore);
         return parkingLotRepository;
+    }
+
+    public IParkingSectionRepository getParkingSectionRepository(String lotId) {
+        this.initDatastore();
+        this.parkingSectionRepository = new ParkingSectionRepository(this.datastore, lotId);
+        return parkingSectionRepository;
     }
 
     public void setDatastoreManager(DbxDatastoreManager datastoreManager) {

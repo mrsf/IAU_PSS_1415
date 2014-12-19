@@ -24,7 +24,6 @@ public class ParkingLotRepository implements IParkingLotRepository {
         this.datastore = datastore;
     }
 
-
     @Override
     public List<ParkingLot> fetchParkingLots() {
 
@@ -37,7 +36,7 @@ public class ParkingLotRepository implements IParkingLotRepository {
             e.printStackTrace();
         }
 
-        LinkedList<ParkingLot> parkingLotList = new LinkedList<ParkingLot>();
+        List<ParkingLot> parkingLotList = new LinkedList<ParkingLot>();
 
         for(ParkingLotsTable.ParkingLotRecord record: records) {
             ParkingLot pLot = new ParkingLot();

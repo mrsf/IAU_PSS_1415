@@ -26,4 +26,15 @@ abstract class ESTGParkingDBContract {
         public static final String IMAGE_PATH = "image_path";
     }
 
+    public static abstract class SectionBase implements BaseColumns {
+        public static final String TABLE_NAME = "section";
+        public static final String NAME = "name";
+        public static final String DESCRIPTION = "description";
+        public static final String LATITUDE = "latitude";
+        public static final String LONGITUDE = "longitude";
+        public static final String CAPACITY = "lotacao";
+        public static final String OCCUPATION = "ocupacao";
+        public static final String LOT_ID = "id_lote";
+    }
+
 }

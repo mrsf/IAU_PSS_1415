@@ -101,6 +101,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ParkingLotsActivity" />
         </activity>
+        <activity
+            android:name=".ParkingSectionsActivity"
+            android:label="@string/title_activity_parking_sections"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <!-- Dropbox Datastore API -->
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />

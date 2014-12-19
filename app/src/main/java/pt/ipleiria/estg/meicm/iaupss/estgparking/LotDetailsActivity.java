@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -78,6 +79,7 @@ public class LotDetailsActivity extends ActionBarActivity {
         private TextView nameText;
         private TextView descriptionText;
         private TextView coordinatesText;
+        private Button showSections;
 
         public PlaceholderFragment(Intent intent) {
             this.intent = intent;
@@ -95,6 +97,16 @@ public class LotDetailsActivity extends ActionBarActivity {
             this.nameText = (TextView) rootView.findViewById(R.id.detail_name_text_view);
             this.descriptionText = (TextView) rootView.findViewById(R.id.detail_description_text_view);
             this.coordinatesText = (TextView) rootView.findViewById(R.id.detail_coordinates_text_view);
+            this.showSections = (Button) rootView.findViewById(R.id.show_sections_button);
+            this.showSections.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), ParkingSectionsActivity.class);
+                    intent.putExtra("lotId", "MwwNmD84GPZNYbxXzeI3PQ");
+
+                    v.getContext().startActivity(intent);
+                }
+            });
 
             this.parkingLot = intent.getParcelableExtra("ParkingLot");
 
