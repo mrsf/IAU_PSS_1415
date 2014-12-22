@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxDatastore;
 
@@ -140,6 +141,11 @@ public class ParkingLotsActivity extends BaseRecyclerViewActivity {
         }*/
 
         List<ParkingLot> parkingLots = super.getApp().getParkingLotRepository().fetchParkingLots();
+
+        if (parkingLots == null || parkingLots.isEmpty()) {
+            Toast.makeText(getBaseContext(), "Não existem lotes de estacionamento", Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         // specify adapter
         super.setViewAdapter(new ParkingLotAdapter(parkingLots, this.imageCache));

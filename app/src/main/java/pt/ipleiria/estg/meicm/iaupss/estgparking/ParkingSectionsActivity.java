@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxDatastore;
 
@@ -138,6 +139,11 @@ public class ParkingSectionsActivity extends BaseRecyclerViewActivity {
         }*/
 
         List<ParkingSection> parkingSections = super.getApp().getParkingSectionRepository(this.lotId).fetchParkingSections();
+
+        if (parkingSections == null || parkingSections.isEmpty()) {
+            Toast.makeText(getBaseContext(), "Não existem Secções", Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         // specify adapter
         super.setViewAdapter(new ParkingSectionAdapter(parkingSections));
