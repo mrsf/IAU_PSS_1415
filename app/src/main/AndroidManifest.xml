@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -54,11 +55,11 @@
 
         <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_map" >
+            android:label="@string/title_activity_map">
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_map" >
+            android:label="@string/title_activity_main" >
         </activity>
         <activity
             android:name=".profile.ProfileActivity"
@@ -90,12 +91,19 @@
             android:name=".ParkingLotsActivity"
             android:label="@string/title_activity_parking_lots"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".LotDetailsActivity"
             android:label="@string/title_activity_lot_details"
-            android:parentActivityName=".ParkingLotsActivity">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".ParkingLotsActivity" >
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -105,7 +113,12 @@
             android:name=".ParkingSectionsActivity"
             android:label="@string/title_activity_parking_sections"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:parentActivityName=".LotDetailsActivity" >
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LotDetailsActivity" />
         </activity>
 
         <!-- Dropbox Datastore API -->

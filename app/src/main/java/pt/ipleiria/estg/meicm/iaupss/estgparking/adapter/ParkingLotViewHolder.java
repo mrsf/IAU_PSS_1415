@@ -1,14 +1,11 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -19,9 +16,6 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.model.DownloadTask;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.task.ImageDownloader;
 
-/**
- * Created by francisco on 07-12-2014.
- */
 public class ParkingLotViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private ParkingLot parkingLot;
@@ -48,11 +42,6 @@ public class ParkingLotViewHolder extends RecyclerView.ViewHolder implements Vie
     protected void bindLot(ParkingLot lot, ImageCache cache, ThreadPoolExecutor exec) {
 
         this.parkingLot = lot;
-        /*this.parkingLot.setName(lot.getName());
-        this.parkingLot.setDescription(lot.getDescription());
-        this.parkingLot.setLatitude(lot.getLatitude());
-        this.parkingLot.setLongitude(lot.getLongitude());
-        this.parkingLot.setImagePath(lot.getImagePath());*/
 
         this.nameText.setText(lot.getName());
         this.descriptionText.setText(lot.getDescription());
@@ -71,6 +60,5 @@ public class ParkingLotViewHolder extends RecyclerView.ViewHolder implements Vie
         intent.putExtra("ParkingLot", parkingLot);
 
         v.getContext().startActivity(intent);
-        //Toast.makeText(v.getContext(), this.nameText.getText(), Toast.LENGTH_LONG).show();
     }
 }

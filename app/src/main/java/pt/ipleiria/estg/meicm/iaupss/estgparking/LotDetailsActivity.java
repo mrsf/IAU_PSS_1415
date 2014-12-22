@@ -20,7 +20,6 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.model.DownloadTask;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.task.ImageDownloader;
 
-
 public class LotDetailsActivity extends ActionBarActivity {
 
     @Override
@@ -39,6 +38,11 @@ public class LotDetailsActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        //System.exit(0);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +85,8 @@ public class LotDetailsActivity extends ActionBarActivity {
         private TextView coordinatesText;
         private Button showSections;
 
+        public PlaceholderFragment() {}
+
         public PlaceholderFragment(Intent intent) {
             this.intent = intent;
             this.cache = new ImageCache();
@@ -92,6 +98,9 @@ public class LotDetailsActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_lot_details, container, false);
 
+            if (this.parkingLot == null)
+                this.parkingLot = intent.getParcelableExtra("ParkingLot");
+
             this.lotImage = (ImageView) rootView.findViewById(R.id.detail_lot_image_view);
             this.imageProgress = (ProgressBar) rootView.findViewById(R.id.detail_image_progress_bar);
             this.nameText = (TextView) rootView.findViewById(R.id.detail_name_text_view);
@@ -102,13 +111,11 @@ public class LotDetailsActivity extends ActionBarActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ParkingSectionsActivity.class);
-                    intent.putExtra("lotId", "MwwNmD84GPZNYbxXzeI3PQ");
+                    intent.putExtra("LotId", parkingLot.getId());
 
                     v.getContext().startActivity(intent);
                 }
             });
-
-            this.parkingLot = intent.getParcelableExtra("ParkingLot");
 
             this.downloader.execute(new DownloadTask(this.parkingLot.getImagePath(), this.lotImage, this.imageProgress));
 

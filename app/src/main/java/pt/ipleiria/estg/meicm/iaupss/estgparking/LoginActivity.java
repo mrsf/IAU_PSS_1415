@@ -167,9 +167,11 @@ public class LoginActivity extends FragmentActivity
         }
 
         setContentView(R.layout.activity_login);
+        //setContentView(R.layout.activity_login_formated);
 
         // Facebook login button
         fbLoginButton = (LoginButton) findViewById(R.id.login_button);
+        //fbLoginButton = (LoginButton) findViewById(R.id.facebook_image_button);
         fbLoginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -240,6 +242,7 @@ public class LoginActivity extends FragmentActivity
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
+        //findViewById(R.id.googleplus_Image_button).setOnClickListener(this);
 
         app.setGoogleApiClient(mGoogleApiClient);
 
@@ -451,7 +454,7 @@ public class LoginActivity extends FragmentActivity
 
     private void postPhoto() {
         dispatchTakePictureIntent();
-        //Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
+        Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
 
     }
     private void postFacebookPhoto() {
@@ -611,7 +614,7 @@ public class LoginActivity extends FragmentActivity
                     personPhoto.getUrl().length() - 2)
                     + 50;
 
-            new LoadProfileImage(imgProfilePic).execute(personPhotoUrl);
+           new LoadProfileImage(imgProfilePic).execute(personPhotoUrl);
 
         }
     }

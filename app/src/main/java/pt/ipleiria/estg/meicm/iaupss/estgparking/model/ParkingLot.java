@@ -3,13 +3,9 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.dropbox.sync.android.DbxRecord;
-
-/**
- * Created by francisco on 05-12-2014.
- */
 public class ParkingLot implements Parcelable {
 
+    private String id;
     private String name;
     private String description;
     private double latitude;
@@ -23,8 +19,9 @@ public class ParkingLot implements Parcelable {
         this.readFromParcel(in);
     }
 
-    public ParkingLot(String name, String description, double latitude, double longitude, String imagePath) {
+    public ParkingLot(String id, String name, String description, double latitude, double longitude, String imagePath) {
 
+        this.id = id;
         this.name = name;
         this.description = description;
         this.latitude = latitude;
@@ -32,40 +29,48 @@ public class ParkingLot implements Parcelable {
         this.imagePath = imagePath;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public String getImagePath() {
-        return imagePath;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getLatitude() {
+        return latitude;
     }
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getImagePath() {
+        return imagePath;
     }
 
     public void setImagePath(String imagePath) {
@@ -81,6 +86,7 @@ public class ParkingLot implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
+        dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.description);
         dest.writeDouble(this.latitude);
@@ -90,6 +96,7 @@ public class ParkingLot implements Parcelable {
 
     private void readFromParcel(Parcel in) {
 
+        this.id = in.readString();
         this.name = in.readString();
         this.description = in.readString();
         this.latitude = in.readDouble();

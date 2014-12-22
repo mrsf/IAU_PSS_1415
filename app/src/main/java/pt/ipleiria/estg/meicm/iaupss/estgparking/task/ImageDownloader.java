@@ -11,34 +11,31 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.NoSuchAlgorithmException;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.HashConvertion;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ImageCache;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.DownloadTask;
 
-/**
- * Created by francisco on 11-12-2014.
- */
 public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, DownloadTask> {
 
     private static final String TAG = "IMAGE_DOWNLOADER";
     private static final String CACHE_FOLDER = (Environment
-            .getExternalStorageState() == Environment.MEDIA_MOUNTED ? Environment
-            .getExternalStorageDirectory().getPath().toString()
+            .getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ? Environment
+            .getExternalStorageDirectory().getPath()
             + "/Android/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/"
-            : Environment.getDataDirectory().getPath().toString()
+            : Environment.getDataDirectory().getPath()
             + "/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/");
 
     private final ImageCache imageCache;
 
-    private DownloadTask task;
-    private boolean finished;
-
     public ImageDownloader(ImageCache imageCache) {
+
         this.imageCache = imageCache;
-        this.finished = false;
     }
 
     @Override
@@ -46,9 +43,17 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
 
         File dir = this.createDirIfNotExits();
 
-        this.task = tasks[0];
+        DownloadTask task = tasks[0];
         String imageUrl = task.getUrl();
-        String checksum = this.imageCache.generateChecksum(imageUrl);
+        //String checksum = this.imageCache.generateChecksum(imageUrl);
+        String checksum = null;
+        try {
+            checksum = HashConvertion.SHA1(imageUrl);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         if (!imageCache.containsElement(imageUrl)) {
             File imgFile = new File(CACHE_FOLDER + checksum);
@@ -70,7 +75,6 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
             return task;
         }
 
-        this.finished = true;
         return null;
     }
 
@@ -99,7 +103,7 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
 
     private InputStream OpenHttpConnection(String urlString) throws IOException {
         InputStream in = null;
-        int response = -1;
+        int response;
 
         URL url = new URL(urlString);
         URLConnection conn = url.openConnection();
@@ -126,7 +130,7 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
 
     private Bitmap imageDownload(String imageUrl) {
         Bitmap bitmap = null;
-        InputStream inputStream = null;
+        InputStream inputStream;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
         options.inTempStorage = new byte[1024/2];
@@ -166,17 +170,5 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
         } catch (IOException ioe) {
             Log.d(TAG, ioe.getLocalizedMessage());
         }
-    }
-
-    public ImageCache getImageCache() {
-        return imageCache;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
-
-    public boolean isFinished() {
-        return finished;
     }
 }

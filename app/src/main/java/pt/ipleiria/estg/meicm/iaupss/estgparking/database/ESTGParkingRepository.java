@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-/**
- * Created by francisco on 17-12-2014.
- */
 public class ESTGParkingRepository {
 
     private static final int DATABASE_VERSION = 1;
@@ -51,5 +48,4 @@ public class ESTGParkingRepository {
 
         return mDb;
     }
-
 }

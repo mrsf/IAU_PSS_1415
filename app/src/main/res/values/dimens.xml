@@ -2,4 +2,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Login Activity Dimens -->
+    <dimen name="logo_image_width">230dp</dimen>
+    <dimen name="logo_image_height">115dp</dimen>
+    <dimen name="logo_image_bottom_margin">48dp</dimen>
 </resources>

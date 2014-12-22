@@ -5,21 +5,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingSection;
 
-/**
- * Created by francisco on 19-12-2014.
- */
 public class SectionsRepository extends ESTGParkingRepository {
 
     public static final String[] CREATE_TABLE_SECTION = new String[] {
             "CREATE TABLE IF NOT EXISTS "
                     + ESTGParkingDBContract.SectionBase.TABLE_NAME + " ("
-                    + ESTGParkingDBContract.SectionBase.NAME
+                    + ESTGParkingDBContract.SectionBase.ID
                     + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.PRIMARY_KEY
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.NAME
+                    + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
                     + ESTGParkingDBContract.SectionBase.DESCRIPTION
                     + ESTGParkingDBContract.TEXT_TYPE
@@ -51,17 +52,40 @@ public class SectionsRepository extends ESTGParkingRepository {
 
         for (ParkingSection section : sections)
             if (section != null)
-                if (!this.sectionExist(section.getName()))
+                if (!this.sectionExist(section.getId()))
                     this.insertSection(section);
     }
 
-    private boolean sectionExist(String name) {
+    public List<ParkingSection> getSections(String lotId) {
+
+        List<ParkingSection> sections = new LinkedList<>();
+        Cursor cursor = database().rawQuery("SELECT * FROM "
+                        + ESTGParkingDBContract.SectionBase.TABLE_NAME + " WHERE "
+                        + ESTGParkingDBContract.SectionBase.LOT_ID + " = ?",
+                new String[] { lotId });
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        if (cursor.moveToFirst()) {
+            do {
+                sections.add(new ParkingSection(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                        cursor.getDouble(3), cursor.getDouble(4), cursor.getInt(5), cursor.getDouble(6), cursor.getString(7)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return sections;
+    }
+
+    private boolean sectionExist(String id) {
 
         boolean exist = false;
         Cursor cursor = database().rawQuery(
                 "SELECT * FROM " + ESTGParkingDBContract.SectionBase.TABLE_NAME
-                        + " WHERE " + ESTGParkingDBContract.SectionBase.NAME
-                        + " = ?", new String[] { String.valueOf(name) });
+                        + " WHERE " + ESTGParkingDBContract.SectionBase.ID
+                        + " = ?", new String[] { id });
 
         if (cursor != null)
             if (cursor.moveToFirst()) {
@@ -75,6 +99,7 @@ public class SectionsRepository extends ESTGParkingRepository {
     private long insertSection(ParkingSection section) throws SQLException {
 
         ContentValues values = new ContentValues();
+        values.put(ESTGParkingDBContract.SectionBase.ID, section.getId());
         values.put(ESTGParkingDBContract.SectionBase.NAME, section.getName());
         values.put(ESTGParkingDBContract.SectionBase.DESCRIPTION, section.getDescription());
         values.put(ESTGParkingDBContract.SectionBase.LATITUDE, section.getLatitude());

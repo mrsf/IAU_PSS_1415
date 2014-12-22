@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity"
+    android:id="@+id/login_relative_layout">
+
+    <ImageView
+        android:layout_width="@dimen/logo_image_width"
+        android:layout_height="@dimen/logo_image_height"
+        android:id="@+id/logo_image_view"
+        android:background="#ffffbb92"
+        android:layout_above="@+id/login_desc_text_view"
+        android:layout_alignLeft="@+id/googleplus_Image_button"
+        android:layout_alignStart="@+id/googleplus_Image_button"
+        android:layout_marginBottom="@dimen/logo_image_bottom_margin"
+        android:layout_alignParentEnd="false"
+        android:contentDescription="@string/logo_image_content_decription" />
+
+    <TextView
+        android:layout_width="230dp"
+        android:layout_height="24dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/login_description"
+        android:id="@+id/login_desc_text_view"
+        android:singleLine="true"
+        android:gravity="center_horizontal"
+        android:layout_above="@+id/facebook_image_button"
+        android:layout_alignLeft="@+id/facebook_image_button"
+        android:layout_alignStart="@+id/facebook_image_button" />
+
+    <com.facebook.widget.LoginButton
+        android:layout_width="230dp"
+        android:layout_height="48dp"
+        android:id="@+id/facebook_image_button"
+        android:layout_above="@+id/googleplus_Image_button"
+        android:layout_alignLeft="@+id/logo_image_view"
+        android:layout_alignStart="@+id/logo_image_view"
+        facebook:confirm_logout="false"
+        facebook:fetch_user_info="true"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_width="230dp"
+        android:layout_height="48dp"
+        android:id="@+id/googleplus_Image_button"
+        android:layout_marginBottom="85dp"
+        android:layout_above="@+id/info_image_button"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:id="@+id/info_image_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

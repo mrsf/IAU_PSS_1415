@@ -8,9 +8,6 @@ import android.widget.Toast;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingSection;
 
-/**
- * Created by francisco on 18-12-2014.
- */
 public class ParkingSectionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private ParkingSection parkingSection;
@@ -42,6 +39,6 @@ public class ParkingSectionViewHolder extends RecyclerView.ViewHolder implements
         intent.putExtra("ParkingLot", parkingLot);
 
         v.getContext().startActivity(intent);*/
-        Toast.makeText(v.getContext(), this.nameText.getText(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(v.getContext(), parkingSection.getName(), Toast.LENGTH_SHORT).show();
     }
 }

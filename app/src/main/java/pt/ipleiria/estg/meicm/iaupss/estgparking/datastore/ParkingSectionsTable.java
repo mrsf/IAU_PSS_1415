@@ -11,9 +11,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Created by francisco on 19-12-2014.
- */
 public class ParkingSectionsTable {
 
     private DbxDatastore mDatastore;
@@ -85,15 +82,15 @@ public class ParkingSectionsTable {
     }
 
     public List<ParkingSectionRecord> getParkingSectionsSorted(String lotId) throws DbxException {
-        List<ParkingSectionRecord> resultList = new ArrayList<ParkingSectionRecord>();
+        List<ParkingSectionRecord> resultList = new ArrayList<>();
         DbxFields queryParams = new DbxFields().set("id_lote", lotId);
         for (DbxRecord result : mTable.query(queryParams)) {
             resultList.add(new ParkingSectionRecord(result));
         }
         Collections.sort(resultList, new Comparator<ParkingSectionRecord>() {
             @Override
-            public int compare(ParkingSectionRecord o1, ParkingSectionRecord o2) {
-                return o1.getName().compareTo(o2.getName());
+            public int compare(ParkingSectionRecord s1, ParkingSectionRecord s2) {
+                return s1.getName().compareTo(s2.getName());
             }
         });
         return resultList;

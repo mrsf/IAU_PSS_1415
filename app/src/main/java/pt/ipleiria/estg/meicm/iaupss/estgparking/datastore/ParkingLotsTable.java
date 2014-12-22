@@ -9,12 +9,8 @@ import com.dropbox.sync.android.DbxTable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by francisco on 19-11-2014.
- */
 public class ParkingLotsTable {
 
     private DbxDatastore mDatastore;
@@ -76,17 +72,16 @@ public class ParkingLotsTable {
     }
 
     public List<ParkingLotRecord> getParkingLotsSorted() throws DbxException {
-        List<ParkingLotRecord> resultList = new ArrayList<ParkingLotRecord>();
+        List<ParkingLotRecord> resultList = new ArrayList<>();
         for (DbxRecord result : mTable.query()) {
             resultList.add(new ParkingLotRecord(result));
         }
         Collections.sort(resultList, new Comparator<ParkingLotRecord>() {
             @Override
-            public int compare(ParkingLotRecord o1, ParkingLotRecord o2) {
-                return o1.getName().compareTo(o2.getName());
+            public int compare(ParkingLotRecord l1, ParkingLotRecord l2) {
+                return l1.getName().compareTo(l2.getName());
             }
         });
         return resultList;
     }
-
 }

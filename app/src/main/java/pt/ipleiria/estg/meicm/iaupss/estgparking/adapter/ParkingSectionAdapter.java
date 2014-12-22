@@ -10,9 +10,6 @@ import java.util.List;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingSection;
 
-/**
- * Created by francisco on 18-12-2014.
- */
 public class ParkingSectionAdapter extends RecyclerView.Adapter<ParkingSectionViewHolder> {
 
     private List<ParkingSection> sections;
@@ -32,9 +29,7 @@ public class ParkingSectionAdapter extends RecyclerView.Adapter<ParkingSectionVi
         // set the view's size, margins, paddings and layout parameters
         //...
 
-        ParkingSectionViewHolder vh = new ParkingSectionViewHolder(v);
-
-        return vh;
+        return new ParkingSectionViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

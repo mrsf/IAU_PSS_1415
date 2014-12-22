@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-/**
- * Created by francisco on 11-12-2014.
- */
 public class DownloadTask {
 
     private String url;

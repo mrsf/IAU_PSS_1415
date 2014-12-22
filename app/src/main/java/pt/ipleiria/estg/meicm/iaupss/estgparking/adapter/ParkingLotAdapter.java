@@ -1,6 +1,5 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.adapter;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +13,6 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.ImageCache;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
 
-/**
- * Created by francisco on 19-11-2014.
- */
 public class ParkingLotAdapter extends RecyclerView.Adapter<ParkingLotViewHolder> {
 
     private ThreadPoolExecutor exec;
@@ -44,9 +40,7 @@ public class ParkingLotAdapter extends RecyclerView.Adapter<ParkingLotViewHolder
         // set the view's size, margins, paddings and layout parameters
         //...
 
-        ParkingLotViewHolder vh = new ParkingLotViewHolder(v);
-
-        return vh;
+        return new ParkingLotViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

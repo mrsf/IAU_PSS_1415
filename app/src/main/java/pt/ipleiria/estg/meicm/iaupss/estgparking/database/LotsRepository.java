@@ -5,21 +5,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
 
-/**
- * Created by francisco on 17-12-2014.
- */
 public class LotsRepository extends ESTGParkingRepository {
 
     public static final String[] CREATE_TABLE_LOT = new String[] {
             "CREATE TABLE IF NOT EXISTS "
                     + ESTGParkingDBContract.LotBase.TABLE_NAME + " ("
-                    + ESTGParkingDBContract.LotBase.NAME
+                    + ESTGParkingDBContract.LotBase.ID
                     + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.PRIMARY_KEY
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.LotBase.NAME
+                    + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
                     + ESTGParkingDBContract.LotBase.DESCRIPTION
                     + ESTGParkingDBContract.TEXT_TYPE
@@ -45,17 +46,45 @@ public class LotsRepository extends ESTGParkingRepository {
 
         for (ParkingLot lot : lots)
             if (lot != null)
-                if (!this.lotExist(lot.getName()))
+                if (!this.lotExist(lot.getId()))
                     this.insertLot(lot);
     }
 
-    private boolean lotExist(String name) {
+    public List<ParkingLot> getLots() {
+
+        List<ParkingLot> lots = new LinkedList<>();
+        Cursor cursor = database().query(
+                ESTGParkingDBContract.LotBase.TABLE_NAME,
+                new String[] { ESTGParkingDBContract.LotBase.ID,
+                        ESTGParkingDBContract.LotBase.NAME,
+                        ESTGParkingDBContract.LotBase.DESCRIPTION,
+                        ESTGParkingDBContract.LotBase.LATITUDE,
+                        ESTGParkingDBContract.LotBase.LONGITUDE,
+                        ESTGParkingDBContract.LotBase.IMAGE_PATH }, null, null,
+                null, null, ESTGParkingDBContract.LotBase.NAME);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        if (cursor.moveToFirst()) {
+            do {
+                lots.add(new ParkingLot(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                        cursor.getDouble(3), cursor.getDouble(4), cursor.getString(5)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        return lots;
+    }
+
+    private boolean lotExist(String id) {
 
         boolean exist = false;
         Cursor cursor = database().rawQuery(
                 "SELECT * FROM " + ESTGParkingDBContract.LotBase.TABLE_NAME
-                        + " WHERE " + ESTGParkingDBContract.LotBase.NAME
-                        + " = ?", new String[] { String.valueOf(name) });
+                        + " WHERE " + ESTGParkingDBContract.LotBase.ID
+                        + " = ?", new String[] { id });
 
         if (cursor != null)
             if (cursor.moveToFirst()) {
@@ -69,6 +98,7 @@ public class LotsRepository extends ESTGParkingRepository {
     private long insertLot(ParkingLot lot) throws SQLException {
 
         ContentValues values = new ContentValues();
+        values.put(ESTGParkingDBContract.LotBase.ID, lot.getId());
         values.put(ESTGParkingDBContract.LotBase.NAME, lot.getName());
         values.put(ESTGParkingDBContract.LotBase.DESCRIPTION, lot.getDescription());
         values.put(ESTGParkingDBContract.LotBase.LATITUDE, lot.getLatitude());
@@ -77,5 +107,4 @@ public class LotsRepository extends ESTGParkingRepository {
         return database().insert(ESTGParkingDBContract.LotBase.TABLE_NAME,
                 null, values);
     }
-
 }

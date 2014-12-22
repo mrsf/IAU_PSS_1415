@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/**
- * Created by francisco on 17-12-2014.
- */
 public class ESTGParkingDBHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "ESTGPARKING_DBHELPER";
@@ -27,7 +24,7 @@ public class ESTGParkingDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        Log.w(TAG, "A criar a base de dados ...");
+        Log.w(TAG, "Creating database ...");
         for (String s : sql_create_entries)
             db.execSQL(s);
     }
@@ -35,7 +32,7 @@ public class ESTGParkingDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        Log.w(TAG, "A actualizar da versão " + oldVersion + " para a versão "
+        Log.w(TAG, "Updating version " + oldVersion + " to version "
                 + newVersion + "...");
         for (String s : sql_delete_entries)
             db.execSQL(s);
@@ -48,5 +45,4 @@ public class ESTGParkingDBHelper extends SQLiteOpenHelper {
 
         onUpgrade(db, oldVersion, newVersion);
     }
-
 }

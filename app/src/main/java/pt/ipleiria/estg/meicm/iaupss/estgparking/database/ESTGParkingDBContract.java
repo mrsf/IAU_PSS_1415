@@ -2,9 +2,6 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking.database;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by francisco on 17-12-2014.
- */
 abstract class ESTGParkingDBContract {
 
     public static final String PRIMARY_KEY = " PRIMARY KEY";
@@ -19,6 +16,7 @@ abstract class ESTGParkingDBContract {
 
     public static abstract class LotBase implements BaseColumns {
         public static final String TABLE_NAME = "lot";
+        public static final String ID = "id";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
         public static final String LATITUDE = "latitude";
@@ -28,13 +26,21 @@ abstract class ESTGParkingDBContract {
 
     public static abstract class SectionBase implements BaseColumns {
         public static final String TABLE_NAME = "section";
+        public static final String ID = "id";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
         public static final String LATITUDE = "latitude";
         public static final String LONGITUDE = "longitude";
-        public static final String CAPACITY = "lotacao";
-        public static final String OCCUPATION = "ocupacao";
-        public static final String LOT_ID = "id_lote";
+        public static final String CAPACITY = "capacity";
+        public static final String OCCUPATION = "occupation";
+        public static final String LOT_ID = "lot_id";
     }
 
+    public static abstract class RankingBase implements BaseColumns {
+        public static final String TABLE_NAME = "ranking";
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String POINTS = "points";
+        public static final String IMAGE_PATH = "image_path";
+    }
 }

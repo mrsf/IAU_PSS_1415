@@ -9,14 +9,15 @@ import java.io.File;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
-/**
- * Created by francisco on 11-12-2014.
- */
 public class ImageCache {
 
     private static final String TAG = "IMAGE_CACHE";
-    private static final String CACHE_FOLDER = Environment.getDataDirectory()
-            + "/data/pt.ipleiria.estg.meicm.iaupss.estgparking/Images/";
+    private static final String CACHE_FOLDER = (Environment
+            .getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ? Environment
+            .getExternalStorageDirectory().getPath()
+            + "/Android/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/"
+            : Environment.getDataDirectory().getPath()
+            + "/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/");
     private static final int MAX_SIZE = 64 * 1024 * 1024; // 64 MiB
 
     private LruCache<String, Bitmap> imgCache;

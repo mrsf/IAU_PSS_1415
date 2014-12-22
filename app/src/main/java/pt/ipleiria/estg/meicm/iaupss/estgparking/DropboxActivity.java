@@ -15,7 +15,6 @@ import com.dropbox.sync.android.DbxException;
 public class DropboxActivity extends ActionBarActivity {
 
     private static final String TAG = "DROPBOX_ACTIVITY";
-    private static int REQUEST_LINK_TO_DBX = 0;
 
     private ESTGParkingApplication app;
 
@@ -23,23 +22,23 @@ public class DropboxActivity extends ActionBarActivity {
 
         @Override
         public void onLinkedAccountChange(DbxAccountManager mgr, DbxAccount acct) {
-
+            // Set up the datastore manager
             if (mgr.hasLinkedAccount()) {
-                // When the user is logged in, show the game.
                 try {
                     // Use Dropbox datastores
                     app.setDatastoreManager(DbxDatastoreManager.forAccount(mgr.getLinkedAccount()));
+                    // show menu activity
                     Intent i = new Intent(getBaseContext(), ParkingLotsActivity.class);
                     startActivity(i);
                     finish();
                 } catch (DbxException.Unauthorized e) {
-                    Log.e(TAG, "Account was unlinked remotely");
+                    Log.e(TAG, "Account was unlinked remotely: ", e);
                 }
             } else {
                 // Account isn't linked yet, use local datastores
                 app.setDatastoreManager(DbxDatastoreManager.localManager(mgr));
-                // When the user is not logged in, show the login screen.
-                getFragmentManager().beginTransaction().replace(R.id.container, new DropboxFragment(mgr)).commitAllowingStateLoss();
+                // Show link button
+                getFragmentManager().beginTransaction().replace(R.id.container, new DropboxFragment(mgr, app.getDatastoreManager())).commitAllowingStateLoss();
             }
         }
     };
@@ -51,10 +50,6 @@ public class DropboxActivity extends ActionBarActivity {
         setContentView(R.layout.activity_dropbox);
 
         this.app = ESTGParkingApplication.getInstance();
-
-        /*if (savedInstanceState == null) {
-            this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
-        }*/
     }
 
     @Override
@@ -62,7 +57,7 @@ public class DropboxActivity extends ActionBarActivity {
 
         super.onPause();
 
-        this.app.getAccountManager().addListener(accountListener);
+        this.app.getAccountManager().removeListener(accountListener);
     }
 
     @Override

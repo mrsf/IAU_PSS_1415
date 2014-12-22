@@ -3,11 +3,9 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by francisco on 18-12-2014.
- */
 public class ParkingSection implements Parcelable {
 
+    private String id;
     private String name;
     private String description;
     private double latitude;
@@ -23,8 +21,9 @@ public class ParkingSection implements Parcelable {
         this.readFromParcel(in);
     }
 
-    public ParkingSection(String name, String description, double latitude, double longitude, int capacity, double occupation, String lotId) {
+    public ParkingSection(String id, String name, String description, double latitude, double longitude, int capacity, double occupation, String lotId) {
 
+        this.id = id;
         this.name = name;
         this.description = description;
         this.latitude = latitude;
@@ -32,6 +31,14 @@ public class ParkingSection implements Parcelable {
         this.capacity = capacity;
         this.occupation = occupation;
         this.lotId = lotId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -99,6 +106,7 @@ public class ParkingSection implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
+        dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.description);
         dest.writeDouble(this.latitude);
@@ -110,6 +118,7 @@ public class ParkingSection implements Parcelable {
 
     private void readFromParcel(Parcel in) {
 
+        this.id = in.readString();
         this.name = in.readString();
         this.description = in.readString();
         this.latitude = in.readDouble();
