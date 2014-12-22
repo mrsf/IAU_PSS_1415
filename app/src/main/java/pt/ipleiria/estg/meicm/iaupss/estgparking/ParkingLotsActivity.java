@@ -2,6 +2,7 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.dropbox.sync.android.DbxDatastore;
@@ -104,6 +105,18 @@ public class ParkingLotsActivity extends BaseRecyclerViewActivity {
 
         return super.onOptionsItemSelected(item);
     }*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            super.getApp().getDatastoreManager().shutDown();
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onBackPressed() {
