@@ -1,6 +1,8 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.adapter;
 
 import android.os.AsyncTask;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

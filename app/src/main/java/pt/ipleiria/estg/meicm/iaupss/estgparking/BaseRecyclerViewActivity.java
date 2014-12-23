@@ -1,9 +1,11 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -12,6 +14,8 @@ import android.widget.ProgressBar;
 
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxException;
+
+import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.DividerItemDecoration;
 
 public class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
 

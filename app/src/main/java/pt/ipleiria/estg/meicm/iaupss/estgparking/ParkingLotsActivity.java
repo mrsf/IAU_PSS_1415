@@ -1,6 +1,8 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -10,6 +12,7 @@ import com.dropbox.sync.android.DbxDatastore;
 
 import java.util.List;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.DividerItemDecoration;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.ParkingLotAdapter;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
 
@@ -150,6 +153,10 @@ public class ParkingLotsActivity extends BaseRecyclerViewActivity {
         // specify adapter
         super.setViewAdapter(new ParkingLotAdapter(parkingLots, this.imageCache));
         super.getRecyclerView().setAdapter(super.getViewAdapter());
+
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this);
+        super.getRecyclerView().addItemDecoration(itemDecoration);
+        //super.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
 
         super.getProgressBar().setVisibility(ProgressBar.GONE);
         /*this.parkingLots = this.app.getParkingLotRepository().fetchParkingLots();
