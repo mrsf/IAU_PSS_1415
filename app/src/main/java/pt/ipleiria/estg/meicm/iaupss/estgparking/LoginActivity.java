@@ -67,17 +67,17 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUti
 public class LoginActivity extends FragmentActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, View.OnClickListener {
 
+    /**
+     * App singleton
+     */
+    private ESTGParkingApplication app;
+
     private static final String PERMISSION = "publish_actions";
 
 
     private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.samples.hellofacebook:PendingAction";
 
-    private Button postStatusUpdateButton;
-    private Button postPhotoButton;
-
     private LoginButton fbLoginButton;
-    private ProfilePictureView profilePictureView;
-    private TextView greeting;
     private PendingAction pendingAction = PendingAction.NONE;
     private ViewGroup controlsContainer;
     private GraphUser user;
@@ -155,7 +155,7 @@ public class LoginActivity extends FragmentActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ESTGParkingApplication app = ESTGParkingApplication.getInstance();
+        app = ESTGParkingApplication.getInstance();
 
         // Facebook helper
         uiHelper = new UiLifecycleHelper(this, callback);
@@ -167,11 +167,9 @@ public class LoginActivity extends FragmentActivity
         }
 
         setContentView(R.layout.activity_login);
-        //setContentView(R.layout.activity_login_formated);
 
         // Facebook login button
         fbLoginButton = (LoginButton) findViewById(R.id.login_button);
-        //fbLoginButton = (LoginButton) findViewById(R.id.facebook_image_button);
         fbLoginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
             @Override
             public void onUserInfoFetched(GraphUser user) {
@@ -180,23 +178,17 @@ public class LoginActivity extends FragmentActivity
                 // It's possible that we were waiting for this.user to be populated in order to post a
                 // status update.
                 handlePendingAction();
-            }
-        });
 
-        profilePictureView = (ProfilePictureView) findViewById(R.id.profilePicture);
-        greeting = (TextView) findViewById(R.id.greeting);
+                //Session session = new Session(LoginActivity.this);
+                Session.OpenRequest openRequest = new Session.OpenRequest(LoginActivity.this).setPermissions("basic_info", "email");
 
-        postStatusUpdateButton = (Button) findViewById(R.id.postStatusUpdateButton);
-        postStatusUpdateButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                onClickPostStatusUpdate();
-            }
-        });
+                //Session.setActiveSession(session);
+                //session.openForRead(openRequest);
 
-        postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
-        postPhotoButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                onClickPostPhoto();
+                if (LoginActivity.this.user != null) {
+                    app.setoAuthProvider(OAuthProvider.FACEBOOK);   // Register the used OAuth provider
+                    startMainActivity();
+                }
             }
         });
 
@@ -229,12 +221,6 @@ public class LoginActivity extends FragmentActivity
 
 
 
-
-
-
-
-        imgProfilePic = (ImageView) findViewById(R.id.imgProfilePic);
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -242,24 +228,9 @@ public class LoginActivity extends FragmentActivity
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        //findViewById(R.id.googleplus_Image_button).setOnClickListener(this);
 
         app.setGoogleApiClient(mGoogleApiClient);
 
-        Button shareButton = (Button) findViewById(R.id.share_button);
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Launch the Google+ share dialog with attribution to your app.
-                Intent shareIntent = new PlusShare.Builder(LoginActivity.this)
-                        .setType("text/plain")
-                        .setText("Welcome to the Google+ platform.")
-                        .setContentUrl(Uri.parse("https://developers.google.com/+/"))
-                        .getIntent();
-
-                startActivityForResult(shareIntent, 0);
-            }
-        });
 
         updateUI();
 
@@ -308,8 +279,6 @@ public class LoginActivity extends FragmentActivity
                 break;
         }
 
-
-
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data, dialogCallback);
     }
@@ -349,17 +318,6 @@ public class LoginActivity extends FragmentActivity
     private void updateUI() {
         Session session = Session.getActiveSession();
         boolean enableButtons = (session != null && session.isOpened());
-
-        postStatusUpdateButton.setEnabled(enableButtons || canPresentShareDialog);
-        postPhotoButton.setEnabled(enableButtons || canPresentShareDialogWithPhotos);
-
-        if (enableButtons && user != null) {
-            profilePictureView.setProfileId(user.getId());
-            greeting.setText(getString(R.string.hello_user, user.getFirstName()));
-        } else {
-            profilePictureView.setProfileId(null);
-            greeting.setText(null);
-        }
     }
 
     private void handlePendingAction() {
@@ -454,7 +412,7 @@ public class LoginActivity extends FragmentActivity
 
     private void postPhoto() {
         dispatchTakePictureIntent();
-        Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
+        //Bitmap image = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher);
 
     }
     private void postFacebookPhoto() {
@@ -503,13 +461,7 @@ public class LoginActivity extends FragmentActivity
 
 
 
-    private void showAlert(String title, String message) {
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok, null)
-                .show();
-    }
+
 
     private boolean hasPublishPermission() {
         Session session = Session.getActiveSession();
@@ -536,9 +488,6 @@ public class LoginActivity extends FragmentActivity
             handlePendingAction();
         }
     }
-
-
-
 
     /**
      * Verify that Google Play services is available before making a request.
@@ -568,12 +517,6 @@ public class LoginActivity extends FragmentActivity
         }
     }
 
-
-
-
-
-
-
     @Override
     public void onConnectionFailed(ConnectionResult result) {
 
@@ -592,31 +535,22 @@ public class LoginActivity extends FragmentActivity
         }
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.wtf("onConnected","onConnected");
-        mSignInClicked = false;
-        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+    private void startMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
-        //finish();
+        finish();
+    }
 
-        if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
-            Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            String personName = currentPerson.getDisplayName();
-            Person.Image personPhoto = currentPerson.getImage();
-            String personGooglePlusProfile = currentPerson.getUrl();
+    @Override
+    /**
+     * Google play services connected callback
+     */
+    public void onConnected(Bundle connectionHint) {
+        mSignInClicked = false;
+        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
 
-            // by default the profile url gives 50x50 px image only
-            // we can replace the value with whatever dimension we want by
-            // replacing sz=X
-            String personPhotoUrl = personPhoto.getUrl().substring(0,
-                    personPhoto.getUrl().length() - 2)
-                    + 50;
-
-           new LoadProfileImage(imgProfilePic).execute(personPhotoUrl);
-
-        }
+        app.setoAuthProvider(OAuthProvider.GOGGLE_PLUS);
+        startMainActivity();
     }
 
     /* Track whether the sign-in button has been clicked so that we know to resolve
@@ -644,7 +578,6 @@ public class LoginActivity extends FragmentActivity
             }
         }
     }
-
 
     // Google+ stuff
     @Override

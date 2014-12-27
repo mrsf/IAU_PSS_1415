@@ -27,7 +27,14 @@ public class ESTGParkingApplication extends Application {
     private DbxDatastoreManager datastoreManager;
     private DbxDatastore datastore;
 
-    // Client used to interact with Google APIs.
+    /**
+     * Indicates the OAuth provider being used
+     */
+    private OAuthProvider oAuthProvider;
+
+    /**
+     * Client used to interact with Google APIs
+     */
     private GoogleApiClient googleApiClient;
 
     private String currentUserActivity;
@@ -104,5 +111,13 @@ public class ESTGParkingApplication extends Application {
                 e.printStackTrace();
             }
         }
+    }
+
+    public OAuthProvider getoAuthProvider() {
+        return oAuthProvider;
+    }
+
+    public void setoAuthProvider(OAuthProvider oAuthProvider) {
+        this.oAuthProvider = oAuthProvider;
     }
 }
