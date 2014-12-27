@@ -23,6 +23,8 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ParkingSectionReposi
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
 
+    private OAuthProvider oAuthProvider;
+
     private DbxAccountManager accountManager;
     private DbxAccount account;
     private DbxDatastoreManager datastoreManager;
@@ -107,5 +109,14 @@ public class ESTGParkingApplication extends Application {
 
     public DbxDatastoreManager getDatastoreManager() {
         return datastoreManager;
+    }
+
+
+    public OAuthProvider getoAuthProvider() {
+        return oAuthProvider;
+    }
+
+    public void setoAuthProvider(OAuthProvider oAuthProvider) {
+        this.oAuthProvider = oAuthProvider;
     }
 }

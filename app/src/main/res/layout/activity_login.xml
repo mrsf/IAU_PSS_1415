@@ -12,66 +12,38 @@
         android:layout_height="fill_parent"
         android:background="#FFF"
         android:id="@+id/main_ui_container">
-        <com.facebook.widget.LoginButton
-            android:id="@+id/login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            facebook:confirm_logout="false"
-            facebook:fetch_user_info="true"
-            />
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <LinearLayout
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/greeting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"
-                android:textColor="#333"
-                android:textSize="18sp"/>
-            <com.facebook.widget.ProfilePictureView
-                android:id="@+id/profilePicture"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                facebook:preset_size="normal"/>
-            <Button
-                android:id="@+id/postStatusUpdateButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Post Status Update"
-                />
-            <Button
-                android:id="@+id/postPhotoButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Post Photo"
-                />
-            <Button
-                android:id="@+id/share_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Share on Google+"
-                />
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:weightSum="1">
 
             <ImageView
-                android:id="@+id/imgProfilePic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"/>
+                android:layout_width="300px"
+                android:layout_height="300px"
+                android:id="@+id/login_img_profile"
+                android:background="@drawable/ic_launcher"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp" />
+
+            <com.facebook.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                facebook:confirm_logout="false"
+                facebook:fetch_user_info="true"
+                android:layout_gravity="center_horizontal" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="225dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
+
     </LinearLayout>
     <FrameLayout
         android:id="@+id/fragment_container"
