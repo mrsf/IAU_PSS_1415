@@ -55,7 +55,7 @@
 
         <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_map">
+            android:label="@string/title_activity_map" >
         </activity>
         <activity
             android:name=".MainActivity"
@@ -88,11 +88,12 @@
             android:label="@string/title_activity_dropbox" >
         </activity>
         <activity
-            android:name=".ParkingLotsActivity"
+            android:name=".LotsActivity"
             android:label="@string/title_activity_parking_lots"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
+
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -102,19 +103,21 @@
             android:name=".LotDetailsActivity"
             android:label="@string/title_activity_lot_details"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".ParkingLotsActivity" >
+            android:parentActivityName=".LotsActivity"
+            android:screenOrientation="portrait" >
+
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ParkingLotsActivity" />
+                android:value=".LotsActivity" />
         </activity>
         <activity
-            android:name=".ParkingSectionsActivity"
+            android:name=".SectionsActivity"
             android:label="@string/title_activity_parking_sections"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".LotDetailsActivity" >
+            android:parentActivityName=".LotDetailsActivity"
+            android:screenOrientation="portrait" >
+
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -135,11 +138,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <service
             android:name="com.dropbox.sync.android.DbxSyncService"
             android:enabled="true"
             android:exported="false"
             android:label="Dropbox Sync" />
+
+        <activity
+            android:name=".UsersRankingActivity"
+            android:label="@string/title_activity_users_ranking" >
+        </activity>
     </application>
 
 </manifest>

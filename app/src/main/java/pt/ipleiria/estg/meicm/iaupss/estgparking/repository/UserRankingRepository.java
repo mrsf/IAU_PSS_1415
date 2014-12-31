@@ -10,88 +10,88 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.database.RankingsRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.UserRankingsTable;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.model.UserRanking;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.database.RankingsData;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.RankingsTable;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Ranking;
 
 public class UserRankingRepository implements IUserRankingRepository {
 
     private static final String TAG = "FETCH_USER_RANKING";
 
     private DbxDatastore datastore;
-    private RankingsRepository rankingsRepository;
+    private RankingsData rankingsRepository;
 
     public UserRankingRepository(Context context, DbxDatastore datastore) {
 
         this.datastore = datastore;
-        this.rankingsRepository = new RankingsRepository(context, false);
+        this.rankingsRepository = new RankingsData(context, false);
     }
 
     @Override
-    public List<UserRanking> fetchUserRankings() {
+    public List<Ranking> fetchUserRankings() {
 
-        List<UserRankingsTable.UserRankingRecord> records = new ArrayList<>();
+        List<RankingsTable.RankingRecord> records = new ArrayList<>();
         try {
             datastore.sync();
-            UserRankingsTable rankingsTable = new UserRankingsTable(datastore);
-            records.addAll(rankingsTable.getUserRankingsSorted());
+            RankingsTable rankingsTable = new RankingsTable(datastore);
+            records.addAll(rankingsTable.getRankingsSorted());
         } catch (DbxException e) {
             e.printStackTrace();
         }
 
-        List<UserRanking> userRankings = new LinkedList<>();
+        List<Ranking> rankings = new LinkedList<>();
 
-        for(UserRankingsTable.UserRankingRecord record: records) {
-            UserRanking uRanking = new UserRanking();
+        for(RankingsTable.RankingRecord record: records) {
+            Ranking uRanking = new Ranking();
             uRanking.setId(record.getId());
             uRanking.setName(record.getName());
-            uRanking.setPoints(record.getPoints());
+            uRanking.setScore(record.getScore());
             uRanking.setImagePath(record.getImagePath());
 
-            userRankings.add(uRanking);
-            Log.d(TAG, "Add: " + uRanking.getId() + " | " + uRanking.getName() + " | " + uRanking.getPoints() + " | " + uRanking.getImagePath());
+            rankings.add(uRanking);
+            Log.d(TAG, "Add: " + uRanking.getId() + " | " + uRanking.getName() + " | " + uRanking.getScore() + " | " + uRanking.getImagePath());
         }
 
-        return userRankings;
+        return rankings;
     }
 
-    private List<UserRanking> dataStoreUserRankings() {
+    private List<Ranking> dataStoreUserRankings() {
 
-        List<UserRankingsTable.UserRankingRecord> records = new ArrayList<>();
+        List<RankingsTable.RankingRecord> records = new ArrayList<>();
         try {
             datastore.sync();
-            UserRankingsTable rankingsTable = new UserRankingsTable(datastore);
-            records.addAll(rankingsTable.getUserRankingsSorted());
+            RankingsTable rankingsTable = new RankingsTable(datastore);
+            records.addAll(rankingsTable.getRankingsSorted());
         } catch (DbxException e) {
             e.printStackTrace();
         }
 
-        List<UserRanking> userRankings = new LinkedList<>();
+        List<Ranking> rankings = new LinkedList<>();
 
-        for(UserRankingsTable.UserRankingRecord record: records) {
-            UserRanking uRanking = new UserRanking();
+        for(RankingsTable.RankingRecord record: records) {
+            Ranking uRanking = new Ranking();
             uRanking.setId(record.getId());
             uRanking.setName(record.getName());
-            uRanking.setPoints(record.getPoints());
+            uRanking.setScore(record.getScore());
             uRanking.setImagePath(record.getImagePath());
 
-            userRankings.add(uRanking);
-            Log.d(TAG, "Add: " + uRanking.getId() + " | " + uRanking.getName() + " | " + uRanking.getPoints() + " | " + uRanking.getImagePath());
+            rankings.add(uRanking);
+            Log.d(TAG, "Add: " + uRanking.getId() + " | " + uRanking.getName() + " | " + uRanking.getScore() + " | " + uRanking.getImagePath());
         }
 
         this.rankingsRepository.open();
-        this.rankingsRepository.insertRankings(userRankings);
+        this.rankingsRepository.insertRankings(rankings);
         this.rankingsRepository.close();
 
-        return userRankings;
+        return rankings;
     }
 
-    private List<UserRanking> dataBaseUserRankings() {
+    private List<Ranking> dataBaseUserRankings() {
 
         this.rankingsRepository.open();
-        List<UserRanking> userRankings = this.rankingsRepository.getRankings();
+        List<Ranking> rankings = this.rankingsRepository.getRankings();
         this.rankingsRepository.close();
 
-        return userRankings;
+        return rankings;
     }
 }

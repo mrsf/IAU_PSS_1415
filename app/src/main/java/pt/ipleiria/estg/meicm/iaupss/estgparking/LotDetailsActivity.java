@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.DownloadTask;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.model.ParkingLot;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Lot;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.task.ImageDownloader;
 
 public class LotDetailsActivity extends ActionBarActivity {
@@ -82,7 +82,7 @@ public class LotDetailsActivity extends ActionBarActivity {
         private ImageCache cache;
 
         private Intent intent;
-        private ParkingLot parkingLot;
+        private Lot lot;
 
         private ImageView lotImage;
         private ProgressBar imageProgress;
@@ -104,8 +104,8 @@ public class LotDetailsActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_lot_details, container, false);
 
-            if (this.parkingLot == null)
-                this.parkingLot = intent.getParcelableExtra("ParkingLot");
+            if (this.lot == null)
+                this.lot = intent.getParcelableExtra("Lot");
 
             this.lotImage = (ImageView) rootView.findViewById(R.id.detail_lot_image_view);
             this.imageProgress = (ProgressBar) rootView.findViewById(R.id.detail_image_progress_bar);
@@ -116,20 +116,21 @@ public class LotDetailsActivity extends ActionBarActivity {
             this.showSections.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), ParkingSectionsActivity.class);
-                    intent.putExtra("LotId", parkingLot.getId());
+                    Intent intent = new Intent(v.getContext(), SectionsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("LotId", lot.getId());
 
                     v.getContext().startActivity(intent);
                 }
             });
 
-            this.downloader.execute(new DownloadTask(this.parkingLot.getImagePath(), this.lotImage, this.imageProgress));
+            this.downloader.execute(new DownloadTask(this.lot.getImagePath(), this.lotImage, this.imageProgress));
 
-            this.nameText.setText(this.nameText.getText() + this.parkingLot.getName());
-            this.descriptionText.setText(this.descriptionText.getText() + this.parkingLot.getDescription());
+            this.nameText.setText(this.nameText.getText() + this.lot.getName());
+            this.descriptionText.setText(this.descriptionText.getText() + this.lot.getDescription());
             this.coordinatesText.setText(this.coordinatesText.getText() +
-                                            String.valueOf(this.parkingLot.getLatitude())
-                                            + " ; " + String.valueOf(this.parkingLot.getLongitude()));
+                                            String.valueOf(this.lot.getLatitude())
+                                            + " ; " + String.valueOf(this.lot.getLongitude()));
 
             return rootView;
         }

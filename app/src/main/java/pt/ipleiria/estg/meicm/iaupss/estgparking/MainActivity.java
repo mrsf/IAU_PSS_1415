@@ -93,7 +93,8 @@ public class MainActivity extends Activity {
         lotsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent;
-                intent = new Intent(MainActivity.this, DropboxActivity.class);
+                intent = new Intent(MainActivity.this, LotsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });

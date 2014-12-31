@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_users_ranking"/>
+      <point      
+        x = "1720"      
+        y = "2860"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_parking_spot"/>
+      <point      
+        x = "1700"      
+        y = "0"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSpotActivity"/>
+      <point      
+        x = "480"      
+        y = "0"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingLotsActivity"/>
+      <point      
+        x = "500"      
+        y = "8380"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.dropbox.client2.android.AuthActivity"/>
+      <point      
+        x = "550"      
+        y = "8430"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.profile.ProfileActivity"/>
+      <point      
+        x = "500"      
+        y = "1480"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity"/>
+      <point      
+        x = "600"      
+        y = "8480"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSectionsActivity"/>
+      <point      
+        x = "650"      
+        y = "8530"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_lot_details"/>
+      <point      
+        x = "1720"      
+        y = "5620"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_map"/>
+      <point      
+        x = "1720"      
+        y = "7000"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.UsersRankingActivity"/>
+      <point      
+        x = "500"      
+        y = "2860"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.facebook.LoginActivity"/>
+      <point      
+        x = "700"      
+        y = "8580"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.FacebookPostPhotoActivity"/>
+      <point      
+        x = "750"      
+        y = "8630"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_dropbox"/>
+      <point      
+        x = "1720"      
+        y = "4240"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.MenuState"      
+        xmlResourceName = "menu_profile"/>
+      <point      
+        x = "1720"      
+        y = "1480"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity"/>
+      <point      
+        x = "800"      
+        y = "8680"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.DropboxActivity"/>
+      <point      
+        x = "500"      
+        y = "4240"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.dropbox.sync.android.DbxAuthActivity"/>
+      <point      
+        x = "850"      
+        y = "8730"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.LotDetailsActivity"/>
+      <point      
+        x = "500"      
+        y = "5620"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.MapActivity"/>
+      <point      
+        x = "500"      
+        y = "7000"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>

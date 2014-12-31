@@ -597,7 +597,8 @@ public class LoginActivity extends FragmentActivity
         Log.wtf("onConnected","onConnected");
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, DropboxActivity.class);
         startActivity(intent);
         //finish();
 
