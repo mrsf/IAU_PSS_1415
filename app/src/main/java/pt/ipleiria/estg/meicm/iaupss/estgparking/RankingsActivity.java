@@ -14,18 +14,19 @@ import com.dropbox.sync.android.DbxException;
 
 import java.util.List;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.RankingsAdapter;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.SpacerItemDecoration;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.LotsAdapter;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Lot;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Ranking;
 
-public class LotsActivity extends BaseRecyclerViewActivity {
 
-    private static final String TAG = "LOTS_ACTIVITY";
+public class RankingsActivity extends BaseRecyclerViewActivity {
+
+    private static final String TAG = "RANKINGS_ACTIVITY";
 
     private ImageCache imageCache;
 
-    public LotsActivity() {
-        super(R.layout.activity_lots, R.id.my_progress_bar, R.id.my_recycler_view, R.menu.menu_parking_lots);
+    public RankingsActivity() {
+        super(R.layout.activity_rankings, R.id.rankings_progress_bar, R.id.rankings_recycler_view, R.menu.menu_rankings);
         Log.d(TAG, "Activity is Initialized.");
     }
 
@@ -73,16 +74,10 @@ public class LotsActivity extends BaseRecyclerViewActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public void onBackPressed() {
-        super.getApp().getDatastoreManager().shutDown();
-        super.onBackPressed();
-    }*/
-
     @Override
     public void onDatastoreStatusChange(DbxDatastore datastore) {
 
-        List<Lot> lots;
+        List<Ranking> rankings;
 
         if (datastore.getSyncStatus().hasIncoming) {
             try {
@@ -91,18 +86,18 @@ public class LotsActivity extends BaseRecyclerViewActivity {
                 e.printStackTrace();
             }
         } /*else {
-            lots = super.getApp().getLotRepository(false).fetchLots();
+            rankings = super.getApp().getRankingRepository().fetchRankings();
         }*/
 
-        lots = super.getApp().getLotRepository(true).fetchLots();
+        rankings = super.getApp().getRankingRepository().fetchRankings();
 
-        if (lots == null || lots.isEmpty()) {
-            Toast.makeText(getBaseContext(), "Não existem lotes de estacionamento", Toast.LENGTH_LONG).show();
+        if (rankings == null || rankings.isEmpty()) {
+            Toast.makeText(getBaseContext(), "Não existe ranking de utilizadores", Toast.LENGTH_SHORT).show();
             finish();
         }
 
         // specify adapter
-        super.setViewAdapter(new LotsAdapter(lots, this.imageCache));
+        super.setViewAdapter(new RankingsAdapter(rankings, this.imageCache));
         super.getRecyclerView().setAdapter(super.getViewAdapter());
 
         RecyclerView.ItemDecoration itemDecoration = new SpacerItemDecoration(this);

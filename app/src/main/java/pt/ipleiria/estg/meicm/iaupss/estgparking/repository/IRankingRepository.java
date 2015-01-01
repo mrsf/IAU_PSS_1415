@@ -4,7 +4,7 @@ import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Ranking;
 
-public interface IUserRankingRepository {
+public interface IRankingRepository {
 
-    List<Ranking> fetchUserRankings();
+    List<Ranking> fetchRankings();
 }

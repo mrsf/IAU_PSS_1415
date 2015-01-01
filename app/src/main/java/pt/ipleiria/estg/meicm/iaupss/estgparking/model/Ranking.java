@@ -58,4 +58,8 @@ public class Ranking {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
+
+    public float getRating() {
+        return (this.score * 5) / 10000;
+    }
 }

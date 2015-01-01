@@ -10,10 +10,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ILotRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ISectionRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IUserRankingRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IRankingRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.LotRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.SectionRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.UserRankingRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.RankingRepository;
 
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
@@ -75,9 +75,9 @@ public class ESTGParkingApplication extends Application {
         return new SectionRepository(this.getApplicationContext(), this.datastore, lotId);
     }
 
-    public IUserRankingRepository getUserRankingRepository() {
+    public IRankingRepository getRankingRepository() {
         this.initDatastore();
-        return new UserRankingRepository(this.getApplicationContext(), this.datastore);
+        return new RankingRepository(this.getApplicationContext(), this.datastore);
     }
 
     public DbxDatastoreManager getDatastoreManager() {

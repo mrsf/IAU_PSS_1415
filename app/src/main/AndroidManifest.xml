@@ -123,6 +123,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LotDetailsActivity" />
         </activity>
+        <activity
+            android:name=".RankingsActivity"
+            android:label="@string/title_activity_users_ranking"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <!-- Dropbox Datastore API -->
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
@@ -144,11 +156,6 @@
             android:enabled="true"
             android:exported="false"
             android:label="Dropbox Sync" />
-
-        <activity
-            android:name=".UsersRankingActivity"
-            android:label="@string/title_activity_users_ranking" >
-        </activity>
     </application>
 
 </manifest>
