@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
         });
 
         Button rankingsButton = (Button) findViewById(R.id.main_btn_rankings);
-        lotsButton.setOnClickListener(new View.OnClickListener() {
+        rankingsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent;
                 intent = new Intent(MainActivity.this, RankingsActivity.class);

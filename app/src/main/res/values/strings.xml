@@ -84,5 +84,6 @@
     <string name="title_activity_lot_details">Detalhes do Lote</string>
     <string name="title_activity_parking_sections">Secções do Lote</string>
     <string name="title_activity_users_ranking">Ranking</string>
+    <string name="title_activity_start">ESTG Parking</string>
 
 </resources>
