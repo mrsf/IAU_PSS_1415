@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+
+    <string name="ga_logLevel">verbose</string>
+
+    <string name="ga_dispatchPeriod">1</string>
+
+    <bool name="ga_dryRun">false</bool>
+
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity">Main Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity">Login Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingLotsActivity">Parking Lots Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.LotDetailsActivity">Parking Lot Detail Activity</string>
+
+</resources>

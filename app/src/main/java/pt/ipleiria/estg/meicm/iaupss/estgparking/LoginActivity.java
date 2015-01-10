@@ -42,6 +42,10 @@ import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.PickerFragment;
 import com.facebook.widget.ProfilePictureView;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Logger;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -59,13 +63,25 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
 
 
+
+
 public class LoginActivity extends FragmentActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, View.OnClickListener {
+
+
+
+
+
+
+
+
+
 
     /**
      * App singleton
@@ -139,13 +155,18 @@ public class LoginActivity extends FragmentActivity
     @Override
     protected void onStart() {
         super.onStart();
+
+        //app.getTracker(ESTGParkingApplication.TrackerName.APP_TRACKER).setScreenName("Login");
+        //app.getTracker(ESTGParkingApplication.TrackerName.APP_TRACKER).send(new HitBuilders.ScreenViewBuilder().build());
+
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
         //mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
         if (mGoogleApiClient.isConnected()) {
             //mGoogleApiClient.disconnect();
         }
@@ -156,6 +177,7 @@ public class LoginActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
 
         app = ESTGParkingApplication.getInstance();
+        app.getTracker(ESTGParkingApplication.TrackerName.APP_TRACKER);
 
         // Facebook helper
         uiHelper = new UiLifecycleHelper(this, callback);
@@ -233,8 +255,6 @@ public class LoginActivity extends FragmentActivity
 
 
         updateUI();
-
-
     }
 
     @Override

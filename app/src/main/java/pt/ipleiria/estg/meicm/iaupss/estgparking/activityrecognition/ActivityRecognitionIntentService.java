@@ -69,7 +69,7 @@ public class ActivityRecognitionIntentService extends IntentService {
             int activityType = mostProbableActivity.getType();
             app.setCurrentUserActivity(getNameFromType(activityType));
 
-            Log.i("activityType", "activityType " + getNameFromType(activityType));
+            //Log.i("activityType", "activityType " + getNameFromType(activityType));
 
             // Check to see if the repository contains a previous activity
             if (!mPrefs.contains(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE)) {
@@ -93,7 +93,7 @@ public class ActivityRecognitionIntentService extends IntentService {
                             && (confidence >= 50)) {
 
                 // Notify the user
-                sendNotification();
+                //sendNotification();
             }
         }
     }
