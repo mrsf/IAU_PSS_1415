@@ -556,7 +556,7 @@ public class LoginActivity extends FragmentActivity
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, DropboxActivity.class);
         startActivity(intent);
         finish();
     }
@@ -568,6 +568,7 @@ public class LoginActivity extends FragmentActivity
     public void onConnected(Bundle connectionHint) {
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+        //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
         app.setoAuthProvider(OAuthProvider.GOGGLE_PLUS);
         startMainActivity();

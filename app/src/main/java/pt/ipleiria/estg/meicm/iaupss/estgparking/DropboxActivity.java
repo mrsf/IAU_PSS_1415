@@ -28,7 +28,8 @@ public class DropboxActivity extends ActionBarActivity {
                     // Use Dropbox datastores
                     app.setDatastoreManager(DbxDatastoreManager.forAccount(mgr.getLinkedAccount()));
                     // show menu activity
-                    Intent i = new Intent(getBaseContext(), ParkingLotsActivity.class);
+                    Intent i = new Intent(getBaseContext(), MainActivity.class);
+                    //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                     finish();
                 } catch (DbxException.Unauthorized e) {

@@ -133,8 +133,8 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
         InputStream inputStream;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
-        options.inTempStorage = new byte[1024/2];
-        options.inSampleSize = 2;
+        options.inTempStorage = new byte[1024 * 16];
+        options.inSampleSize = 1;
         options.inDither = false;
         options.inPurgeable = true;
         options.inInputShareable = true;

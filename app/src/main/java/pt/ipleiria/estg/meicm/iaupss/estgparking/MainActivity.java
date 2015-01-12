@@ -17,6 +17,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.DetectionRemover;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.DetectionRequester;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Ranking;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.ProfileActivity;
 
 
@@ -93,7 +94,18 @@ public class MainActivity extends Activity {
         lotsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent;
-                intent = new Intent(MainActivity.this, DropboxActivity.class);
+                intent = new Intent(MainActivity.this, LotsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
+        Button rankingsButton = (Button) findViewById(R.id.main_btn_rankings);
+        rankingsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent;
+                intent = new Intent(MainActivity.this, RankingsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });

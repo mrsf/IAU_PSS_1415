@@ -1,11 +1,9 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -13,11 +11,10 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.DividerItemDecoration;
-
-public class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
+public abstract class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
 
     private ESTGParkingApplication app;
 
@@ -46,8 +43,9 @@ public class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDa
 
         if (savedInstanceState == null) {
 
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getActionBar();
+            if(actionBar != null)
+                actionBar.setDisplayHomeAsUpEnabled(true);
 
             this.app = ESTGParkingApplication.getInstance();
 
@@ -67,6 +65,13 @@ public class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDa
     @Override
     public void onResume() {
         super.onResume();
+        if (this.app.getDatastoreManager().isShutDown()) {
+            try {
+                this.app.setDatastoreManager(DbxDatastoreManager.forAccount(this.app.getAccountManager().getLinkedAccount()));
+            } catch (DbxException.Unauthorized unauthorized) {
+                unauthorized.printStackTrace();
+            }
+        }
         this.app.initDatastore();
         this.app.getDatastore().addSyncStatusListener(this);
     }
@@ -80,7 +85,15 @@ public class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDa
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!this.app.getDatastoreManager().isShutDown())
+            this.app.getDatastoreManager().shutDown();
+    }
+
+    @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finish();
         //System.exit(0);
     }
@@ -107,20 +120,6 @@ public class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDa
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDatastoreStatusChange(DbxDatastore datastore) {
-        if (datastore.getSyncStatus().hasIncoming) {
-            try {
-                //Map<String, Set<DbxRecord>> changes = this.app.getDatastore().sync();
-                this.app.getDatastore().sync();
-                // Handle the updated data
-            } catch (DbxException e) {
-                // Handle exception
-                e.printStackTrace();
-            }
-        }
     }
 
     public ESTGParkingApplication getApp() {

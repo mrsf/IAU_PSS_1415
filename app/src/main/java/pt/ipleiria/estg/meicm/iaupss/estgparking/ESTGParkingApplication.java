@@ -2,7 +2,6 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.app.Application;
 
-import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
@@ -11,16 +10,14 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import com.facebook.Session;
-
 import java.util.HashMap;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IParkingLotRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IParkingSectionRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IUserRankingRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ParkingLotRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ParkingSectionRepository;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.UserRankingRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ILotRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ISectionRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IRankingRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.LotRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.SectionRepository;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.RankingRepository;
 
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
@@ -87,19 +84,19 @@ public class ESTGParkingApplication extends Application {
         return accountManager;
     }
 
-    public IParkingLotRepository getParkingLotRepository() {
+    public ILotRepository getLotRepository(boolean update) {
         this.initDatastore();
-        return new ParkingLotRepository(this.getApplicationContext(), this.datastore);
+        return new LotRepository(this.getApplicationContext(), this.datastore, update);
     }
 
-    public IParkingSectionRepository getParkingSectionRepository(String lotId) {
+    public ISectionRepository getSectionRepository(String lotId) {
         this.initDatastore();
-        return new ParkingSectionRepository(this.getApplicationContext(), this.datastore, lotId);
+        return new SectionRepository(this.getApplicationContext(), this.datastore, lotId);
     }
 
-    public IUserRankingRepository getUserRankingRepository() {
+    public IRankingRepository getRankingRepository() {
         this.initDatastore();
-        return new UserRankingRepository(this.getApplicationContext(), this.datastore);
+        return new RankingRepository(this.getApplicationContext(), this.datastore);
     }
 
     public DbxDatastoreManager getDatastoreManager() {

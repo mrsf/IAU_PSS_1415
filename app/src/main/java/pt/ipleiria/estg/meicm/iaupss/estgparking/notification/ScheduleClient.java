@@ -1,0 +1,71 @@
+package pt.ipleiria.estg.meicm.iaupss.estgparking.notification;
+
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+
+import java.util.Calendar;
+
+/**
+ * This is our service client, it is the 'middle-man' between the
+ * service and any activity that wants to connect to the service
+ *
+ * @source http://blog.blundell-apps.com/notification-for-a-user-chosen-time/
+ */
+public class ScheduleClient {
+
+    private ScheduleService scheduleService;
+    private Context context;
+    private boolean isBound;
+
+    public ScheduleClient(Context context) {
+        this.context = context;
+    }
+
+    /**
+     * Call this to connect your activity to your service
+     */
+    public void doBindService() {
+        // Establish a connection with our service
+        this.context.bindService(new Intent(this.context, ScheduleService.class), this.connection, Context.BIND_AUTO_CREATE);
+        this.isBound = true;
+    }
+
+    /**
+     * When you attempt to connect to the service, this connection will be called with the result.
+     * If we have successfully connected we instantiate our service object so that we can call methods on it.
+     */
+    private ServiceConnection connection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // This is called when the connection with our service has been established,
+            // giving us the service object we can use to interact with our service.
+            scheduleService = ((ScheduleService.ServiceBinder) service).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            scheduleService = null;
+        }
+    };
+
+    /**
+     * Tell our service to set an alarm for the given date
+     * @param c a date to set the notification for
+     */
+    public void setAlarmForNotification(Calendar c){
+        this.scheduleService.setAlarm(c);
+    }
+
+    /**
+     * When you have finished with the service call this method to stop it
+     * releasing your connection and resources
+     */
+    public void doUnbindService() {
+        if (this.isBound) {
+            // Detach our existing connection.
+            this.context.unbindService(this.connection);
+            this.isBound = false;
+        }
+    }
+}

@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
@@ -26,12 +27,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection.OnAnimateListener;;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection.OnAnimateListener;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Section;;
 
 public class MapActivity extends FragmentActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
+    private Section section;
 
     LatLng start = new LatLng(39.6359523,-8.8211917);
     LatLng end = new LatLng(39.6359523,-8.8211917);
@@ -50,6 +54,13 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
+
+        if (this.section == null) {
+            Intent i = getIntent();
+            this.section = i.getParcelableExtra("Section");
+            if (this.section != null)
+                end = new LatLng(this.section.getLatitude(), this.section.getLongitude());
+        }
 
         mMap = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 

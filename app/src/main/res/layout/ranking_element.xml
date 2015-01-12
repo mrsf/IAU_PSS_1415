@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:ignore="UselessParent">
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/ranking_user_photo_frame_layout">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ranking_user_photo_image_view"
+                android:layout_centerVertical="true"
+                android:background="#393a40"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                android:padding="1dp" />
+
+            <ProgressBar
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:id="@+id/ranking_user_photo_progress_bar"
+                android:layout_gravity="center"
+                android:indeterminateOnly="true"
+                android:padding="16dp"
+                android:outlineProvider="background" />
+
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Marcio Francisco"
+            android:id="@+id/ranking_user_name_text_view"
+            android:layout_alignTop="@+id/ranking_user_photo_frame_layout"
+            android:layout_toRightOf="@+id/ranking_user_photo_frame_layout"
+            android:layout_toEndOf="@+id/ranking_user_photo_frame_layout"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:singleLine="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="marciosilva15@hotmail.com"
+            android:id="@+id/ranking_user_email_text_view"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/ranking_user_name_text_view"
+            android:layout_alignStart="@+id/ranking_user_name_text_view"
+            android:singleLine="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="10 pontos"
+            android:id="@+id/ranking_user_score_text_view"
+            android:layout_alignBottom="@+id/ranking_user_photo_frame_layout"
+            android:layout_alignLeft="@+id/ranking_user_email_text_view"
+            android:layout_alignStart="@+id/ranking_user_email_text_view"
+            android:layout_toLeftOf="@+id/ranking_user_rating_bar"
+            android:layout_toStartOf="@+id/ranking_user_rating_bar"
+            android:singleLine="true" />
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ranking_user_rating_bar"
+            style="@android:style/Widget.DeviceDefault.Light.RatingBar.Small"
+            android:layout_alignBottom="@+id/ranking_user_photo_frame_layout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:rating="2.5" />
+
+    </RelativeLayout>
+
+</LinearLayout>
