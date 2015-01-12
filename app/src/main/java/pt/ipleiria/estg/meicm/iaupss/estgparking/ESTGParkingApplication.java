@@ -2,11 +2,18 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.app.Application;
 
+import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import com.facebook.Session;
+
+import java.util.HashMap;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IParkingLotRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IParkingSectionRepository;
@@ -19,6 +26,16 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.UserRankingRepositor
 public class ESTGParkingApplication extends Application {
 
     private static ESTGParkingApplication singleton;
+    public enum TrackerName {
+        APP_TRACKER, GLOBAL_TRACKER, ECOMMERCE_TRACKER,
+    }
+
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+
+    private static final String PROPERTY_ID = "UA-43643199-8";
+
+
+    private OAuthProvider oAuthProvider;
 
     private static final String APP_KEY = "va8yje80i09ga1t";
     private static final String APP_SECRET = "pak1a4lgec50mh9";
@@ -119,5 +136,20 @@ public class ESTGParkingApplication extends Application {
 
     public void setoAuthProvider(OAuthProvider oAuthProvider) {
         this.oAuthProvider = oAuthProvider;
+    }
+
+    synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics
+                    .newTracker(R.xml.app_tracker)
+                    : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics
+                    .newTracker(PROPERTY_ID) : analytics
+                    .newTracker(R.xml.global_tracker);
+            mTrackers.put(trackerId, t);
+
+        }
+        return mTrackers.get(trackerId);
     }
 }
