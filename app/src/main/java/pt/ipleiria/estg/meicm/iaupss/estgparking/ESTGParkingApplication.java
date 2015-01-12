@@ -35,8 +35,6 @@ public class ESTGParkingApplication extends Application {
     private static final String PROPERTY_ID = "UA-43643199-8";
 
 
-    private OAuthProvider oAuthProvider;
-
     private static final String APP_KEY = "va8yje80i09ga1t";
     private static final String APP_SECRET = "pak1a4lgec50mh9";
 
