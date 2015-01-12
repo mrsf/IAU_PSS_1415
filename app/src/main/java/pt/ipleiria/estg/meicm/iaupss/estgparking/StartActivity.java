@@ -59,7 +59,7 @@ public class StartActivity extends ActionBarActivity {
         // Notify the user what they just did
         // Toast.makeText(this, "Notification set for: " + day + "/" + (month + 1) + "/" + year, Toast.LENGTH_SHORT).show();
 
-        /*new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
 
@@ -73,7 +73,7 @@ public class StartActivity extends ActionBarActivity {
                 startActivity(intent);
                 finish();
             }
-        }).start();*/
+        }).start();
 
     }
 

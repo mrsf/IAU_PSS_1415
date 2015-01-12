@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.adapter;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.MapActivity;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Section;
 
@@ -78,6 +80,11 @@ public class SectionViewHolder extends RecyclerView.ViewHolder implements View.O
         intent.putExtra("ParkingLot", parkingLot);
 
         v.getContext().startActivity(intent);*/
-        Toast.makeText(v.getContext(), section.getName(), Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(v.getContext(), MapActivity.class);
+        intent.putExtra("Section", section);
+        v.getContext().startActivity(intent);
+
+        //Toast.makeText(v.getContext(), section.getName(), Toast.LENGTH_SHORT).show();
     }
 }
