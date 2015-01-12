@@ -12,6 +12,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.HashMap;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfo;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ILotRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ISectionRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IRankingRepository;
@@ -38,6 +39,8 @@ public class ESTGParkingApplication extends Application {
     private DbxAccountManager accountManager;
     private DbxDatastoreManager datastoreManager;
     private DbxDatastore datastore;
+
+    private IUserInfo userInfo;
 
     /**
      * Indicates the OAuth provider being used
@@ -97,6 +100,14 @@ public class ESTGParkingApplication extends Application {
     public IRankingRepository getRankingRepository() {
         this.initDatastore();
         return new RankingRepository(this.getApplicationContext(), this.datastore);
+    }
+
+    public IUserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(IUserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public DbxDatastoreManager getDatastoreManager() {

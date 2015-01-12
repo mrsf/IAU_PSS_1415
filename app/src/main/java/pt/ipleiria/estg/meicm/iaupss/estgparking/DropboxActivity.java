@@ -9,8 +9,12 @@ import android.view.MenuItem;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxTable;
+
+import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.RankingsTable;
 
 public class DropboxActivity extends ActionBarActivity {
 
@@ -31,6 +35,7 @@ public class DropboxActivity extends ActionBarActivity {
                     Intent i = new Intent(getBaseContext(), MainActivity.class);
                     //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
+                    CreateUserRanking();
                     finish();
                 } catch (DbxException.Unauthorized e) {
                     Log.e(TAG, "Account was unlinked remotely: ", e);
@@ -90,5 +95,17 @@ public class DropboxActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void CreateUserRanking() {
+        try {
+            // criar a base de dados
+            this.app.initDatastore();
+            // criar tabela e inserir registo
+            RankingsTable rankings = new RankingsTable(this.app.getDatastore());
+            rankings.createRanking(this.app.getUserInfo().getName(), this.app.getUserInfo().getEmail(), 5, this.app.getUserInfo().getPhotoURL());
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
     }
 }
