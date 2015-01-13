@@ -35,6 +35,11 @@ public class SectionRepository implements ISectionRepository {
         return dataStoreSections();
     }
 
+    @Override
+    public boolean occupySection(String lat, String lng) {
+        return false;
+    }
+
     private List<Section> dataStoreSections() {
 
         List<SectionsTable.SectionRecord> sectionRecords = new ArrayList<>();

@@ -53,6 +53,12 @@
             android:onClick="onClick"
             android:layout_gravity="center_horizontal" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Button"
+            android:id="@+id/profile_btn_park" />
+
     </LinearLayout>
 
 </RelativeLayout>
