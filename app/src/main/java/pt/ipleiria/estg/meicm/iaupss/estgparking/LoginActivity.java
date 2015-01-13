@@ -67,8 +67,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
-
-
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.FacebookUserInfo;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.GooglePlusUserInfo;
 
 
 public class LoginActivity extends FragmentActivity
@@ -201,14 +201,17 @@ public class LoginActivity extends FragmentActivity
                 // status update.
                 handlePendingAction();
 
-                //Session session = new Session(LoginActivity.this);
-                Session.OpenRequest openRequest = new Session.OpenRequest(LoginActivity.this).setPermissions("basic_info", "email");
-
-                //Session.setActiveSession(session);
-                //session.openForRead(openRequest);
-
                 if (LoginActivity.this.user != null) {
+                    // Set facebook session necessary permissions
+                    Session session = new Session(LoginActivity.this);
+                    Session.OpenRequest openRequest = new Session.OpenRequest(LoginActivity.this).setPermissions("basic_info", "email");
+                    Session.setActiveSession(session);
+                    session.openForRead(openRequest);
                     app.setoAuthProvider(OAuthProvider.FACEBOOK);   // Register the used OAuth provider
+
+                    // Set the user info provider
+                    app.setUserInfo(new FacebookUserInfo());
+
                     startMainActivity();
                 }
             }
@@ -569,6 +572,9 @@ public class LoginActivity extends FragmentActivity
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
         //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
+        // Set the user info provider
+        app.setUserInfo(new GooglePlusUserInfo());
 
         app.setoAuthProvider(OAuthProvider.GOGGLE_PLUS);
         startMainActivity();
