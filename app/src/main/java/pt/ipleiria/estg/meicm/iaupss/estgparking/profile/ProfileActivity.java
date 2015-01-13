@@ -102,7 +102,7 @@ public class ProfileActivity extends Activity {
 
 
 
-                app.getSectionRepository().occupySection();
+                app.getSectionRepository("").occupySection(0.0, 0.0);
             }
         });
     }

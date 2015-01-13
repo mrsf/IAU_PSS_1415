@@ -94,4 +94,15 @@ public class LotsTable {
         });
         return lotsList;
     }
+
+    public String getLotIdForLocation(double lat, double lng) throws DbxException {
+        String lotId = null;
+        for (DbxRecord record : table.query()) {
+            if (record.getDouble("latitudeX") < lat && record.getDouble("longitudeX") > lng && record.getDouble("latitudeY") > lat && record.getDouble("longitudeY") < lng) {
+                lotId = record.getId();
+                break;
+            }
+        }
+        return lotId;
+    }
 }

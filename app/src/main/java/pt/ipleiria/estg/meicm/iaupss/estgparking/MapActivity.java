@@ -12,10 +12,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -62,7 +66,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
                 end = new LatLng(this.section.getLatitudeX(), this.section.getLongitudeX());
         }
 
-        mMap = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15));
 
@@ -98,10 +102,10 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
             }
         });
 
-        textProgress = (TextView)findViewById(R.id.textProgress);
+        textProgress = (TextView) findViewById(R.id.textProgress);
         textProgress.setVisibility(View.GONE);
 
-        buttonRequest = (Button)findViewById(R.id.buttonRequest);
+        buttonRequest = (Button) findViewById(R.id.buttonRequest);
         buttonRequest.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 v.setVisibility(View.GONE);
@@ -110,7 +114,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
             }
         });
 
-        buttonAnimate = (Button)findViewById(R.id.buttonAnimate);
+        buttonAnimate = (Button) findViewById(R.id.buttonAnimate);
         buttonAnimate.setVisibility(View.GONE);
         buttonAnimate.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -122,7 +126,25 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
 
 
         mLocationClient = new LocationClient(this, this, this);
+    }
 
+    private void showGPSAlertMessage() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("É necessária a activação do GPS?")
+                .setCancelable(false)
+                .setPositiveButton("Activar", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog,  final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -216,11 +238,17 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
 
         super.onStart();
 
-        /*
-         * Connect the client. Don't re-start any requests here;
-         * instead, wait for onResume()
-         */
-        mLocationClient.connect();
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showGPSAlertMessage();
+        } else {
+            /*
+             * Connect the client. Don't re-start any requests here;
+             * instead, wait for onResume()
+             */
+            mLocationClient.connect();
+        }
 
     }
 
@@ -230,5 +258,17 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
     @Override
     public void onResume() {
         super.onResume();
+
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showGPSAlertMessage();
+        } else {
+            /*
+             * Connect the client. Don't re-start any requests here;
+             * instead, wait for onResume()
+             */
+            mLocationClient.connect();
+        }
     }
 }

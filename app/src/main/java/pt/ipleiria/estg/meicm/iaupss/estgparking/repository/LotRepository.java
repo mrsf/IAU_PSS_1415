@@ -46,6 +46,22 @@ public class LotRepository implements ILotRepository {
         //}
     }
 
+    @Override
+    public String findLot(double lat, double lng) {
+
+        String lotId = null;
+
+        try {
+            this.datastore.sync();
+            LotsTable lotsTable = new LotsTable(datastore);
+            lotId = lotsTable.getLotIdForLocation(lat, lng);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+
+        return lotId;
+    }
+
     private List<Lot> dataStoreLots() {
 
         List<LotRecord> lotRecords = new ArrayList<>();

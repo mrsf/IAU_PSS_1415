@@ -36,7 +36,7 @@ public class SectionRepository implements ISectionRepository {
     }
 
     @Override
-    public boolean occupySection(String lat, String lng) {
+    public boolean occupySection(double lat, double lng) {
         return false;
     }
 
