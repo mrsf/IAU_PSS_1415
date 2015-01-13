@@ -45,7 +45,7 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ESTGParkingApplication app = ESTGParkingApplication.getInstance();
+        final ESTGParkingApplication app = ESTGParkingApplication.getInstance();
 
         GoogleApiClient googleApiClient = app.getGoogleApiClient();
 
@@ -93,6 +93,18 @@ public class ProfileActivity extends Activity {
         if (app.getoAuthProvider() == OAuthProvider.FACEBOOK) {
             fetchFacebookUserInfo();
         }
+
+
+
+        Button parkButton = (Button) findViewById(R.id.profile_btn_park);
+        parkingSpotButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+
+
+
+                app.getSectionRepository().occupySection();
+            }
+        });
     }
 
     @Override

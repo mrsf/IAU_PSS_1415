@@ -16,5 +16,5 @@ public interface ISectionRepository {
      * @return true if latitude and longitude are inside a known section and a parking
      * spot was marked as occupied, false otherwise.
      */
-    boolean occupySection(String lat, String lng);
+    boolean occupySection(double lat, double lng);
 }
