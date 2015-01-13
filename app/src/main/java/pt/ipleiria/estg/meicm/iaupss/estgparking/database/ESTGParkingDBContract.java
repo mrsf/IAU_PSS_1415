@@ -18,8 +18,10 @@ abstract class ESTGParkingDBContract {
         public static final String ID = "id";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
-        public static final String LATITUDE = "latitude";
-        public static final String LONGITUDE = "longitude";
+        public static final String LATITUDE_X = "latitude_x";
+        public static final String LONGITUDE_X = "longitude_x";
+        public static final String LATITUDE_Y = "latitude_y";
+        public static final String LONGITUDE_Y = "longitude_y";
         public static final String IMAGE_PATH = "image_path";
     }
 
@@ -28,8 +30,10 @@ abstract class ESTGParkingDBContract {
         public static final String ID = "id";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
-        public static final String LATITUDE = "latitude";
-        public static final String LONGITUDE = "longitude";
+        public static final String LATITUDE_X = "latitude_x";
+        public static final String LONGITUDE_X = "longitude_x";
+        public static final String LATITUDE_Y = "latitude_y";
+        public static final String LONGITUDE_Y = "longitude_y";
         public static final String CAPACITY = "capacity";
         public static final String OCCUPATION = "occupation";
         public static final String LOT_ID = "lot_id";

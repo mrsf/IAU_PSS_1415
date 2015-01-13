@@ -25,10 +25,16 @@ public class SectionsData extends ESTGParkingData {
                     + ESTGParkingDBContract.SectionBase.DESCRIPTION
                     + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.SectionBase.LATITUDE
+                    + ESTGParkingDBContract.SectionBase.LATITUDE_X
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.SectionBase.LONGITUDE
+                    + ESTGParkingDBContract.SectionBase.LONGITUDE_X
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LATITUDE_Y
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LONGITUDE_Y
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
                     + ESTGParkingDBContract.SectionBase.CAPACITY
@@ -69,8 +75,8 @@ public class SectionsData extends ESTGParkingData {
             if (cursor.moveToFirst())
                 do {
                     sections.add(new Section(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                            cursor.getDouble(3), cursor.getDouble(4), cursor.getInt(5), cursor.getInt(6),
-                            cursor.getString(7)));
+                            cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6),
+                            cursor.getInt(7), cursor.getInt(8), cursor.getString(9)));
                 } while (cursor.moveToNext());
 
             cursor.close();
@@ -102,8 +108,10 @@ public class SectionsData extends ESTGParkingData {
         values.put(ESTGParkingDBContract.SectionBase.ID, section.getId());
         values.put(ESTGParkingDBContract.SectionBase.NAME, section.getName());
         values.put(ESTGParkingDBContract.SectionBase.DESCRIPTION, section.getDescription());
-        values.put(ESTGParkingDBContract.SectionBase.LATITUDE, section.getLatitude());
-        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE, section.getLongitude());
+        values.put(ESTGParkingDBContract.SectionBase.LATITUDE_X, section.getLatitudeX());
+        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE_X, section.getLongitudeX());
+        values.put(ESTGParkingDBContract.SectionBase.LATITUDE_Y, section.getLatitudeY());
+        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE_Y, section.getLongitudeY());
         values.put(ESTGParkingDBContract.SectionBase.CAPACITY, section.getCapacity());
         values.put(ESTGParkingDBContract.SectionBase.OCCUPATION, section.getOccupation());
         values.put(ESTGParkingDBContract.SectionBase.LOT_ID, section.getLotId());

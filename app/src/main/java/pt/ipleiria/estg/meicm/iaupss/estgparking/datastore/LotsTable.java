@@ -36,12 +36,20 @@ public class LotsTable {
             return record.getString("description");
         }
 
-        public Double getLatitude() {
-            return record.getDouble("latitude");
+        public Double getLatitudeX() {
+            return record.getDouble("latitude_x");
         }
 
-        public Double getLongitude() {
-            return record.getDouble("longitude");
+        public Double getLongitudeX() {
+            return record.getDouble("longitude_x");
+        }
+
+        public Double getLatitudeY() {
+            return record.getDouble("latitude_y");
+        }
+
+        public Double getLongitudeY() {
+            return record.getDouble("longitude_y");
         }
 
         public String getImagePath() {
@@ -60,12 +68,14 @@ public class LotsTable {
         this.table = datastore.getTable("lot");
     }
 
-    public void createLot(String name, String description, double latitude, double longitude, String imagePath) throws DbxException {
+    public void createLot(String name, String description, double latitudeX, double longitudeX, double latitudeY, double longitudeY, String imagePath) throws DbxException {
         DbxFields lotFields = new DbxFields()
                 .set("name", name)
                 .set("description", description)
-                .set("latitude", latitude)
-                .set("longitude", longitude)
+                .set("latitude_x", latitudeX)
+                .set("longitude_x", longitudeX)
+                .set("latitude_y", latitudeY)
+                .set("longitude_y", longitudeY)
                 .set("image_path", imagePath);
         table.insert(lotFields);
         datastore.sync();

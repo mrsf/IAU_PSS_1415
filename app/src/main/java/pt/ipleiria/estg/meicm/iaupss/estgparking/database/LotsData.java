@@ -25,10 +25,16 @@ public class LotsData extends ESTGParkingData {
                     + ESTGParkingDBContract.LotBase.DESCRIPTION
                     + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.LotBase.LATITUDE
+                    + ESTGParkingDBContract.LotBase.LATITUDE_X
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.LotBase.LONGITUDE
+                    + ESTGParkingDBContract.LotBase.LONGITUDE_X
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.LotBase.LATITUDE_Y
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.LotBase.LONGITUDE_Y
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
                     + ESTGParkingDBContract.LotBase.IMAGE_PATH
@@ -58,8 +64,10 @@ public class LotsData extends ESTGParkingData {
                 new String[]{ESTGParkingDBContract.LotBase.ID,
                         ESTGParkingDBContract.LotBase.NAME,
                         ESTGParkingDBContract.LotBase.DESCRIPTION,
-                        ESTGParkingDBContract.LotBase.LATITUDE,
-                        ESTGParkingDBContract.LotBase.LONGITUDE,
+                        ESTGParkingDBContract.LotBase.LATITUDE_X,
+                        ESTGParkingDBContract.LotBase.LONGITUDE_X,
+                        ESTGParkingDBContract.LotBase.LATITUDE_Y,
+                        ESTGParkingDBContract.LotBase.LONGITUDE_Y,
                         ESTGParkingDBContract.LotBase.IMAGE_PATH}, null, null,
                 null, null, ESTGParkingDBContract.LotBase.NAME);
 
@@ -67,7 +75,8 @@ public class LotsData extends ESTGParkingData {
             if (cursor.moveToFirst())
                 do {
                     lots.add(new Lot(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                            cursor.getDouble(3), cursor.getDouble(4), cursor.getString(5)));
+                            cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5),
+                            cursor.getDouble(6), cursor.getString(7)));
                 } while (cursor.moveToNext());
 
             cursor.close();
@@ -99,8 +108,10 @@ public class LotsData extends ESTGParkingData {
         values.put(ESTGParkingDBContract.LotBase.ID, lot.getId());
         values.put(ESTGParkingDBContract.LotBase.NAME, lot.getName());
         values.put(ESTGParkingDBContract.LotBase.DESCRIPTION, lot.getDescription());
-        values.put(ESTGParkingDBContract.LotBase.LATITUDE, lot.getLatitude());
-        values.put(ESTGParkingDBContract.LotBase.LONGITUDE, lot.getLongitude());
+        values.put(ESTGParkingDBContract.LotBase.LATITUDE_X, lot.getLatitudeX());
+        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_X, lot.getLongitudeX());
+        values.put(ESTGParkingDBContract.LotBase.LATITUDE_Y, lot.getLatitudeY());
+        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_Y, lot.getLongitudeY());
         values.put(ESTGParkingDBContract.LotBase.IMAGE_PATH, lot.getImagePath());
         return database().insert(ESTGParkingDBContract.LotBase.TABLE_NAME,
                 null, values);

@@ -59,7 +59,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
             Intent i = getIntent();
             this.section = i.getParcelableExtra("Section");
             if (this.section != null)
-                end = new LatLng(this.section.getLatitude(), this.section.getLongitude());
+                end = new LatLng(this.section.getLatitudeX(), this.section.getLongitudeX());
         }
 
         mMap = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();

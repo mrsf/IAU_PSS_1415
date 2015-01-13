@@ -129,8 +129,8 @@ public class LotDetailsActivity extends ActionBarActivity {
             this.nameText.setText(this.nameText.getText() + this.lot.getName());
             this.descriptionText.setText(this.descriptionText.getText() + this.lot.getDescription());
             this.coordinatesText.setText(this.coordinatesText.getText() +
-                                            String.valueOf(this.lot.getLatitude())
-                                            + " ; " + String.valueOf(this.lot.getLongitude()));
+                                            String.valueOf(this.lot.getLatitudeX())
+                                            + " ; " + String.valueOf(this.lot.getLongitudeX()));
 
             return rootView;
         }

@@ -9,8 +9,10 @@ public class Section implements Parcelable {
     private String id;
     private String name;
     private String description;
-    private double latitude;
-    private double longitude;
+    private double latitudeX;
+    private double longitudeX;
+    private double latitudeY;
+    private double longitudeY;
     private int capacity;
     private int occupation;
     private String lotId;
@@ -22,13 +24,15 @@ public class Section implements Parcelable {
         this.readFromParcel(in);
     }
 
-    public Section(String id, String name, String description, double latitude, double longitude, int capacity, int occupation, String lotId) {
+    public Section(String id, String name, String description, double latitudeX, double longitudeX, double latitudeY, double longitudeY, int capacity, int occupation, String lotId) {
 
         this.id = id;
         this.name = name;
         this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitudeX = latitudeX;
+        this.longitudeX = longitudeX;
+        this.latitudeY = latitudeY;
+        this.longitudeY = longitudeY;
         this.capacity = capacity;
         this.occupation = occupation;
         this.lotId = lotId;
@@ -58,20 +62,36 @@ public class Section implements Parcelable {
         this.description = description;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public double getLatitudeX() {
+        return latitudeX;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setLatitudeX(double latitudeX) {
+        this.latitudeX = latitudeX;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public double getLongitudeX() {
+        return longitudeX;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setLongitudeX(double longitudeX) {
+        this.longitudeX = longitudeX;
+    }
+
+    public double getLatitudeY() {
+        return latitudeY;
+    }
+
+    public void setLatitudeY(double latitudeY) {
+        this.latitudeY = latitudeY;
+    }
+
+    public double getLongitudeY() {
+        return longitudeY;
+    }
+
+    public void setLongitudeY(double longitudeY) {
+        this.longitudeY = longitudeY;
     }
 
     public int getCapacity() {
@@ -123,8 +143,10 @@ public class Section implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.description);
-        dest.writeDouble(this.latitude);
-        dest.writeDouble(this.longitude);
+        dest.writeDouble(this.latitudeX);
+        dest.writeDouble(this.longitudeX);
+        dest.writeDouble(this.latitudeY);
+        dest.writeDouble(this.longitudeY);
         dest.writeInt(this.capacity);
         dest.writeInt(this.occupation);
         dest.writeString(this.lotId);
@@ -135,8 +157,10 @@ public class Section implements Parcelable {
         this.id = in.readString();
         this.name = in.readString();
         this.description = in.readString();
-        this.latitude = in.readDouble();
-        this.longitude = in.readDouble();
+        this.latitudeX = in.readDouble();
+        this.longitudeX = in.readDouble();
+        this.latitudeY = in.readDouble();
+        this.longitudeY = in.readDouble();
         this.capacity = in.readInt();
         this.occupation = in.readInt();
         this.lotId = in.readString();

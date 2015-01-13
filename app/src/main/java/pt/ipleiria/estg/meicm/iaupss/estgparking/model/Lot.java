@@ -8,8 +8,10 @@ public class Lot implements Parcelable {
     private String id;
     private String name;
     private String description;
-    private double latitude;
-    private double longitude;
+    private double latitudeX;
+    private double longitudeX;
+    private double latitudeY;
+    private double longitudeY;
     private String imagePath;
 
     public Lot() {}
@@ -19,13 +21,15 @@ public class Lot implements Parcelable {
         this.readFromParcel(in);
     }
 
-    public Lot(String id, String name, String description, double latitude, double longitude, String imagePath) {
+    public Lot(String id, String name, String description, double latitudeX, double longitudeX, double latitudeY, double longitudeY, String imagePath) {
 
         this.id = id;
         this.name = name;
         this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.latitudeX = latitudeX;
+        this.longitudeX = longitudeX;
+        this.latitudeY = latitudeY;
+        this.longitudeY = longitudeY;
         this.imagePath = imagePath;
     }
 
@@ -53,20 +57,36 @@ public class Lot implements Parcelable {
         this.description = description;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public double getLatitudeX() {
+        return latitudeX;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setLatitudeX(double latitudeX) {
+        this.latitudeX = latitudeX;
     }
 
-    public double getLongitude() {
-        return longitude;
+    public double getLongitudeX() {
+        return longitudeX;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setLongitudeX(double longitudeX) {
+        this.longitudeX = longitudeX;
+    }
+
+    public double getLatitudeY() {
+        return latitudeY;
+    }
+
+    public void setLatitudeY(double latitudeY) {
+        this.latitudeY = latitudeY;
+    }
+
+    public double getLongitudeY() {
+        return longitudeY;
+    }
+
+    public void setLongitudeY(double longitudeY) {
+        this.longitudeY = longitudeY;
     }
 
     public String getImagePath() {
@@ -89,8 +109,10 @@ public class Lot implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.name);
         dest.writeString(this.description);
-        dest.writeDouble(this.latitude);
-        dest.writeDouble(this.longitude);
+        dest.writeDouble(this.latitudeX);
+        dest.writeDouble(this.longitudeX);
+        dest.writeDouble(this.latitudeY);
+        dest.writeDouble(this.longitudeY);
         dest.writeString(this.imagePath);
     }
 
@@ -99,8 +121,10 @@ public class Lot implements Parcelable {
         this.id = in.readString();
         this.name = in.readString();
         this.description = in.readString();
-        this.latitude = in.readDouble();
-        this.longitude = in.readDouble();
+        this.latitudeX = in.readDouble();
+        this.longitudeX = in.readDouble();
+        this.latitudeY = in.readDouble();
+        this.longitudeY = in.readDouble();
         this.imagePath = in.readString();
     }
 

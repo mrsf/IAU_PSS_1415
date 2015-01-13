@@ -67,14 +67,17 @@ public class LotRepository implements ILotRepository {
             lot.setId(lotRecord.getId());
             lot.setName(lotRecord.getName());
             lot.setDescription(lotRecord.getDescription());
-            lot.setLatitude(lotRecord.getLatitude());
-            lot.setLongitude(lotRecord.getLongitude());
+            lot.setLatitudeX(lotRecord.getLatitudeX());
+            lot.setLongitudeX(lotRecord.getLongitudeX());
+            lot.setLatitudeY(lotRecord.getLatitudeY());
+            lot.setLongitudeY(lotRecord.getLongitudeY());
             lot.setImagePath(lotRecord.getImagePath());
 
             lots.add(lot);
 
             Log.d(TAG, "Add: " + lot.getId() + " | " + lot.getName() + " | " + lot.getDescription()
-                    + " | " + lot.getLatitude() + " | " + lot.getLongitude() + " | " + lot.getImagePath());
+                    + " | " + lot.getLatitudeX() + " | " + lot.getLongitudeX() + " | " + lot.getLatitudeY()
+                    + " | " + lot.getLongitudeY() + " | " + lot.getImagePath());
         }
 
         /*this.lotsData.open();
