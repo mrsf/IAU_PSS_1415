@@ -1,6 +1,8 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
@@ -54,6 +56,8 @@ public class ESTGParkingApplication extends Application {
 
     private String currentUserActivity;
 
+    private SharedPreferences sharedPreferences;
+
     public static ESTGParkingApplication getInstance() {
         return singleton;
     }
@@ -65,6 +69,8 @@ public class ESTGParkingApplication extends Application {
         singleton = this;
 
         this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
+
+        sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
     }
 
     public GoogleApiClient getGoogleApiClient() {
@@ -157,5 +163,13 @@ public class ESTGParkingApplication extends Application {
 
         }
         return mTrackers.get(trackerId);
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
+
+    public SharedPreferences.Editor getSharedPreferencesEditor() {
+        return sharedPreferences.edit();
     }
 }

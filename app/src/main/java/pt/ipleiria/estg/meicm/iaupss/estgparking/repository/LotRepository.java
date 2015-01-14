@@ -46,6 +46,11 @@ public class LotRepository implements ILotRepository {
         //}
     }
 
+    @Override
+    public String findLot(double lat, double lng) {
+        return null;
+    }
+
     private List<Lot> dataStoreLots() {
 
         List<LotRecord> lotRecords = new ArrayList<>();

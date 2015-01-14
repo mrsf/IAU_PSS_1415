@@ -11,11 +11,11 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
  */
 public class GooglePlusUserInfo implements IUserInfo {
 
-    private String name;
+    private String name = "";
 
-    private String email;
+    private String email = "";
 
-    private String photoURL;
+    private String photoURL = "";
 
     public GooglePlusUserInfo() {
         ESTGParkingApplication app = ESTGParkingApplication.getInstance();
