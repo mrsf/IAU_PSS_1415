@@ -45,6 +45,13 @@
             android:text="Large Text"
             android:id="@+id/txt_main_current_activity" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/profile_txt_status" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

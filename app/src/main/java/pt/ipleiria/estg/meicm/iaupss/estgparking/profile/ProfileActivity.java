@@ -1,8 +1,10 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.profile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -48,6 +50,8 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
         super.onCreate(savedInstanceState);
 
         app = ESTGParkingApplication.getInstance();
+        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        app.setSharedPreferences(sharedPreferences);
 
         GoogleApiClient googleApiClient = app.getGoogleApiClient();
 
@@ -69,7 +73,10 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
             }
         });
 
-        Button parkButton = (Button) findViewById(R.id.profile_btn_park);
+
+        final TextView txtStatus = (TextView) findViewById(R.id.profile_txt_status);
+
+        final Button parkButton = (Button) findViewById(R.id.profile_btn_park);
         parkButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
@@ -84,11 +91,33 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
                     app.getSectionRepository(lotId).occupySection(lat, lng);
                 }
 
-                app.getSharedPreferencesEditor().putFloat(getString(R.string.user_parking_lat), (float)lat);
-                app.getSharedPreferencesEditor().putFloat(getString(R.string.user_parking_lng), (float)lng);
+                if (app.isParked()) {
+                    app.setParked(false);
+                    txtStatus.setText("Nao estacionado");
+                    parkButton.setText("Estacionar");
+                } else {
+                    app.setParked(true);
+                    SharedPreferences.Editor editor = app.getSharedPreferences().edit();
+                    editor.putBoolean("parked", true);
+                    editor.putFloat(getString(R.string.user_parking_lat), (float)lat);
+                    editor.putFloat(getString(R.string.user_parking_lng), (float)lng);
+                    editor.commit();
+                    txtStatus.setText("Estacionado");
+                    parkButton.setText("Desestacionar");
+                }
             }
         });
 
+
+        if (app.isParked()) {
+            parkButton.setText("Libertar estacionamento");
+            txtStatus.setText("Nao estacionado");
+        } else {
+            parkButton.setText("Estacionar");
+            txtStatus.setText("Estacionado");
+        }
+
+        txtStatus.setText("bla");
 
         locationClient = new LocationClient(this, this, this);
     }

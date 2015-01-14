@@ -1,12 +1,18 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -18,21 +24,29 @@ import org.w3c.dom.Document;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 
-public class ParkingSpotActivity extends FragmentActivity {
+public class ParkingSpotActivity extends FragmentActivity  implements GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-    LatLng start    = new LatLng(39.6359523,-8.8211917);
-    LatLng end      = new LatLng(39.6369623,-8.8211917);
-
     GoogleDirection gd;
     Document mDoc;
+
+    private ESTGParkingApplication app;
+
+    private LatLng parkingLocation;
+    private LatLng userLocation;
+
+    private LocationClient locationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parking_spot);
+        app = ESTGParkingApplication.getInstance();
+        parkingLocation = app.getParkingLocation();
         setUpMapIfNeeded();
+        locationClient = new LocationClient(this, this, this);
     }
 
     @Override
@@ -52,7 +66,7 @@ public class ParkingSpotActivity extends FragmentActivity {
                 return true;
             case R.id.action_parking_spot_show_path:
                 gd.setLogging(true);
-                gd.request(start, end, GoogleDirection.MODE_WALKING);
+                gd.request(userLocation, parkingLocation, GoogleDirection.MODE_WALKING);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -100,19 +114,19 @@ public class ParkingSpotActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(start).title("Veículo"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15));
+        mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
 
         gd = new GoogleDirection(this);
         gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
             public void onResponse(String status, Document doc, GoogleDirection gd) {
                 mDoc = doc;
                 mMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
-                mMap.addMarker(new MarkerOptions().position(start)
+                mMap.addMarker(new MarkerOptions().position(parkingLocation)
                         .icon(BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_GREEN)));
 
-                mMap.addMarker(new MarkerOptions().position(end)
+                mMap.addMarker(new MarkerOptions().position(userLocation)
                         .icon(BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_GREEN)));
 
@@ -121,5 +135,27 @@ public class ParkingSpotActivity extends FragmentActivity {
         });
 
         gd.setLogging(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        locationClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Location location = locationClient.getLastLocation();
+        userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }

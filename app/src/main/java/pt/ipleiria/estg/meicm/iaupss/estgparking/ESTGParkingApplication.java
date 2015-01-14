@@ -11,6 +11,7 @@ import com.dropbox.sync.android.DbxException;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 
@@ -44,6 +45,8 @@ public class ESTGParkingApplication extends Application {
 
     private IUserInfo userInfo;
 
+    private Boolean isParked;
+
     /**
      * Indicates the OAuth provider being used
      */
@@ -70,7 +73,11 @@ public class ESTGParkingApplication extends Application {
 
         this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
 
-        sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        sharedPreferences = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+    }
+
+    public void setSharedPreferences(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
     }
 
     public GoogleApiClient getGoogleApiClient() {
@@ -169,7 +176,25 @@ public class ESTGParkingApplication extends Application {
         return sharedPreferences;
     }
 
-    public SharedPreferences.Editor getSharedPreferencesEditor() {
-        return sharedPreferences.edit();
+    public Boolean isParked() {
+
+        if (isParked == null) {
+            isParked = getSharedPreferences().getBoolean("parked", false);
+        }
+
+        return isParked;
+    }
+
+    public void setParked(Boolean isParked) {
+        this.isParked = isParked;
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean("parked", isParked);
+        editor.commit();
+    }
+
+    public LatLng getParkingLocation() {
+        double latitude = (double)getSharedPreferences().getFloat(getString(R.string.user_parking_lat), (float)0);
+        double longitude = (double)getSharedPreferences().getFloat(getString(R.string.user_parking_lng), (float)0);
+        return new LatLng(latitude, longitude);
     }
 }
