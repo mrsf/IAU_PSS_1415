@@ -1,15 +1,14 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.profile;
 
-import android.app.Activity;
-import android.content.Context;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,8 +19,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.InputStream;
 
@@ -29,7 +28,7 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSpotActivity;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 
-public class ProfileActivity extends Activity implements GooglePlayServicesClient.ConnectionCallbacks,
+public class ProfileActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -48,19 +47,17 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
+
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
         app = ESTGParkingApplication.getInstance();
-        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        app.setSharedPreferences(sharedPreferences);
-
-        GoogleApiClient googleApiClient = app.getGoogleApiClient();
-
-        setContentView(R.layout.activity_profile);
 
         imgProfilePic = (ImageView) findViewById(R.id.imagePhoto);
         txtUsername = (TextView) findViewById(R.id.textUsername);
         txtEmail = (TextView) findViewById(R.id.textEmail);
-        TextView txtUserActivity = (TextView) findViewById(R.id.txt_main_current_activity);
 
         fetchUserInfo();
 
@@ -80,34 +77,28 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
         parkButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
-                Location location = locationClient.getLastLocation();
+            Location location = locationClient.getLastLocation();
 
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
 
-                String lotId = app.getLotRepository(true).findLot(lat, lng);
+            String lotId = app.getLotRepository(true).findLot(lat, lng);
 
-                if (lotId != null) {
-                    app.getSectionRepository(lotId).occupySection(lat, lng);
-                }
+            if (lotId != null) {
+                app.getSectionRepository(lotId).occupySection(lat, lng);
+            }
 
-                if (app.isParked()) {
-                    app.setParked(false);
-                    txtStatus.setText("Nao estacionado");
-                    parkButton.setText("Estacionar");
-                } else {
-                    app.setParked(true);
-                    SharedPreferences.Editor editor = app.getSharedPreferences().edit();
-                    editor.putBoolean("parked", true);
-                    editor.putFloat(getString(R.string.user_parking_lat), (float)lat);
-                    editor.putFloat(getString(R.string.user_parking_lng), (float)lng);
-                    editor.commit();
-                    txtStatus.setText("Estacionado");
-                    parkButton.setText("Desestacionar");
-                }
+            if (app.isParked()) {
+                app.depart();
+                txtStatus.setText(app.getCurrentUserActivity());
+                parkButton.setText("Estacionar");
+            } else {
+                app.park(new LatLng(lat, lng));
+                txtStatus.setText(app.getCurrentUserActivity());
+                parkButton.setText("Desestacionar");
+            }
             }
         });
-
 
         if (app.isParked()) {
             parkButton.setText("Libertar estacionamento");
@@ -116,8 +107,6 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
             parkButton.setText("Estacionar");
             txtStatus.setText("Estacionado");
         }
-
-        txtStatus.setText("bla");
 
         locationClient = new LocationClient(this, this, this);
     }
@@ -131,6 +120,13 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            //super.getApp().getDatastoreManager().shutDown();
+            finish();
+            return true;
+        }
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -230,13 +226,23 @@ public class ProfileActivity extends Activity implements GooglePlayServicesClien
     }
 
     private void fetchUserInfo() {
-        String name = app.getUserInfo().getName();
-        String email = app.getUserInfo().getEmail();
-        String photoUrl = app.getUserInfo().getPhotoURL();
+
+        String name = null;
+        String email = null;
+        String photoUrl = null;
+        IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
+
+        if (userInfoProvider != null) {
+            name = app.getUserInfoProvider().getName();
+            email = app.getUserInfoProvider().getEmail();
+            photoUrl = app.getUserInfoProvider().getPhotoURL();
+        }
 
         txtUsername.setText(name);
         txtEmail.setText(email);
 
-        new LoadProfileImage(imgProfilePic).execute(photoUrl);
+        if (photoUrl != null) {
+            new LoadProfileImage(imgProfilePic).execute(photoUrl);
+        }
     }
 }

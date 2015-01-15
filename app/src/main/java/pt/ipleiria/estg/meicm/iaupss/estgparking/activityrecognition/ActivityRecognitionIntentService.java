@@ -1,8 +1,13 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition;
 
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.model.LatLng;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -11,6 +16,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Location;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -27,18 +34,27 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
  * Service that receives ActivityRecognition updates. It receives updates
  * in the background, even if the main Activity is not visible.
  */
-public class ActivityRecognitionIntentService extends IntentService {
+public class ActivityRecognitionIntentService extends IntentService implements LocationListener, GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
 
     // Store the app's shared preferences repository
     private SharedPreferences mPrefs;
 
     private ESTGParkingApplication app;
 
+    private LocationClient locationClient;
+
     public ActivityRecognitionIntentService() {
         // Set the label for the service's background thread
         super("ActivityRecognitionIntentService");
 
         app = ESTGParkingApplication.getInstance();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        locationClient = new LocationClient(this, this, this);
     }
 
     /**
@@ -69,7 +85,9 @@ public class ActivityRecognitionIntentService extends IntentService {
             int activityType = mostProbableActivity.getType();
             app.setCurrentUserActivity(getNameFromType(activityType));
 
-            //Log.i("activityType", "activityType " + getNameFromType(activityType));
+            Log.i("activityType", "activityType " + getNameFromType(activityType));
+
+            activityChanged(activityType);
 
             // Check to see if the repository contains a previous activity
             if (!mPrefs.contains(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE)) {
@@ -101,14 +119,14 @@ public class ActivityRecognitionIntentService extends IntentService {
     /**
      * Post a notification to the user. The notification prompts the user to click it to open the device's GPS settings
      */
-    private void sendNotification() {
+    private void sendNotification(String msg) {
 
         // Create a notification builder that's compatible with platforms >= version 4
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
 
         // Set the title, text, and icon
         builder.setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.turn_on_GPS))
+                .setContentText(msg)
                 .setSmallIcon(R.drawable.ic_notification)
 
                         // Get the Intent that starts the Location settings panel
@@ -148,8 +166,34 @@ public class ActivityRecognitionIntentService extends IntentService {
         // Get the previous type, otherwise return the "unknown" type
         int previousType = mPrefs.getInt(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE, DetectedActivity.UNKNOWN);
 
+        if (previousType == DetectedActivity.IN_VEHICLE && currentType == DetectedActivity.ON_FOOT) {
+            sendNotification("transition from IN_VEHICLE to ON_FOOT");
+            Editor editor = mPrefs.edit();
+            editor.putInt(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
+            editor.commit();
+            Location location = locationClient.getLastLocation();
+            app.park(new LatLng(location.getLatitude(), location.getLongitude()));
+            return true;
+        }
+
+        if (previousType == DetectedActivity.ON_FOOT && currentType == DetectedActivity.IN_VEHICLE) {
+            sendNotification("transition from ON_FOOT to IN_VEHICLE");
+            Editor editor = mPrefs.edit();
+            editor.putInt(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
+            editor.commit();
+            Location location = locationClient.getLastLocation();
+            app.park(new LatLng(location.getLatitude(), location.getLongitude()));
+            return true;
+        }
+
+        //locationClient = new LocationClient(this, this, this);
+        locationClient.connect();
+
         // If the previous type isn't the same as the current type, the activity has changed
         if (previousType != currentType) {
+
+            sendNotification("transition from " + previousType + " to " + currentType);
+
             return true;
 
             // Otherwise, it hasn't.
@@ -218,5 +262,32 @@ public class ActivityRecognitionIntentService extends IntentService {
                 return "tilting";
         }
         return "unknown";
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Location location = locationClient.getLastLocation();
+        app.park(new LatLng(location.getLatitude(), location.getLongitude()));
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 }

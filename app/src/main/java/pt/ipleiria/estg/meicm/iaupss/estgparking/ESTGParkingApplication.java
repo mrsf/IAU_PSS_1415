@@ -3,6 +3,7 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
@@ -15,7 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfo;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfoProvider;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ILotRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ISectionRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.IRankingRepository;
@@ -26,21 +27,27 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.RankingRepository;
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
 
+    /**
+     * Google Analytics property Id
+     */
+    private static final String PROPERTY_ID = "UA-43643199-8";
+
+    /**
+     * Dropbox constants
+     */
+    private static final String APP_KEY = "va8yje80i09ga1t";
+    private static final String APP_SECRET = "pak1a4lgec50mh9";
+
     public enum TrackerName {
         APP_TRACKER, GLOBAL_TRACKER, ECOMMERCE_TRACKER,
     }
 
     private static ESTGParkingApplication singleton;
 
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
-
     /**
-     * Google Analytics property Id
+     * Google Analytics trackers list
      */
-    private static final String PROPERTY_ID = "UA-43643199-8";
-
-    private static final String APP_KEY = "va8yje80i09ga1t";
-    private static final String APP_SECRET = "pak1a4lgec50mh9";
+    private HashMap<TrackerName, Tracker> trackers = new HashMap<>();
 
     /**
      * Dropbox API stuff
@@ -52,7 +59,7 @@ public class ESTGParkingApplication extends Application {
     /**
      * User info provider service
      */
-    private IUserInfo userInfo;
+    private IUserInfoProvider userInfoProvider;
 
     /**
      * Indicates whether the car is parked or not
@@ -136,7 +143,7 @@ public class ESTGParkingApplication extends Application {
      * @return
      */
     synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!mTrackers.containsKey(trackerId)) {
+        if (!trackers.containsKey(trackerId)) {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics
@@ -144,10 +151,10 @@ public class ESTGParkingApplication extends Application {
                     : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics
                     .newTracker(PROPERTY_ID) : analytics
                     .newTracker(R.xml.global_tracker);
-            mTrackers.put(trackerId, t);
+            trackers.put(trackerId, t);
 
         }
-        return mTrackers.get(trackerId);
+        return trackers.get(trackerId);
     }
 
     public SharedPreferences getSharedPreferences() {
@@ -163,7 +170,7 @@ public class ESTGParkingApplication extends Application {
         return isParked;
     }
 
-    public void setParked(Boolean isParked) {
+    private void setParked(Boolean isParked) {
         this.isParked = isParked;
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean("parked", isParked);
@@ -176,6 +183,42 @@ public class ESTGParkingApplication extends Application {
         return new LatLng(latitude, longitude);
     }
 
+    public void park(LatLng location) {
+
+        setParked(true);
+
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean("parked", true);
+        editor.putFloat(getString(R.string.user_parking_lat), (float)location.latitude);
+        editor.putFloat(getString(R.string.user_parking_lng), (float)location.longitude);
+        editor.commit();
+
+        String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
+
+        if (lotId != null) {
+            getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
+        }
+
+        Log.i(this.getClass().getSimpleName(), "Parked in (" + location.latitude + ", " + location.longitude);
+    }
+
+    public void depart() {
+
+        setParked(false);
+
+        LatLng location = getParkingLocation();
+
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean("parked", false);
+        editor.commit();
+
+        String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
+
+        if (lotId != null) {
+            getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
+        }
+    }
+
     // <editor-fold desc="Getters and setters">
 
     public GoogleApiClient getGoogleApiClient() {
@@ -186,12 +229,12 @@ public class ESTGParkingApplication extends Application {
         this.googleApiClient = googleApiClient;
     }
 
-    public IUserInfo getUserInfo() {
-        return userInfo;
+    public IUserInfoProvider getUserInfoProvider() {
+        return userInfoProvider;
     }
 
-    public void setUserInfo(IUserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setUserInfoProvider(IUserInfoProvider userInfoProvider) {
+        this.userInfoProvider = userInfoProvider;
     }
 
     public DbxDatastoreManager getDatastoreManager() {
