@@ -9,7 +9,7 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
 /**
  * Created by pedro on 12/01/15.
  */
-public class GooglePlusUserInfo implements IUserInfo {
+public class GooglePlusUserInfoProvider implements IUserInfoProvider {
 
     private String name = "";
 
@@ -17,7 +17,7 @@ public class GooglePlusUserInfo implements IUserInfo {
 
     private String photoURL = "";
 
-    public GooglePlusUserInfo() {
+    public GooglePlusUserInfoProvider() {
         ESTGParkingApplication app = ESTGParkingApplication.getInstance();
         GoogleApiClient googleApiClient = app.getGoogleApiClient();
 

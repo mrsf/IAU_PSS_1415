@@ -8,7 +8,7 @@ import com.facebook.model.GraphUser;
 /**
  * Created by pedro on 12/01/15.
  */
-public class FacebookUserInfo implements IUserInfo {
+public class FacebookUserInfoProvider implements IUserInfoProvider {
 
     private String id = "";
 
@@ -19,7 +19,7 @@ public class FacebookUserInfo implements IUserInfo {
     private String photoURL = "";
 
 
-    public FacebookUserInfo() {
+    public FacebookUserInfoProvider() {
         final Session session = Session.getActiveSession();
 
         //if (session != null && session.isOpened()) {
