@@ -26,25 +26,37 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.RankingRepository;
 // We're creating our own Application just to have a singleton off of which to hand the datastore manager.
 public class ESTGParkingApplication extends Application {
 
-    private static ESTGParkingApplication singleton;
     public enum TrackerName {
         APP_TRACKER, GLOBAL_TRACKER, ECOMMERCE_TRACKER,
     }
 
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+    private static ESTGParkingApplication singleton;
 
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<>();
+
+    /**
+     * Google Analytics property Id
+     */
     private static final String PROPERTY_ID = "UA-43643199-8";
-
 
     private static final String APP_KEY = "va8yje80i09ga1t";
     private static final String APP_SECRET = "pak1a4lgec50mh9";
 
+    /**
+     * Dropbox API stuff
+     */
     private DbxAccountManager accountManager;
     private DbxDatastoreManager datastoreManager;
     private DbxDatastore datastore;
 
+    /**
+     * User info provider service
+     */
     private IUserInfo userInfo;
 
+    /**
+     * Indicates whether the car is parked or not
+     */
     private Boolean isParked;
 
     /**
@@ -57,9 +69,12 @@ public class ESTGParkingApplication extends Application {
      */
     private GoogleApiClient googleApiClient;
 
-    private String currentUserActivity;
-
+    /**
+     * Application shared preferences
+     */
     private SharedPreferences sharedPreferences;
+
+    private String currentUserActivity;
 
     public static ESTGParkingApplication getInstance() {
         return singleton;
@@ -74,18 +89,6 @@ public class ESTGParkingApplication extends Application {
         this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
 
         sharedPreferences = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-    }
-
-    public void setSharedPreferences(SharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
-    }
-
-    public GoogleApiClient getGoogleApiClient() {
-        return googleApiClient;
-    }
-
-    public void setGoogleApiClient(GoogleApiClient googleApiClient) {
-        this.googleApiClient = googleApiClient;
     }
 
     public String getCurrentUserActivity() {
@@ -115,30 +118,6 @@ public class ESTGParkingApplication extends Application {
         return new RankingRepository(this.getApplicationContext(), this.datastore);
     }
 
-    public IUserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(IUserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    public DbxDatastoreManager getDatastoreManager() {
-        return datastoreManager;
-    }
-
-    public void setDatastoreManager(DbxDatastoreManager datastoreManager) {
-        this.datastoreManager = datastoreManager;
-    }
-
-    public DbxDatastore getDatastore() {
-        return datastore;
-    }
-
-    public void setDatastore(DbxDatastore datastore) {
-        this.datastore = datastore;
-    }
-
     public void initDatastore() {
         if (this.datastore == null) {
             try {
@@ -149,14 +128,13 @@ public class ESTGParkingApplication extends Application {
         }
     }
 
-    public OAuthProvider getoAuthProvider() {
-        return oAuthProvider;
-    }
 
-    public void setoAuthProvider(OAuthProvider oAuthProvider) {
-        this.oAuthProvider = oAuthProvider;
-    }
 
+    /**
+     * Get Google Analytics tracker
+     * @param trackerId
+     * @return
+     */
     synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
@@ -197,4 +175,48 @@ public class ESTGParkingApplication extends Application {
         double longitude = (double)getSharedPreferences().getFloat(getString(R.string.user_parking_lng), (float)0);
         return new LatLng(latitude, longitude);
     }
+
+    // <editor-fold desc="Getters and setters">
+
+    public GoogleApiClient getGoogleApiClient() {
+        return googleApiClient;
+    }
+
+    public void setGoogleApiClient(GoogleApiClient googleApiClient) {
+        this.googleApiClient = googleApiClient;
+    }
+
+    public IUserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(IUserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public DbxDatastoreManager getDatastoreManager() {
+        return datastoreManager;
+    }
+
+    public void setDatastoreManager(DbxDatastoreManager datastoreManager) {
+        this.datastoreManager = datastoreManager;
+    }
+
+    public DbxDatastore getDatastore() {
+        return datastore;
+    }
+
+    public void setDatastore(DbxDatastore datastore) {
+        this.datastore = datastore;
+    }
+
+    public OAuthProvider getoAuthProvider() {
+        return oAuthProvider;
+    }
+
+    public void setoAuthProvider(OAuthProvider oAuthProvider) {
+        this.oAuthProvider = oAuthProvider;
+    }
+
+    // </editor-fold>
 }
