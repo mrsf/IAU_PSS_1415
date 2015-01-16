@@ -1,6 +1,6 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.profile;
 
-public interface IUserInfo {
+public interface IUserInfoProvider {
 
     String getName();
     String getEmail();

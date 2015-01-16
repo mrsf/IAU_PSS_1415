@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,9 +19,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AppEventsLogger;
@@ -41,11 +38,7 @@ import com.facebook.model.GraphUser;
 import com.facebook.widget.FacebookDialog;
 import com.facebook.widget.LoginButton;
 import com.facebook.widget.PickerFragment;
-import com.facebook.widget.ProfilePictureView;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Logger;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -54,8 +47,6 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.location.ActivityRecognitionClient;
 
 import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.PlusShare;
-import com.google.android.gms.plus.model.people.Person;
 
 
 import java.io.InputStream;
@@ -63,12 +54,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.FacebookUserInfo;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.GooglePlusUserInfo;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.FacebookUserInfoProvider;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.GooglePlusUserInfoProvider;
 
 
 public class LoginActivity extends FragmentActivity
@@ -210,7 +200,7 @@ public class LoginActivity extends FragmentActivity
                     app.setoAuthProvider(OAuthProvider.FACEBOOK);   // Register the used OAuth provider
 
                     // Set the user info provider
-                    app.setUserInfo(new FacebookUserInfo());
+                    app.setUserInfoProvider(new FacebookUserInfoProvider());
 
                     startMainActivity();
                 }
@@ -574,7 +564,7 @@ public class LoginActivity extends FragmentActivity
         //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
         // Set the user info provider
-        app.setUserInfo(new GooglePlusUserInfo());
+        app.setUserInfoProvider(new GooglePlusUserInfoProvider());
 
         app.setoAuthProvider(OAuthProvider.GOGGLE_PLUS);
         startMainActivity();

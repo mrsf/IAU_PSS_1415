@@ -8,21 +8,21 @@ import com.facebook.model.GraphUser;
 /**
  * Created by pedro on 12/01/15.
  */
-public class FacebookUserInfo implements IUserInfo {
+public class FacebookUserInfoProvider implements IUserInfoProvider {
 
-    private String id;
+    private String id = "";
 
-    private String name;
+    private String name = "";
 
-    private String email;
+    private String email = "";
 
-    private String photoURL;
+    private String photoURL = "";
 
 
-    public FacebookUserInfo() {
+    public FacebookUserInfoProvider() {
         final Session session = Session.getActiveSession();
 
-        if (session != null && session.isOpened()) {
+        //if (session != null && session.isOpened()) {
             // If the session is open, make an API call to get user data
             // and define a new callback to handle the response
             Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
@@ -44,7 +44,7 @@ public class FacebookUserInfo implements IUserInfo {
                 }
             });
             Request.executeBatchAsync(request);
-        }
+        //}
     }
 
     @Override

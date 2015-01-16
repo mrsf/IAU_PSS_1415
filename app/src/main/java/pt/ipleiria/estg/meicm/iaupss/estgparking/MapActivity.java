@@ -119,8 +119,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
         buttonAnimate.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 v.setVisibility(View.GONE);
-                gd.animateDirection(mMap, gd.getDirection(mDoc), GoogleDirection.SPEED_FAST
-                        , true, false, true, false, null, false, true, null);
+                gd.animateDirection(mMap, gd.getDirection(mDoc), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
             }
         });
 
@@ -160,7 +159,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_search:
-                //openSearch();
+                gd.animateDirection(mMap, gd.getDirection(mDoc), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
                 return true;
             case R.id.action_settings:
                 gd.setLogging(true);

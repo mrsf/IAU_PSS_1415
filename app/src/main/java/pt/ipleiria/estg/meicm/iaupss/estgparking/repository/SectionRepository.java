@@ -40,6 +40,11 @@ public class SectionRepository implements ISectionRepository {
         return false;
     }
 
+    @Override
+    public boolean abandonSection(double lat, double lng) {
+        return false;
+    }
+
     private List<Section> dataStoreSections() {
 
         List<SectionsTable.SectionRecord> sectionRecords = new ArrayList<>();
