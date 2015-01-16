@@ -37,12 +37,34 @@ public class SectionRepository implements ISectionRepository {
 
     @Override
     public boolean occupySection(double lat, double lng) {
-        return false;
+
+        boolean isValid = false;
+
+        try {
+            this.datastore.sync();
+            SectionsTable sectionsTable = new SectionsTable(datastore);
+            isValid = sectionsTable.occupationIncrement(lat, lng);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+
+        return isValid;
     }
 
     @Override
     public boolean abandonSection(double lat, double lng) {
-        return false;
+
+        boolean isValid = false;
+
+        try {
+            this.datastore.sync();
+            SectionsTable sectionsTable = new SectionsTable(datastore);
+            isValid = sectionsTable.occupationDecrement(lat, lng);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+
+        return isValid;
     }
 
     private List<Section> dataStoreSections() {
