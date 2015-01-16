@@ -98,7 +98,7 @@ public class DropboxActivity extends ActionBarActivity {
     }
 
     private void CreateUserRanking() {
-        try {
+        /*try {
             // criar a base de dados
             this.app.initDatastore();
             // criar tabela e inserir registo
@@ -106,6 +106,6 @@ public class DropboxActivity extends ActionBarActivity {
             rankings.createRanking(this.app.getUserInfo().getName(), this.app.getUserInfo().getEmail(), 5, this.app.getUserInfo().getPhotoURL());
         } catch (DbxException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
