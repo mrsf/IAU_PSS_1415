@@ -61,10 +61,14 @@ public class SectionRepository implements ISectionRepository {
             section.setId(record.getId());
             section.setName(record.getName());
             section.setDescription(record.getDescription());
-            section.setLatitudeX(record.getLatitudeX());
-            section.setLongitudeX(record.getLongitudeX());
-            section.setLatitudeY(record.getLatitudeY());
-            section.setLongitudeY(record.getLongitudeY());
+            section.setLatitudeA(record.getLatitudeA());
+            section.setLongitudeA(record.getLongitudeA());
+            section.setLatitudeB(record.getLatitudeB());
+            section.setLongitudeB(record.getLongitudeB());
+            section.setLatitudeC(record.getLatitudeC());
+            section.setLongitudeC(record.getLongitudeC());
+            section.setLatitudeD(record.getLatitudeD());
+            section.setLongitudeD(record.getLongitudeD());
             section.setCapacity(record.getCapacity());
             section.setOccupation(record.getOccupation());
             section.setLotId(record.getLotId());
@@ -72,9 +76,7 @@ public class SectionRepository implements ISectionRepository {
             sections.add(section);
 
             Log.d(TAG, "Add: " + section.getId() + " | " + section.getName() + " | " + section.getDescription()
-                    + " | " + section.getLatitudeX() + " | " + section.getLongitudeX() + " | "
-                    + section.getLatitudeY() + " | " + section.getLongitudeY() + " | " + section.getCapacity()
-                    + " | " + section.getOccupation() + " | " + section.getLotId());
+                    + " | " + section.getCapacity() + " | " + section.getOccupation() + " | " + section.getLotId());
         }
 
         /*this.sectionsData.open();

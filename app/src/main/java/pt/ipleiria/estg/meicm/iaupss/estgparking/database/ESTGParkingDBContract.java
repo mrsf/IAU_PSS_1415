@@ -18,10 +18,14 @@ abstract class ESTGParkingDBContract {
         public static final String ID = "id";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
-        public static final String LATITUDE_X = "latitude_x";
-        public static final String LONGITUDE_X = "longitude_x";
-        public static final String LATITUDE_Y = "latitude_y";
-        public static final String LONGITUDE_Y = "longitude_y";
+        public static final String LATITUDE_A = "latitude_a";
+        public static final String LONGITUDE_A = "longitude_a";
+        public static final String LATITUDE_B = "latitude_b";
+        public static final String LONGITUDE_B = "longitude_b";
+        public static final String LATITUDE_C = "latitude_c";
+        public static final String LONGITUDE_C = "longitude_c";
+        public static final String LATITUDE_D = "latitude_d";
+        public static final String LONGITUDE_D = "longitude_d";
         public static final String IMAGE_PATH = "image_path";
     }
 
@@ -30,10 +34,14 @@ abstract class ESTGParkingDBContract {
         public static final String ID = "id";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
-        public static final String LATITUDE_X = "latitude_x";
-        public static final String LONGITUDE_X = "longitude_x";
-        public static final String LATITUDE_Y = "latitude_y";
-        public static final String LONGITUDE_Y = "longitude_y";
+        public static final String LATITUDE_A = "latitude_a";
+        public static final String LONGITUDE_A = "longitude_a";
+        public static final String LATITUDE_B = "latitude_b";
+        public static final String LONGITUDE_B = "longitude_b";
+        public static final String LATITUDE_C = "latitude_c";
+        public static final String LONGITUDE_C = "longitude_c";
+        public static final String LATITUDE_D = "latitude_d";
+        public static final String LONGITUDE_D = "longitude_d";
         public static final String CAPACITY = "capacity";
         public static final String OCCUPATION = "occupation";
         public static final String LOT_ID = "lot_id";

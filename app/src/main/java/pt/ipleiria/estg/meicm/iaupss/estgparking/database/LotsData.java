@@ -25,16 +25,28 @@ public class LotsData extends ESTGParkingData {
                     + ESTGParkingDBContract.LotBase.DESCRIPTION
                     + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.LotBase.LATITUDE_X
+                    + ESTGParkingDBContract.LotBase.LATITUDE_A
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.LotBase.LONGITUDE_X
+                    + ESTGParkingDBContract.LotBase.LONGITUDE_A
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.LotBase.LATITUDE_Y
+                    + ESTGParkingDBContract.LotBase.LATITUDE_B
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.LotBase.LONGITUDE_Y
+                    + ESTGParkingDBContract.LotBase.LONGITUDE_B
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.LotBase.LATITUDE_C
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.LotBase.LONGITUDE_C
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.LotBase.LATITUDE_D
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.LotBase.LONGITUDE_D
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
                     + ESTGParkingDBContract.LotBase.IMAGE_PATH
@@ -64,10 +76,14 @@ public class LotsData extends ESTGParkingData {
                 new String[]{ESTGParkingDBContract.LotBase.ID,
                         ESTGParkingDBContract.LotBase.NAME,
                         ESTGParkingDBContract.LotBase.DESCRIPTION,
-                        ESTGParkingDBContract.LotBase.LATITUDE_X,
-                        ESTGParkingDBContract.LotBase.LONGITUDE_X,
-                        ESTGParkingDBContract.LotBase.LATITUDE_Y,
-                        ESTGParkingDBContract.LotBase.LONGITUDE_Y,
+                        ESTGParkingDBContract.LotBase.LATITUDE_A,
+                        ESTGParkingDBContract.LotBase.LONGITUDE_A,
+                        ESTGParkingDBContract.LotBase.LATITUDE_B,
+                        ESTGParkingDBContract.LotBase.LONGITUDE_B,
+                        ESTGParkingDBContract.LotBase.LATITUDE_C,
+                        ESTGParkingDBContract.LotBase.LONGITUDE_C,
+                        ESTGParkingDBContract.LotBase.LATITUDE_D,
+                        ESTGParkingDBContract.LotBase.LONGITUDE_D,
                         ESTGParkingDBContract.LotBase.IMAGE_PATH}, null, null,
                 null, null, ESTGParkingDBContract.LotBase.NAME);
 
@@ -76,7 +92,8 @@ public class LotsData extends ESTGParkingData {
                 do {
                     lots.add(new Lot(cursor.getString(0), cursor.getString(1), cursor.getString(2),
                             cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5),
-                            cursor.getDouble(6), cursor.getString(7)));
+                            cursor.getDouble(6), cursor.getDouble(7), cursor.getDouble(8),
+                            cursor.getDouble(9), cursor.getDouble(10), cursor.getString(11)));
                 } while (cursor.moveToNext());
 
             cursor.close();
@@ -108,10 +125,14 @@ public class LotsData extends ESTGParkingData {
         values.put(ESTGParkingDBContract.LotBase.ID, lot.getId());
         values.put(ESTGParkingDBContract.LotBase.NAME, lot.getName());
         values.put(ESTGParkingDBContract.LotBase.DESCRIPTION, lot.getDescription());
-        values.put(ESTGParkingDBContract.LotBase.LATITUDE_X, lot.getLatitudeX());
-        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_X, lot.getLongitudeX());
-        values.put(ESTGParkingDBContract.LotBase.LATITUDE_Y, lot.getLatitudeY());
-        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_Y, lot.getLongitudeY());
+        values.put(ESTGParkingDBContract.LotBase.LATITUDE_A, lot.getLatitudeA());
+        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_A, lot.getLongitudeA());
+        values.put(ESTGParkingDBContract.LotBase.LATITUDE_B, lot.getLatitudeB());
+        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_B, lot.getLongitudeB());
+        values.put(ESTGParkingDBContract.LotBase.LATITUDE_C, lot.getLatitudeC());
+        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_C, lot.getLongitudeC());
+        values.put(ESTGParkingDBContract.LotBase.LATITUDE_D, lot.getLatitudeD());
+        values.put(ESTGParkingDBContract.LotBase.LONGITUDE_D, lot.getLongitudeD());
         values.put(ESTGParkingDBContract.LotBase.IMAGE_PATH, lot.getImagePath());
         return database().insert(ESTGParkingDBContract.LotBase.TABLE_NAME,
                 null, values);

@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Dot;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Rectangle;
+
 public class SectionsTable {
 
     private DbxDatastore datastore;
@@ -124,5 +127,53 @@ public class SectionsTable {
             }
         });
         return sectionsList;
+    }
+
+    public boolean occupationIncrement(double lat, double lng) throws DbxException {
+
+        boolean isIncremented = false;
+
+        for (DbxRecord record : table.query()) {
+
+            Rectangle rectangle = new Rectangle();
+            rectangle.setDotA(new Dot(record.getDouble("latitude_a"), record.getDouble("longitude_a")));
+            rectangle.setDotB(new Dot(record.getDouble("latitude_b"), record.getDouble("longitude_b")));
+            rectangle.setDotC(new Dot(record.getDouble("latitude_c"), record.getDouble("longitude_c")));
+            rectangle.setDotD(new Dot(record.getDouble("latitude_d"), record.getDouble("longitude_d")));
+
+            if (rectangle.dotIsInside(new Dot(lat, lng))) {
+                if (record.getLong("occupation") < record.getLong("capacity")) {
+                    record.set("occupation", (record.getLong("occupation") + 1));
+                    isIncremented = true;
+                }
+                break;
+            }
+        }
+
+        return isIncremented;
+    }
+
+    public boolean occupationDecrement(double lat, double lng) throws DbxException {
+
+        boolean isDecremented = false;
+
+        for (DbxRecord record : table.query()) {
+
+            Rectangle rectangle = new Rectangle();
+            rectangle.setDotA(new Dot(record.getDouble("latitude_a"), record.getDouble("longitude_a")));
+            rectangle.setDotB(new Dot(record.getDouble("latitude_b"), record.getDouble("longitude_b")));
+            rectangle.setDotC(new Dot(record.getDouble("latitude_c"), record.getDouble("longitude_c")));
+            rectangle.setDotD(new Dot(record.getDouble("latitude_d"), record.getDouble("longitude_d")));
+
+            if (rectangle.dotIsInside(new Dot(lat, lng))) {
+                if (record.getLong("occupation") > 0) {
+                    record.set("occupation", (record.getLong("occupation") - 1));
+                    isDecremented = true;
+                }
+                break;
+            }
+        }
+
+        return isDecremented;
     }
 }

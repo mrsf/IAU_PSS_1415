@@ -83,17 +83,20 @@ public class LotRepository implements ILotRepository {
             lot.setId(lotRecord.getId());
             lot.setName(lotRecord.getName());
             lot.setDescription(lotRecord.getDescription());
-            lot.setLatitudeX(lotRecord.getLatitudeX());
-            lot.setLongitudeX(lotRecord.getLongitudeX());
-            lot.setLatitudeY(lotRecord.getLatitudeY());
-            lot.setLongitudeY(lotRecord.getLongitudeY());
+            lot.setLatitudeA(lotRecord.getLatitudeA());
+            lot.setLongitudeA(lotRecord.getLongitudeA());
+            lot.setLatitudeB(lotRecord.getLatitudeB());
+            lot.setLongitudeB(lotRecord.getLongitudeB());
+            lot.setLatitudeC(lotRecord.getLatitudeC());
+            lot.setLongitudeC(lotRecord.getLongitudeC());
+            lot.setLatitudeD(lotRecord.getLatitudeD());
+            lot.setLongitudeD(lotRecord.getLongitudeD());
             lot.setImagePath(lotRecord.getImagePath());
 
             lots.add(lot);
 
-            Log.d(TAG, "Add: " + lot.getId() + " | " + lot.getName() + " | " + lot.getDescription()
-                    + " | " + lot.getLatitudeX() + " | " + lot.getLongitudeX() + " | " + lot.getLatitudeY()
-                    + " | " + lot.getLongitudeY() + " | " + lot.getImagePath());
+            Log.d(TAG, "Add: " + lot.getId() + " | " + lot.getName() + " | " + lot.getDescription() +
+                    " | " + lot.getImagePath());
         }
 
         /*this.lotsData.open();
