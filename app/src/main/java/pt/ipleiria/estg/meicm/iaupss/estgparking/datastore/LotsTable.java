@@ -5,12 +5,14 @@ import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFields;
 import com.dropbox.sync.android.DbxRecord;
 import com.dropbox.sync.android.DbxTable;
-import com.google.android.gms.maps.model.Polygon;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Dot;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Rectangle;
 
 public class LotsTable {
 
@@ -120,7 +122,14 @@ public class LotsTable {
         String lotId = null;
 
         for (DbxRecord record : table.query()) {
-            if (lat <= record.getDouble("latitude_x") && lng >= record.getDouble("longitude_x") && lat >= record.getDouble("latitude_y") && lng <= record.getDouble("longitude_y")) {
+
+            Rectangle rectangle = new Rectangle();
+            rectangle.setDotA(new Dot(record.getDouble("latitude_a"), record.getDouble("longitude_a")));
+            rectangle.setDotB(new Dot(record.getDouble("latitude_b"), record.getDouble("longitude_b")));
+            rectangle.setDotC(new Dot(record.getDouble("latitude_c"), record.getDouble("longitude_c")));
+            rectangle.setDotD(new Dot(record.getDouble("latitude_d"), record.getDouble("longitude_d")));
+
+            if (rectangle.dotIsInside(new Dot(lat, lng))) {
                 lotId = record.getId();
                 break;
             }

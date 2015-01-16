@@ -36,20 +36,36 @@ public class SectionsTable {
             return record.getString("description");
         }
 
-        public Double getLatitudeX() {
-            return record.getDouble("latitude_x");
+        public Double getLatitudeA() {
+            return record.getDouble("latitude_a");
         }
 
-        public Double getLongitudeX() {
-            return record.getDouble("longitude_x");
+        public Double getLongitudeA() {
+            return record.getDouble("longitude_a");
         }
 
-        public Double getLatitudeY() {
-            return record.getDouble("latitude_y");
+        public Double getLatitudeB() {
+            return record.getDouble("latitude_b");
         }
 
-        public Double getLongitudeY() {
-            return record.getDouble("longitude_y");
+        public Double getLongitudeB() {
+            return record.getDouble("longitude_b");
+        }
+
+        public Double getLatitudeC() {
+            return record.getDouble("latitude_c");
+        }
+
+        public Double getLongitudeC() {
+            return record.getDouble("longitude_c");
+        }
+
+        public Double getLatitudeD() {
+            return record.getDouble("latitude_d");
+        }
+
+        public Double getLongitudeD() {
+            return record.getDouble("longitude_d");
         }
 
         public int getCapacity() {
@@ -76,14 +92,18 @@ public class SectionsTable {
         table = datastore.getTable("section");
     }
 
-    public void createSection(String name, String description, double latitudeX, double longitudeX, double latitudeY, double longitudeY, int capacity, int occupation, String lotId) throws DbxException {
+    public void createSection(String name, String description, double latitudeA, double longitudeA, double latitudeB, double longitudeB, double latitudeC, double longitudeC, double latitudeD, double longitudeD, int capacity, int occupation, String lotId) throws DbxException {
         DbxFields sectionFields = new DbxFields()
                 .set("name", name)
                 .set("description", description)
-                .set("latitude_x", latitudeX)
-                .set("longitude_x", longitudeX)
-                .set("latitude_y", latitudeY)
-                .set("longitude_y", longitudeY)
+                .set("latitude_a", latitudeA)
+                .set("longitude_a", longitudeA)
+                .set("latitude_b", latitudeB)
+                .set("longitude_b", longitudeB)
+                .set("latitude_c", latitudeC)
+                .set("longitude_c", longitudeC)
+                .set("latitude_d", latitudeD)
+                .set("longitude_d", longitudeD)
                 .set("capacity", capacity)
                 .set("occupation", occupation)
                 .set("lot_id", lotId);
