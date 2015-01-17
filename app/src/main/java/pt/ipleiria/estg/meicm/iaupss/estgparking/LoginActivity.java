@@ -56,7 +56,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.FacebookUserInfoProvider;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.GooglePlusUserInfoProvider;
 
@@ -287,7 +286,7 @@ public class LoginActivity extends FragmentActivity
                 // If any other request code was received
             default:
                 // Report that this Activity received an unknown requestCode
-                Log.d(ActivityUtils.APPTAG, getString(R.string.unknown_activity_request_code, requestCode));
+                Log.d(ESTGParkingApplicationUtils.APPTAG, getString(R.string.unknown_activity_request_code, requestCode));
 
                 break;
         }
@@ -516,7 +515,7 @@ public class LoginActivity extends FragmentActivity
         if (ConnectionResult.SUCCESS == resultCode) {
 
             // In debug mode, log the status
-            Log.d(ActivityUtils.APPTAG, getString(R.string.play_services_available));
+            Log.d(ESTGParkingApplicationUtils.APPTAG, getString(R.string.play_services_available));
 
             // Continue
             return true;

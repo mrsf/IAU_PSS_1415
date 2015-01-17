@@ -30,6 +30,7 @@ import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.util.Log;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplicationUtils;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 
 /**
@@ -144,7 +145,7 @@ public class DetectionRemover implements ConnectionCallbacks, OnConnectionFailed
     @Override
     public void onConnected(Bundle connectionData) {
         // If debugging, log the connection
-        Log.d(ActivityUtils.APPTAG, mContext.getString(R.string.connected));
+        Log.d(ESTGParkingApplicationUtils.APPTAG, mContext.getString(R.string.connected));
         // Send a request to Location Services to remove activity recognition updates
         continueRemoveUpdates();
     }
@@ -174,7 +175,7 @@ public class DetectionRemover implements ConnectionCallbacks, OnConnectionFailed
     public void onDisconnected() {
 
         // In debug mode, log the disconnection
-        Log.d(ActivityUtils.APPTAG, mContext.getString(R.string.disconnected));
+        Log.d(ESTGParkingApplicationUtils.APPTAG, mContext.getString(R.string.disconnected));
 
         // Destroy the current activity recognition client
         mActivityRecognitionClient = null;
@@ -198,7 +199,7 @@ public class DetectionRemover implements ConnectionCallbacks, OnConnectionFailed
 
             try {
                 connectionResult.startResolutionForResult((Activity) mContext,
-                    ActivityUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                    ESTGParkingApplicationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
             /*
              * Thrown if Google Play services canceled the original
@@ -218,7 +219,7 @@ public class DetectionRemover implements ConnectionCallbacks, OnConnectionFailed
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
                             connectionResult.getErrorCode(),
                             (Activity) mContext,
-                            ActivityUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                            ESTGParkingApplicationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
             if (dialog != null) {
                 dialog.show();
             }

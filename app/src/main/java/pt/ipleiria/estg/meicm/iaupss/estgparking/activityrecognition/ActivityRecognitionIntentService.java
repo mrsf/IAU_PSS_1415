@@ -14,7 +14,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,10 +22,15 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 
-import java.text.DateFormat;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplicationUtils;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 
@@ -37,12 +41,20 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 public class ActivityRecognitionIntentService extends IntentService implements LocationListener, GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
-    // Store the app's shared preferences repository
-    private SharedPreferences mPrefs;
+    /**
+     * Whether to write logs to file or not
+     */
+    private static boolean DEBUG_LOGS = true;
+    private static String LOG_FILE_PATH = "/sdcard/estgparking.txt";
 
     private ESTGParkingApplication app;
 
     private LocationClient locationClient;
+
+    private boolean isParking;
+
+    private FileOutputStream fileOutputStream;
+    private OutputStreamWriter outputStreamWriter;
 
     public ActivityRecognitionIntentService() {
         // Set the label for the service's background thread
@@ -55,6 +67,37 @@ public class ActivityRecognitionIntentService extends IntentService implements L
     public void onCreate() {
         super.onCreate();
         locationClient = new LocationClient(this, this, this);
+
+        if (DEBUG_LOGS) {
+            try {
+                File myFile = new File(LOG_FILE_PATH);
+                myFile.createNewFile();
+                fileOutputStream = new FileOutputStream(myFile, true);
+                outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (DEBUG_LOGS) {
+            try {
+                outputStreamWriter.close();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String getDateString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String dateString = sdf.format(new Date());
+        return dateString;
     }
 
     /**
@@ -63,17 +106,11 @@ public class ActivityRecognitionIntentService extends IntentService implements L
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        // Get a handle to the repository
-        mPrefs = getApplicationContext().getSharedPreferences(ActivityUtils.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-
         // If the intent contains an update
         if (ActivityRecognitionResult.hasResult(intent)) {
 
             // Get the update
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-
-            // Log the update
-            logActivityRecognitionResult(result);
 
             // Get the most probable activity from the list of activities in the update
             DetectedActivity mostProbableActivity = result.getMostProbableActivity();
@@ -85,33 +122,20 @@ public class ActivityRecognitionIntentService extends IntentService implements L
             int activityType = mostProbableActivity.getType();
             app.setCurrentUserActivity(getNameFromType(activityType));
 
-            Log.i("activityType", "activityType " + getNameFromType(activityType));
-
-            activityChanged(activityType);
-
             // Check to see if the repository contains a previous activity
-            if (!mPrefs.contains(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE)) {
+            if (!app.getSharedPreferences().contains(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE) &&
+                    (activityType == DetectedActivity.ON_FOOT || activityType == DetectedActivity.STILL)) {
 
                 // This is the first type an activity has been detected. Store the type
-                Editor editor = mPrefs.edit();
-                editor.putInt(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE, activityType);
+                Editor editor = app.getSharedPreferences().edit();
+                editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, activityType);
                 editor.commit();
 
+                Log.i(this.getClass().getSimpleName(), "Initialized shared preferences activity type with " + getNameFromType(activityType));
+
                 // If the repository contains a type
-            } else if (
-                // If the current type is "moving"
-//                    isMoving(activityType)
-//
-//                            &&
-
-                            // The activity has changed from the previous activity
-                            activityChanged(activityType)
-
-                            // The confidence level for the current activity is > 50%
-                            && (confidence >= 50)) {
-
-                // Notify the user
-                //sendNotification();
+            } else if (confidence >= 50) {
+                checkForActivityChange(activityType, confidence);
             }
         }
     }
@@ -128,13 +152,10 @@ public class ActivityRecognitionIntentService extends IntentService implements L
         builder.setContentTitle(getString(R.string.app_name))
                 .setContentText(msg)
                 .setSmallIcon(R.drawable.ic_notification)
-
-                        // Get the Intent that starts the Location settings panel
                 .setContentIntent(getContentIntent());
 
         // Get an instance of the Notification Manager
-        NotificationManager notifyManager = (NotificationManager)
-                getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notifyManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Build the notification and post it
         notifyManager.notify(0, builder.build());
@@ -146,10 +167,8 @@ public class ActivityRecognitionIntentService extends IntentService implements L
      * @return A PendingIntent that starts the device's Location Settings panel.
      */
     private PendingIntent getContentIntent() {
-
         // Set the Intent action to open Location Settings
         Intent gpsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-
         // Create a PendingIntent to start an Activity
         return PendingIntent.getActivity(getApplicationContext(), 0, gpsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -161,82 +180,35 @@ public class ActivityRecognitionIntentService extends IntentService implements L
      * @return true if the user's current activity is different from the previous most probable
      * activity; otherwise, false.
      */
-    private boolean activityChanged(int currentType) {
+    private void checkForActivityChange(int currentType, int confidence) {
 
         // Get the previous type, otherwise return the "unknown" type
-        int previousType = mPrefs.getInt(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE, DetectedActivity.UNKNOWN);
+        int previousType = app.getSharedPreferences().getInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, DetectedActivity.UNKNOWN);
 
-        if (previousType == DetectedActivity.IN_VEHICLE && currentType == DetectedActivity.ON_FOOT) {
-            sendNotification("transition from IN_VEHICLE to ON_FOOT");
-            Editor editor = mPrefs.edit();
-            editor.putInt(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
+        if (DEBUG_LOGS) {
+            try {
+                String log = getDateString() + " - Activity: " + getNameFromType(currentType) + "; Confidence: " + confidence + "; Previous: " + getNameFromType(previousType) + "\r\n";
+                Log.i(this.getClass().getSimpleName(), log);
+                outputStreamWriter.append(log);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (previousType == DetectedActivity.TILTING && currentType != DetectedActivity.TILTING) {
+            Editor editor = app.getSharedPreferences().edit();
+            editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
             editor.commit();
-            Location location = locationClient.getLastLocation();
-            app.park(new LatLng(location.getLatitude(), location.getLongitude()));
-            return true;
+            isParking = true;
+            locationClient.connect();
         }
 
-        if (previousType == DetectedActivity.ON_FOOT && currentType == DetectedActivity.IN_VEHICLE) {
-            sendNotification("transition from ON_FOOT to IN_VEHICLE");
-            Editor editor = mPrefs.edit();
-            editor.putInt(ActivityUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
+        if (previousType != DetectedActivity.TILTING && currentType == DetectedActivity.TILTING) {
+            Editor editor = app.getSharedPreferences().edit();
+            editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
             editor.commit();
-            Location location = locationClient.getLastLocation();
-            app.park(new LatLng(location.getLatitude(), location.getLongitude()));
-            return true;
-        }
-
-        //locationClient = new LocationClient(this, this, this);
-        locationClient.connect();
-
-        // If the previous type isn't the same as the current type, the activity has changed
-        if (previousType != currentType) {
-
-            sendNotification("transition from " + previousType + " to " + currentType);
-
-            return true;
-
-            // Otherwise, it hasn't.
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Determine if an activity means that the user is moving.
-     *
-     * @param type The type of activity the user is doing (see DetectedActivity constants)
-     * @return true if the user seems to be moving from one location to another, otherwise false
-     */
-    private boolean isMoving(int type) {
-        switch (type) {
-            // These types mean that the user is probably not moving
-            case DetectedActivity.STILL :
-            case DetectedActivity.TILTING :
-            case DetectedActivity.UNKNOWN :
-                return false;
-            default:
-                return true;
-        }
-    }
-
-    /**
-     * Write the activity recognition update to the log file
-     *
-     * @param result The result extracted from the incoming Intent
-     */
-    private void logActivityRecognitionResult(ActivityRecognitionResult result) {
-        // Get all the probably activities from the updated result
-        for (DetectedActivity detectedActivity : result.getProbableActivities()) {
-
-            // Get the activity type, confidence level, and human-readable name
-            int activityType = detectedActivity.getType();
-            int confidence = detectedActivity.getConfidence();
-            String activityName = getNameFromType(activityType);
-
-            // Get the current log file or create a new one, then log the activity
-//            LogFile.getInstance(getApplicationContext()).log(getString(R.string.log_message, activityType, activityName, confidence)
- //           );
+            isParking = false;
+            locationClient.connect();
         }
     }
 
@@ -265,15 +237,26 @@ public class ActivityRecognitionIntentService extends IntentService implements L
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-
-    }
-
-    @Override
     public void onConnected(Bundle bundle) {
         Location location = locationClient.getLastLocation();
-        app.park(new LatLng(location.getLatitude(), location.getLongitude()));
+
+        if (DEBUG_LOGS) {
+            try {
+                outputStreamWriter.append(getDateString() + " - " + (isParking ? " Parked" : "Departed") + "\r\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (isParking) {
+            app.park(new LatLng(location.getLatitude(), location.getLongitude()));
+            sendNotification("Parked");
+        } else {
+            app.depart(new LatLng(location.getLatitude(), location.getLongitude()));
+            sendNotification("Departed");
+        }
+
+        locationClient.disconnect();
     }
 
     @Override

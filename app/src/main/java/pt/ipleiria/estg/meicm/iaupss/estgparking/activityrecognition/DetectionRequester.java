@@ -31,6 +31,7 @@ import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.util.Log;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplicationUtils;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
 
 /**
@@ -98,7 +99,7 @@ public class DetectionRequester implements ConnectionCallbacks, OnConnectionFail
          * Request updates, using the default detection interval.
          * The PendingIntent sends updates to ActivityRecognitionIntentService
          */
-        getActivityRecognitionClient().requestActivityUpdates(ActivityUtils.DETECTION_INTERVAL_MILLISECONDS, createRequestPendingIntent());
+        getActivityRecognitionClient().requestActivityUpdates(ESTGParkingApplicationUtils.DETECTION_INTERVAL_MILLISECONDS, createRequestPendingIntent());
 
         // Disconnect the client
         requestDisconnection();
@@ -142,7 +143,7 @@ public class DetectionRequester implements ConnectionCallbacks, OnConnectionFail
     @Override
     public void onConnected(Bundle arg0) {
         // If debugging, log the connection
-        Log.d(ActivityUtils.APPTAG, mContext.getString(R.string.connected));
+        Log.d(ESTGParkingApplicationUtils.APPTAG, mContext.getString(R.string.connected));
 
         // Continue the process of requesting activity recognition updates
         continueRequestActivityUpdates();
@@ -154,7 +155,7 @@ public class DetectionRequester implements ConnectionCallbacks, OnConnectionFail
     @Override
     public void onDisconnected() {
         // In debug mode, log the disconnection
-        Log.d(ActivityUtils.APPTAG, mContext.getString(R.string.disconnected));
+        Log.d(ESTGParkingApplicationUtils.APPTAG, mContext.getString(R.string.disconnected));
 
         // Destroy the current activity recognition client
         mActivityRecognitionClient = null;
@@ -208,7 +209,7 @@ public class DetectionRequester implements ConnectionCallbacks, OnConnectionFail
         if (connectionResult.hasResolution()) {
 
             try {
-                connectionResult.startResolutionForResult((Activity) mContext, ActivityUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                connectionResult.startResolutionForResult((Activity) mContext, ESTGParkingApplicationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
             /*
              * Thrown if Google Play services canceled the original
@@ -228,7 +229,7 @@ public class DetectionRequester implements ConnectionCallbacks, OnConnectionFail
             Dialog dialog = GooglePlayServicesUtil.getErrorDialog(
                             connectionResult.getErrorCode(),
                             (Activity) mContext,
-                            ActivityUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                            ESTGParkingApplicationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
             if (dialog != null) {
                 dialog.show();
             }

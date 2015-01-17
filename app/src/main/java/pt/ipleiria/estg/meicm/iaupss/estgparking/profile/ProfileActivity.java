@@ -89,7 +89,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             }
 
             if (app.isParked()) {
-                app.depart();
+                app.depart(new LatLng(lat, lng));
                 txtStatus.setText(app.getCurrentUserActivity());
                 parkButton.setText("Estacionar");
             } else {

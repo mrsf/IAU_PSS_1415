@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -37,8 +36,6 @@ import com.facebook.widget.ProfilePictureView;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
 
 
 public class FacebookPostPhotoActivity extends FragmentActivity {
@@ -165,7 +162,7 @@ public class FacebookPostPhotoActivity extends FragmentActivity {
                 // If any other request code was received
             default:
                 // Report that this Activity received an unknown requestCode
-                Log.d(ActivityUtils.APPTAG, getString(R.string.unknown_activity_request_code, requestCode));
+                Log.d(ESTGParkingApplicationUtils.APPTAG, getString(R.string.unknown_activity_request_code, requestCode));
 
                 break;
         }

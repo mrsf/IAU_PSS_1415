@@ -127,8 +127,15 @@ public class ESTGParkingApplication extends Application {
 
     public void initDatastore() {
         if (this.datastore == null) {
+
+            if (datastoreManager == null) {
+                Log.w(this.getClass().getSimpleName(), "Couldn't Initialize datastore: Datastore manager not initialized");
+                return;
+            }
+
             try {
                 this.datastore = this.datastoreManager.openDatastore(".hhSgxW6D63kRmT-eiB69OuFN6jP8SydcsQopEJ1QGFs");
+                Log.i(this.getClass().getSimpleName(), "Initializing datastore...");
             } catch (DbxException e) {
                 e.printStackTrace();
             }
@@ -202,11 +209,11 @@ public class ESTGParkingApplication extends Application {
         Log.i(this.getClass().getSimpleName(), "Parked in (" + location.latitude + ", " + location.longitude);
     }
 
-    public void depart() {
+    public void depart(LatLng location) {
 
         setParked(false);
 
-        LatLng location = getParkingLocation();
+        //LatLng location = getParkingLocation();
 
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean("parked", false);
@@ -217,6 +224,8 @@ public class ESTGParkingApplication extends Application {
         if (lotId != null) {
             getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
         }
+
+        Log.i(this.getClass().getSimpleName(), "Departed from (" + location.latitude + ", " + location.longitude);
     }
 
     // <editor-fold desc="Getters and setters">

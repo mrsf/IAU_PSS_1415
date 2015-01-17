@@ -14,10 +14,8 @@ import android.widget.Button;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.ActivityUtils;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.DetectionRemover;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.DetectionRequester;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Ranking;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.ProfileActivity;
 
 
@@ -33,13 +31,13 @@ public class MainActivity extends Activity {
     private LocalBroadcastManager mBroadcastManager;
 
     // The activity recognition update request object
-    private DetectionRequester mDetectionRequester;
+    private DetectionRequester detectionRequester;
 
     // The activity recognition update removal object
-    private DetectionRemover mDetectionRemover;
+    private DetectionRemover detectionRemover;
 
     // Store the current request type (ADD or REMOVE)
-    private ActivityUtils.REQUEST_TYPE mRequestType;
+    private ESTGParkingApplicationUtils.REQUEST_TYPE mRequestType;
 
 
 
@@ -54,14 +52,14 @@ public class MainActivity extends Activity {
         mBroadcastManager = LocalBroadcastManager.getInstance(this);
 
         // Create a new Intent filter for the broadcast receiver
-        mBroadcastFilter = new IntentFilter(ActivityUtils.ACTION_REFRESH_STATUS_LIST);
-        mBroadcastFilter.addCategory(ActivityUtils.CATEGORY_LOCATION_SERVICES);
+        mBroadcastFilter = new IntentFilter(ESTGParkingApplicationUtils.ACTION_REFRESH_STATUS_LIST);
+        mBroadcastFilter.addCategory(ESTGParkingApplicationUtils.CATEGORY_LOCATION_SERVICES);
 
         // Get detection requester and remover objects
-        mDetectionRequester = new DetectionRequester(this);
-        mDetectionRemover = new DetectionRemover(this);
+        detectionRequester = new DetectionRequester(this);
+        detectionRemover = new DetectionRemover(this);
 
-        mDetectionRequester.requestUpdates();
+        detectionRequester.requestUpdates();
 
 
         Button postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
@@ -133,26 +131,26 @@ public class MainActivity extends Activity {
         switch (requestCode) {
 
             // If the request code matches the code sent in onConnectionFailed
-            case ActivityUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST :
+            case ESTGParkingApplicationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST :
 
                 switch (resultCode) {
                     // If Google Play services resolved the problem
                     case Activity.RESULT_OK:
 
                         // If the request was to start activity recognition updates
-                        if (ActivityUtils.REQUEST_TYPE.ADD == mRequestType) {
+                        if (ESTGParkingApplicationUtils.REQUEST_TYPE.ADD == mRequestType) {
 
                             // Restart the process of requesting activity recognition updates
-                            mDetectionRequester.requestUpdates();
+                            detectionRequester.requestUpdates();
 
                             // If the request was to remove activity recognition updates
-                        } else if (ActivityUtils.REQUEST_TYPE.REMOVE == mRequestType ){
+                        } else if (ESTGParkingApplicationUtils.REQUEST_TYPE.REMOVE == mRequestType ){
 
                                 /*
                                  * Restart the removal of all activity recognition updates for the
                                  * PendingIntent.
                                  */
-                            mDetectionRemover.removeUpdates(mDetectionRequester.getRequestPendingIntent());
+                            detectionRemover.removeUpdates(detectionRequester.getRequestPendingIntent());
 
                         }
                         break;
@@ -161,7 +159,7 @@ public class MainActivity extends Activity {
                     default:
 
                         // Report that Google Play services was unable to resolve the problem.
-                        Log.d(ActivityUtils.APPTAG, getString(R.string.no_resolution));
+                        Log.d(ESTGParkingApplicationUtils.APPTAG, getString(R.string.no_resolution));
                 }
 
                 break;
@@ -169,7 +167,7 @@ public class MainActivity extends Activity {
                 // If any other request code was received
             default:
                 // Report that this Activity received an unknown requestCode
-                Log.d(ActivityUtils.APPTAG, getString(R.string.unknown_activity_request_code, requestCode));
+                Log.d(ESTGParkingApplicationUtils.APPTAG, getString(R.string.unknown_activity_request_code, requestCode));
 
                 break;
         }
@@ -192,7 +190,7 @@ public class MainActivity extends Activity {
         if (ConnectionResult.SUCCESS == resultCode) {
 
             // In debug mode, log the status
-            Log.d(ActivityUtils.APPTAG, getString(R.string.play_services_available));
+            Log.d(ESTGParkingApplicationUtils.APPTAG, getString(R.string.play_services_available));
 
             // Continue
             return true;
