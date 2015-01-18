@@ -129,13 +129,13 @@ public class ESTGParkingApplication extends Application {
         if (this.datastore == null) {
 
             if (datastoreManager == null) {
-                Log.w(this.getClass().getSimpleName(), "Couldn't Initialize datastore: Datastore manager not initialized");
+                Log.w(ESTGParkingApplicationUtils.APPTAG, "Couldn't Initialize datastore: Datastore manager not initialized");
                 return;
             }
 
             try {
                 this.datastore = this.datastoreManager.openDatastore(".hhSgxW6D63kRmT-eiB69OuFN6jP8SydcsQopEJ1QGFs");
-                Log.i(this.getClass().getSimpleName(), "Initializing datastore...");
+                Log.i(ESTGParkingApplicationUtils.APPTAG, "Initializing datastore...");
             } catch (DbxException e) {
                 e.printStackTrace();
             }
@@ -206,7 +206,7 @@ public class ESTGParkingApplication extends Application {
             getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
         }
 
-        Log.i(this.getClass().getSimpleName(), "Parked in (" + location.latitude + ", " + location.longitude);
+        Log.i(ESTGParkingApplicationUtils.APPTAG, "Parked in (" + location.latitude + ", " + location.longitude);
     }
 
     public void depart(LatLng location) {
@@ -225,7 +225,7 @@ public class ESTGParkingApplication extends Application {
             getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
         }
 
-        Log.i(this.getClass().getSimpleName(), "Departed from (" + location.latitude + ", " + location.longitude);
+        Log.i(ESTGParkingApplicationUtils.APPTAG, "Departed from (" + location.latitude + ", " + location.longitude);
     }
 
     // <editor-fold desc="Getters and setters">

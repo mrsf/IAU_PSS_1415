@@ -7,6 +7,7 @@ import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.app.IntentService;
@@ -46,15 +47,16 @@ public class ActivityRecognitionIntentService extends IntentService implements L
      */
     private static boolean DEBUG_LOGS = true;
     private static String LOG_FILE_PATH = "/sdcard/estgparking.txt";
+    private static long CURRENT_ACTIVITY_DELTA = 120000;
 
     private ESTGParkingApplication app;
 
     private LocationClient locationClient;
 
-    private boolean isParking;
-
     private FileOutputStream fileOutputStream;
     private OutputStreamWriter outputStreamWriter;
+    private static Location activityChangeLocation;
+    private static Long activityChangeTime;
 
     public ActivityRecognitionIntentService() {
         // Set the label for the service's background thread
@@ -67,6 +69,9 @@ public class ActivityRecognitionIntentService extends IntentService implements L
     public void onCreate() {
         super.onCreate();
         locationClient = new LocationClient(this, this, this);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationClient.requestLocationUpdates(locationRequest, this);
 
         if (DEBUG_LOGS) {
             try {
@@ -131,7 +136,7 @@ public class ActivityRecognitionIntentService extends IntentService implements L
                 editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, activityType);
                 editor.commit();
 
-                Log.i(this.getClass().getSimpleName(), "Initialized shared preferences activity type with " + getNameFromType(activityType));
+                Log.i(ESTGParkingApplicationUtils.APPTAG, "Initialized shared preferences activity type with " + getNameFromType(activityType));
 
                 // If the repository contains a type
             } else if (confidence >= 50) {
@@ -187,28 +192,60 @@ public class ActivityRecognitionIntentService extends IntentService implements L
 
         if (DEBUG_LOGS) {
             try {
-                String log = getDateString() + " - Activity: " + getNameFromType(currentType) + "; Confidence: " + confidence + "; Previous: " + getNameFromType(previousType) + "\r\n";
-                Log.i(this.getClass().getSimpleName(), log);
-                outputStreamWriter.append(log);
+                String log = "Activity: " + getNameFromType(currentType) + "; Confidence: " + confidence + "; Previous: " + getNameFromType(previousType) + "\r\n";
+                Log.i(ESTGParkingApplicationUtils.APPTAG, log);
+                outputStreamWriter.append(getDateString() + " - " + log);
+                if (activityChangeTime != null)
+                    outputStreamWriter.append(getDateString() + " - " + (System.currentTimeMillis() - activityChangeTime));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        if (previousType == DetectedActivity.TILTING && currentType != DetectedActivity.TILTING) {
-            Editor editor = app.getSharedPreferences().edit();
-            editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
-            editor.commit();
-            isParking = true;
-            locationClient.connect();
-        }
+        if (previousType == DetectedActivity.IN_VEHICLE && currentType != DetectedActivity.IN_VEHICLE) {
 
-        if (previousType != DetectedActivity.TILTING && currentType == DetectedActivity.TILTING) {
-            Editor editor = app.getSharedPreferences().edit();
-            editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
-            editor.commit();
-            isParking = false;
-            locationClient.connect();
+            if (activityChangeTime == null) {
+                activityChangeTime = System.currentTimeMillis();    // Get time for activity change
+                locationClient.connect();                           // Get location for activity change
+            } else if (System.currentTimeMillis() - activityChangeTime > CURRENT_ACTIVITY_DELTA) {
+                Editor editor = app.getSharedPreferences().edit();
+                editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
+                editor.commit();
+                app.park(new LatLng(activityChangeLocation.getLatitude(), activityChangeLocation.getLongitude()));
+                sendNotification("Parked");
+                activityChangeTime = null;
+
+                if (DEBUG_LOGS) {
+                    try {
+                        outputStreamWriter.append(getDateString() + " - Parked at (" + activityChangeLocation.getLatitude() + ", " + activityChangeLocation.getLongitude() + ")\r\n");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else if (previousType != DetectedActivity.IN_VEHICLE && currentType == DetectedActivity.IN_VEHICLE) {
+
+            if (activityChangeTime == null) {
+                activityChangeTime = System.currentTimeMillis();    // Get time for activity change
+                locationClient.connect();                           // Get location for activity change
+            } else if (System.currentTimeMillis() - activityChangeTime > CURRENT_ACTIVITY_DELTA) {
+                Editor editor = app.getSharedPreferences().edit();
+                editor.putInt(ESTGParkingApplicationUtils.KEY_PREVIOUS_ACTIVITY_TYPE, currentType);
+                editor.commit();
+                app.depart(new LatLng(activityChangeLocation.getLatitude(), activityChangeLocation.getLongitude()));
+                sendNotification("Departed");
+                activityChangeTime = null;
+
+                if (DEBUG_LOGS) {
+                    try {
+                        outputStreamWriter.append(getDateString() + " - Departed at (" + activityChangeLocation.getLatitude() + ", " + activityChangeLocation.getLongitude() + ")\r\n");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            activityChangeTime = null;
         }
     }
 
@@ -238,24 +275,7 @@ public class ActivityRecognitionIntentService extends IntentService implements L
 
     @Override
     public void onConnected(Bundle bundle) {
-        Location location = locationClient.getLastLocation();
-
-        if (DEBUG_LOGS) {
-            try {
-                outputStreamWriter.append(getDateString() + " - " + (isParking ? " Parked" : "Departed") + "\r\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (isParking) {
-            app.park(new LatLng(location.getLatitude(), location.getLongitude()));
-            sendNotification("Parked");
-        } else {
-            app.depart(new LatLng(location.getLatitude(), location.getLongitude()));
-            sendNotification("Departed");
-        }
-
+        activityChangeLocation = locationClient.getLastLocation();
         locationClient.disconnect();
     }
 
