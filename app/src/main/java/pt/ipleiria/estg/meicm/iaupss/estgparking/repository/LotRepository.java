@@ -48,7 +48,18 @@ public class LotRepository implements ILotRepository {
 
     @Override
     public String findLot(double lat, double lng) {
-        return null;
+
+        String lotId = null;
+
+        try {
+            this.datastore.sync();
+            LotsTable lotsTable = new LotsTable(datastore);
+            lotId = lotsTable.getLotIdForLocation(lat, lng);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+
+        return lotId;
     }
 
     private List<Lot> dataStoreLots() {
@@ -72,14 +83,20 @@ public class LotRepository implements ILotRepository {
             lot.setId(lotRecord.getId());
             lot.setName(lotRecord.getName());
             lot.setDescription(lotRecord.getDescription());
-            lot.setLatitude(lotRecord.getLatitude());
-            lot.setLongitude(lotRecord.getLongitude());
+            lot.setLatitudeA(lotRecord.getLatitudeA());
+            lot.setLongitudeA(lotRecord.getLongitudeA());
+            lot.setLatitudeB(lotRecord.getLatitudeB());
+            lot.setLongitudeB(lotRecord.getLongitudeB());
+            lot.setLatitudeC(lotRecord.getLatitudeC());
+            lot.setLongitudeC(lotRecord.getLongitudeC());
+            lot.setLatitudeD(lotRecord.getLatitudeD());
+            lot.setLongitudeD(lotRecord.getLongitudeD());
             lot.setImagePath(lotRecord.getImagePath());
 
             lots.add(lot);
 
-            Log.d(TAG, "Add: " + lot.getId() + " | " + lot.getName() + " | " + lot.getDescription()
-                    + " | " + lot.getLatitude() + " | " + lot.getLongitude() + " | " + lot.getImagePath());
+            Log.d(TAG, "Add: " + lot.getId() + " | " + lot.getName() + " | " + lot.getDescription() +
+                    " | " + lot.getImagePath());
         }
 
         /*this.lotsData.open();
