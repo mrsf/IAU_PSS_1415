@@ -199,7 +199,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setBackground(null);
             bmImage.setImageBitmap(result);
             progressBar.setVisibility(ProgressBar.GONE);
         }
