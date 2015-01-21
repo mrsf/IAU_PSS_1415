@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
@@ -65,11 +66,6 @@ public class ESTGParkingApplication extends Application {
      * Indicates whether the car is parked or not
      */
     private Boolean isParked;
-
-    /**
-     * Indicates the OAuth provider being used
-     */
-    private OAuthProvider oAuthProvider;
 
     /**
      * Client used to interact with Google APIs
@@ -204,6 +200,9 @@ public class ESTGParkingApplication extends Application {
 
         if (lotId != null) {
             getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
+        } else {
+            Log.w(ESTGParkingApplicationUtils.APPTAG, "No lot found with the specified coordinates");
+            Toast.makeText(this, "No lot found", Toast.LENGTH_SHORT).show();
         }
 
         Log.i(ESTGParkingApplicationUtils.APPTAG, "Parked in (" + location.latitude + ", " + location.longitude);
@@ -222,7 +221,10 @@ public class ESTGParkingApplication extends Application {
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
         if (lotId != null) {
-            getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
+            getSectionRepository(lotId).abandonSection(location.latitude, location.longitude);
+        } else {
+            Log.w(ESTGParkingApplicationUtils.APPTAG, "No lot found with the specified coordinates");
+            Toast.makeText(this, "No lot found", Toast.LENGTH_SHORT).show();
         }
 
         Log.i(ESTGParkingApplicationUtils.APPTAG, "Departed from (" + location.latitude + ", " + location.longitude);
@@ -260,14 +262,6 @@ public class ESTGParkingApplication extends Application {
 
     public void setDatastore(DbxDatastore datastore) {
         this.datastore = datastore;
-    }
-
-    public OAuthProvider getoAuthProvider() {
-        return oAuthProvider;
-    }
-
-    public void setoAuthProvider(OAuthProvider oAuthProvider) {
-        this.oAuthProvider = oAuthProvider;
     }
 
     // </editor-fold>

@@ -45,7 +45,7 @@ public class ActivityRecognitionIntentService extends IntentService implements L
     /**
      * Whether to write logs to file or not
      */
-    private static boolean DEBUG_LOGS = true;
+    private static boolean DEBUG_LOGS = false;
     private static String LOG_FILE_PATH = "/sdcard/estgparking.txt";
     private static long CURRENT_ACTIVITY_DELTA = 120000;
 
@@ -71,7 +71,6 @@ public class ActivityRecognitionIntentService extends IntentService implements L
         locationClient = new LocationClient(this, this, this);
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationClient.requestLocationUpdates(locationRequest, this);
 
         if (DEBUG_LOGS) {
             try {
