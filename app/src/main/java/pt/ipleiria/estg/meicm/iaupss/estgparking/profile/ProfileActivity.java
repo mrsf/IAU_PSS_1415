@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,13 +22,23 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.w3c.dom.Document;
 
 import java.io.InputStream;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSpotActivity;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 
 public class ProfileActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
@@ -104,6 +115,13 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         }
 
         locationClient = new LocationClient(this, this, this);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
+
+        parkingLocation = app.getParkingLocation();
+        setUpMapIfNeeded();
     }
 
     @Override
@@ -181,6 +199,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         }
 
         protected void onPostExecute(Bitmap result) {
+            bmImage.setBackground(null);
             bmImage.setImageBitmap(result);
             progressBar.setVisibility(ProgressBar.GONE);
         }
@@ -240,5 +259,83 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         if (photoUrl != null) {
             new LoadProfileImage(imgProfilePic).execute(photoUrl);
         }
+    }
+
+
+
+    private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
+
+    GoogleDirection gd;
+    Document mDoc;
+    private LatLng parkingLocation;
+
+    /**
+     * Sets up the map
+     */
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (googleMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            // Check if we were successful in obtaining the map.
+            if (googleMap != null) {
+                setUpMap();
+            }
+
+            googleMap.getUiSettings().setZoomControlsEnabled(false);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            googleMap.getUiSettings().setCompassEnabled(false);
+            googleMap.getUiSettings().setAllGesturesEnabled(false);
+            //googleMap.getUiSettings().setRotateGesturesEnabled(false);
+
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng position) {
+                    Intent intent;
+                    intent = new Intent(ProfileActivity.this, ParkingSpotActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    Intent intent;
+                    intent = new Intent(ProfileActivity.this, ParkingSpotActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+        }
+    }
+
+
+    /**
+     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
+     * just add a marker near Africa.
+     * <p/>
+     * This should only be called once and when we are sure that {@link #googleMap} is not null.
+     */
+    private void setUpMap() {
+        googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+
+        gd = new GoogleDirection(this);
+        gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
+            public void onResponse(String status, Document doc, GoogleDirection gd) {
+                mDoc = doc;
+                googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
+                googleMap.addMarker(new MarkerOptions().position(parkingLocation)
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_GREEN)));
+
+/*                mMap.addMarker(new MarkerOptions().position(userLocation)
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_GREEN)));*/
+            }
+        });
+
+        gd.setLogging(true);
     }
 }

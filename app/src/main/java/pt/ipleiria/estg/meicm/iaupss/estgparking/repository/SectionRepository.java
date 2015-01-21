@@ -37,12 +37,34 @@ public class SectionRepository implements ISectionRepository {
 
     @Override
     public boolean occupySection(double lat, double lng) {
-        return false;
+
+        boolean isValid = false;
+
+        try {
+            this.datastore.sync();
+            SectionsTable sectionsTable = new SectionsTable(datastore);
+            isValid = sectionsTable.occupationIncrement(lat, lng);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+
+        return isValid;
     }
 
     @Override
     public boolean abandonSection(double lat, double lng) {
-        return false;
+
+        boolean isValid = false;
+
+        try {
+            this.datastore.sync();
+            SectionsTable sectionsTable = new SectionsTable(datastore);
+            isValid = sectionsTable.occupationDecrement(lat, lng);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+
+        return isValid;
     }
 
     private List<Section> dataStoreSections() {
@@ -66,8 +88,14 @@ public class SectionRepository implements ISectionRepository {
             section.setId(record.getId());
             section.setName(record.getName());
             section.setDescription(record.getDescription());
-            section.setLatitude(record.getLatitude());
-            section.setLongitude(record.getLongitude());
+            section.setLatitudeA(record.getLatitudeA());
+            section.setLongitudeA(record.getLongitudeA());
+            section.setLatitudeB(record.getLatitudeB());
+            section.setLongitudeB(record.getLongitudeB());
+            section.setLatitudeC(record.getLatitudeC());
+            section.setLongitudeC(record.getLongitudeC());
+            section.setLatitudeD(record.getLatitudeD());
+            section.setLongitudeD(record.getLongitudeD());
             section.setCapacity(record.getCapacity());
             section.setOccupation(record.getOccupation());
             section.setLotId(record.getLotId());
@@ -75,8 +103,7 @@ public class SectionRepository implements ISectionRepository {
             sections.add(section);
 
             Log.d(TAG, "Add: " + section.getId() + " | " + section.getName() + " | " + section.getDescription()
-                    + " | " + section.getLatitude() + " | " + section.getLongitude() + " | " + section.getCapacity()
-                    + " | " + section.getOccupation() + " | " + section.getLotId());
+                    + " | " + section.getCapacity() + " | " + section.getOccupation() + " | " + section.getLotId());
         }
 
         /*this.sectionsData.open();

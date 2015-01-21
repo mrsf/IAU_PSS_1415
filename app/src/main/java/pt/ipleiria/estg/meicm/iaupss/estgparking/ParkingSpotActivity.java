@@ -41,6 +41,8 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
 
     private LocationClient locationClient;
 
+    private Menu menu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,10 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_parking_spot, menu);
+        menu.findItem(R.id.action_normal).setVisible(false);
+        menu.findItem(R.id.action_sattelite).setVisible(true);
+        menu.findItem(R.id.action_hybrid).setVisible(true);
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -75,6 +81,28 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
                 gd.setLogging(true);
                 gd.request(userLocation, parkingLocation, GoogleDirection.MODE_WALKING);
                 return true;
+
+            case R.id.action_normal:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                menu.findItem(R.id.action_normal).setVisible(false);
+                menu.findItem(R.id.action_sattelite).setVisible(true);
+                menu.findItem(R.id.action_hybrid).setVisible(true);
+                return true;
+
+            case R.id.action_sattelite:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                menu.findItem(R.id.action_normal).setVisible(true);
+                menu.findItem(R.id.action_sattelite).setVisible(false);
+                menu.findItem(R.id.action_hybrid).setVisible(true);
+                return true;
+
+            case R.id.action_hybrid:
+                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                menu.findItem(R.id.action_normal).setVisible(true);
+                menu.findItem(R.id.action_sattelite).setVisible(true);
+                menu.findItem(R.id.action_hybrid).setVisible(false);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -98,6 +126,10 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
             if (mMap != null) {
                 setUpMap();
             }
+
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setCompassEnabled(true);
         }
     }
 

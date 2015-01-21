@@ -5,4 +5,14 @@
 
     <item android:id="@+id/action_animate"
         android:title="Animar" />
+
+    <item android:id="@+id/action_sattelite"
+        android:title="Ver mapa em modo satelite" />
+
+    <item android:id="@+id/action_normal"
+        android:title="Ver mapa modo normal" />
+
+    <item android:id="@+id/action_hybrid"
+        android:title="Ver mapa modo híbrido" />
+
     </menu>

@@ -25,10 +25,28 @@ public class SectionsData extends ESTGParkingData {
                     + ESTGParkingDBContract.SectionBase.DESCRIPTION
                     + ESTGParkingDBContract.TEXT_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.SectionBase.LATITUDE
+                    + ESTGParkingDBContract.SectionBase.LATITUDE_A
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
-                    + ESTGParkingDBContract.SectionBase.LONGITUDE
+                    + ESTGParkingDBContract.SectionBase.LONGITUDE_A
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LATITUDE_B
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LONGITUDE_B
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LATITUDE_C
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LONGITUDE_C
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LATITUDE_D
+                    + ESTGParkingDBContract.NUMERIC_TYPE
+                    + ESTGParkingDBContract.COMMA_SEP
+                    + ESTGParkingDBContract.SectionBase.LONGITUDE_D
                     + ESTGParkingDBContract.NUMERIC_TYPE
                     + ESTGParkingDBContract.COMMA_SEP
                     + ESTGParkingDBContract.SectionBase.CAPACITY
@@ -69,8 +87,9 @@ public class SectionsData extends ESTGParkingData {
             if (cursor.moveToFirst())
                 do {
                     sections.add(new Section(cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                            cursor.getDouble(3), cursor.getDouble(4), cursor.getInt(5), cursor.getInt(6),
-                            cursor.getString(7)));
+                            cursor.getDouble(3), cursor.getDouble(4), cursor.getDouble(5), cursor.getDouble(6),
+                            cursor.getDouble(7), cursor.getDouble(8), cursor.getDouble(9), cursor.getDouble(10),
+                            cursor.getInt(11), cursor.getInt(12), cursor.getString(13)));
                 } while (cursor.moveToNext());
 
             cursor.close();
@@ -102,8 +121,14 @@ public class SectionsData extends ESTGParkingData {
         values.put(ESTGParkingDBContract.SectionBase.ID, section.getId());
         values.put(ESTGParkingDBContract.SectionBase.NAME, section.getName());
         values.put(ESTGParkingDBContract.SectionBase.DESCRIPTION, section.getDescription());
-        values.put(ESTGParkingDBContract.SectionBase.LATITUDE, section.getLatitude());
-        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE, section.getLongitude());
+        values.put(ESTGParkingDBContract.SectionBase.LATITUDE_A, section.getLatitudeA());
+        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE_A, section.getLongitudeA());
+        values.put(ESTGParkingDBContract.SectionBase.LATITUDE_B, section.getLatitudeB());
+        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE_B, section.getLongitudeB());
+        values.put(ESTGParkingDBContract.SectionBase.LATITUDE_C, section.getLatitudeC());
+        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE_C, section.getLongitudeC());
+        values.put(ESTGParkingDBContract.SectionBase.LATITUDE_D, section.getLatitudeD());
+        values.put(ESTGParkingDBContract.SectionBase.LONGITUDE_D, section.getLongitudeD());
         values.put(ESTGParkingDBContract.SectionBase.CAPACITY, section.getCapacity());
         values.put(ESTGParkingDBContract.SectionBase.OCCUPATION, section.getOccupation());
         values.put(ESTGParkingDBContract.SectionBase.LOT_ID, section.getLotId());

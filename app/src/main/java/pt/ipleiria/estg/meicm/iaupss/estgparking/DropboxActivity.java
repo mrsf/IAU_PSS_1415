@@ -98,14 +98,14 @@ public class DropboxActivity extends ActionBarActivity {
     }
 
     private void CreateUserRanking() {
-//        try {
-//            // criar a base de dados
-//            this.app.initDatastore();
-//            // criar tabela e inserir registo
-//            RankingsTable rankings = new RankingsTable(this.app.getDatastore());
-//            //rankings.createRanking(this.app.getUserInfoProvider().getName(), this.app.getUserInfoProvider().getEmail(), 5, this.app.getUserInfoProvider().getPhotoURL());
-//        } catch (DbxException e) {
-//            e.printStackTrace();
-//        }
+        /*try {
+            // criar a base de dados
+            this.app.initDatastore();
+            // criar tabela e inserir registo
+            RankingsTable rankings = new RankingsTable(this.app.getDatastore());
+            rankings.createRanking(this.app.getUserInfo().getName(), this.app.getUserInfo().getEmail(), 5, this.app.getUserInfo().getPhotoURL());
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }*/
     }
 }
