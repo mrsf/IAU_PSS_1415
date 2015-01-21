@@ -83,11 +83,11 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
         super.onProgressUpdate(values);
 
         for (DownloadTask t : values) {
-            t.getImageView().setImageBitmap(t.getImage());
+                t.getImageView().setImageBitmap(t.getImage());
 
-            this.imageCache.addElement(t.getUrl(), t.getImage());
+                this.imageCache.addElement(t.getUrl(), t.getImage());
 
-            t.getProgressBar().setVisibility(View.GONE);
+                t.getProgressBar().setVisibility(View.GONE);
         }
     }
 

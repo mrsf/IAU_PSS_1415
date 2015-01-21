@@ -16,6 +16,15 @@ public class Rectangle {
         return  (checkAB(dotP) && checkBC(dotP) && checkCD(dotP) && checkDA(dotP) ? true : false);
     }
 
+    public Dot getCenterDot() {
+
+        double lat, lng;
+        lat = (dotA.getLat() + dotC.getLat()) / 2;
+        lng = (dotA.getLng() + dotC.getLng()) / 2;
+
+        return new Dot(lat, lng);
+    }
+
     private boolean checkAB(Dot dotP) {
 
         double d = (dotA.getLat() - dotB.getLat()) * (dotP.getLng() - dotB.getLng()) -

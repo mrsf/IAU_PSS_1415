@@ -57,13 +57,17 @@ public class RankingsTable {
     }
 
     public void createRanking(String name, String email, int score, String imagePath) throws DbxException {
-        DbxFields rankingFields = new DbxFields()
-                .set("name", name)
-                .set("email", email)
-                .set("score", score)
-                .set("image_path", imagePath);
-        table.insert(rankingFields);
-        datastore.sync();
+
+        if (this.getMyRanking(email) == null) {
+
+            DbxFields rankingFields = new DbxFields()
+                    .set("name", name)
+                    .set("email", email)
+                    .set("score", score)
+                    .set("image_path", imagePath);
+            table.insert(rankingFields);
+            datastore.sync();
+        }
     }
 
     public List<RankingRecord> getRankingsSorted() throws DbxException {
@@ -81,11 +85,12 @@ public class RankingsTable {
     }
 
     public RankingRecord getMyRanking(String email) throws DbxException {
-        List<RankingRecord> rankingsList = new ArrayList<>();
+        RankingRecord rankingRecord = null;
         DbxFields queryParams = new DbxFields().set("email", email);
         for (DbxRecord record : table.query(queryParams)) {
-            rankingsList.add(new RankingRecord(record));
+            rankingRecord = new RankingRecord(record);
+            break;
         }
-        return rankingsList.get(0);
+        return rankingRecord;
     }
 }
