@@ -85,11 +85,9 @@
     <string name="title_activity_parking_sections">Secções do Lote</string>
     <string name="title_activity_users_ranking">Ranking</string>
     <string name="title_activity_start">ESTG Parking</string>
-
     <string name="preference_file_key">"pt.ipleiria.estg.meicm.iaupss.estgparking.profile.PREFERENCE_FILE"</string>
-
     <string name="user_parking_lat">"user_parking_lat"</string>
     <string name="user_parking_lng">"user_parking_lng"</string>
-
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

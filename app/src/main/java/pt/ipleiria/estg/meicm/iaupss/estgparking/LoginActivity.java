@@ -63,24 +63,21 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.GooglePlusUserInfoProvi
 public class LoginActivity extends FragmentActivity
         implements ConnectionCallbacks, OnConnectionFailedListener, View.OnClickListener {
 
+    /* Request code used to invoke sign in user interactions. */
+    private static final int RC_SIGN_IN = 0;
+    private static final String PERMISSION = "publish_actions";
+    private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.samples.hellofacebook:PendingAction";
 
-
-
-
-
-
-
-
+    private enum PendingAction {
+        NONE,
+        POST_PHOTO,
+        POST_STATUS_UPDATE
+    }
 
     /**
      * App singleton
      */
     private ESTGParkingApplication app;
-
-    private static final String PERMISSION = "publish_actions";
-
-
-    private final String PENDING_ACTION_BUNDLE_KEY = "com.facebook.samples.hellofacebook:PendingAction";
 
     private LoginButton fbLoginButton;
     private PendingAction pendingAction = PendingAction.NONE;
@@ -88,16 +85,16 @@ public class LoginActivity extends FragmentActivity
     private GraphUser user;
     private GraphPlace place;
     private List<GraphUser> tags;
+
     private boolean canPresentShareDialog;
     private boolean canPresentShareDialogWithPhotos;
 
-    private ImageView imgProfilePic;
+    /* Track whether the sign-in button has been clicked so that we know to resolve
+     * all issues preventing sign-in without waiting.
+     */
+    private boolean signInClicked;
 
-    private enum PendingAction {
-        NONE,
-        POST_PHOTO,
-        POST_STATUS_UPDATE
-    }
+
     private UiLifecycleHelper uiHelper;
 
 
@@ -106,16 +103,14 @@ public class LoginActivity extends FragmentActivity
 
 
 
-    // Google+ stuff
-    /* Request code used to invoke sign in user interactions. */
-    private static final int RC_SIGN_IN = 0;
+
 
     /* Client used to interact with Google APIs. */
     private GoogleApiClient mGoogleApiClient;
 
     /* A flag indicating that a PendingIntent is in progress and prevents us from starting further intents.
      */
-    private boolean mIntentInProgress;
+    private boolean intentInProgress;
 
 
 
@@ -196,7 +191,6 @@ public class LoginActivity extends FragmentActivity
                     Session.OpenRequest openRequest = new Session.OpenRequest(LoginActivity.this).setPermissions("basic_info", "email");
                     Session.setActiveSession(session);
                     session.openForRead(openRequest);
-                    app.setoAuthProvider(OAuthProvider.FACEBOOK);   // Register the used OAuth provider
 
                     // Set the user info provider
                     app.setUserInfoProvider(new FacebookUserInfoProvider());
@@ -265,10 +259,10 @@ public class LoginActivity extends FragmentActivity
             case RC_SIGN_IN:
                 // Goggle+ stuff
                 if (resultCode != RESULT_OK) {
-                    mSignInClicked = false;
+                    signInClicked = false;
                 }
 
-                mIntentInProgress = false;
+                intentInProgress = false;
 
                 if (!mGoogleApiClient.isConnecting()) {
                     mGoogleApiClient.connect();
@@ -534,14 +528,14 @@ public class LoginActivity extends FragmentActivity
 
         mConnectionResult = result;
 
-        if (!mIntentInProgress && result.hasResolution()) {
+        if (!intentInProgress && result.hasResolution()) {
             try {
-                mIntentInProgress = true;
+                intentInProgress = true;
                 startIntentSenderForResult(result.getResolution().getIntentSender(), RC_SIGN_IN, null, 0, 0, 0);
             } catch (SendIntentException e) {
                 // The intent was canceled before it was sent.  Return to the default
                 // state and attempt to connect to get an updated ConnectionResult.
-                mIntentInProgress = false;
+                intentInProgress = false;
                 mGoogleApiClient.connect();
             }
         }
@@ -558,21 +552,15 @@ public class LoginActivity extends FragmentActivity
      * Google play services connected callback
      */
     public void onConnected(Bundle connectionHint) {
-        mSignInClicked = false;
-        Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
-        //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        signInClicked = false;
 
         // Set the user info provider
         app.setUserInfoProvider(new GooglePlusUserInfoProvider());
 
-        app.setoAuthProvider(OAuthProvider.GOGGLE_PLUS);
         startMainActivity();
     }
 
-    /* Track whether the sign-in button has been clicked so that we know to resolve
- * all issues preventing sign-in without waiting.
- */
-    private boolean mSignInClicked;
+
 
     /* Store the connection result from onConnectionFailed callbacks so that we can
      * resolve them when the user clicks sign-in.
@@ -584,12 +572,12 @@ public class LoginActivity extends FragmentActivity
         Log.wtf("resolveSignInError","resolveSignInError");
         if (mConnectionResult.hasResolution()) {
             try {
-                mIntentInProgress = true;
+                intentInProgress = true;
                 startIntentSenderForResult(mConnectionResult.getResolution().getIntentSender(), RC_SIGN_IN, null, 0, 0, 0);
             } catch (SendIntentException e) {
                 // The intent was canceled before it was sent.  Return to the default
                 // state and attempt to connect to get an updated ConnectionResult.
-                mIntentInProgress = false;
+                intentInProgress = false;
                 mGoogleApiClient.connect();
             }
         }
@@ -604,7 +592,7 @@ public class LoginActivity extends FragmentActivity
 
     public void onClick(View view) {
         if (view.getId() == R.id.sign_in_button && !mGoogleApiClient.isConnecting()) {
-            mSignInClicked = true;
+            signInClicked = true;
             mGoogleApiClient.connect();
             //resolveSignInError();
         }
