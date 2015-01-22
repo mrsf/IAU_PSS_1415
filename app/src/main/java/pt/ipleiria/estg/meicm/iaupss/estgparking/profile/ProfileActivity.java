@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -53,6 +54,8 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     private TextView txtUsername;
     private TextView txtEmail;
 
+    private ProgressBar progressBar;
+
     private LocationClient locationClient;
 
     @Override
@@ -69,6 +72,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         imgProfilePic = (ImageView) findViewById(R.id.imagePhoto);
         txtUsername = (TextView) findViewById(R.id.textUsername);
         txtEmail = (TextView) findViewById(R.id.textEmail);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         fetchUserInfo();
 
@@ -195,8 +199,8 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         }
 
         protected void onPostExecute(Bitmap result) {
-            bmImage.setBackground(null);
             bmImage.setImageBitmap(result);
+            progressBar.setVisibility(ProgressBar.GONE);
         }
     }
 

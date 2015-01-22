@@ -27,14 +27,20 @@
                 android:layout_height="fill_parent">
 
                 <FrameLayout
-                    android:layout_width="150dp"
-                    android:layout_height="150dp">
+                android:layout_width="150dp"
+                android:layout_height="150dp">
 
                     <ImageView
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:id="@+id/imagePhoto"
                         android:background="@drawable/ic_launcher" />
+
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/progressBar"
+                        android:layout_gravity="center" />
                 </FrameLayout>
 
                 <LinearLayout
@@ -65,6 +71,8 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+
 
         </LinearLayout>
 
