@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,110 +22,89 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection.OnAnimateListener;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Section;;
 
-public class MapActivity extends FragmentActivity implements GooglePlayServicesClient.ConnectionCallbacks,
+public class MapActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     private Section section;
 
-    LatLng start = new LatLng(39.6359523,-8.8211917);
-    LatLng end = new LatLng(39.6359523,-8.8211917);
+    private LatLng userLocation;
+    private LatLng targetLocation;
 
-    TextView textProgress;
-    Button buttonAnimate, buttonRequest;
+    private GoogleMap googleMap;
+    private GoogleDirection googleDirection;
+    private Document document;
 
-    GoogleMap mMap;
-    GoogleDirection gd;
-    Document mDoc;
+    private LocationClient locationClient;
 
-    Location mCurrentLocation;
+    private Menu menu;
 
-    private LocationClient mLocationClient;
+    private ProgressBar progressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
 
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
+
         if (this.section == null) {
             Intent i = getIntent();
             this.section = i.getParcelableExtra("Section");
             if (this.section != null)
-                end = new LatLng(this.section.getLatitudeA(), this.section.getLongitudeA());
+                targetLocation = new LatLng(this.section.getLatitudeA(), this.section.getLongitudeA());
         }
 
-        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(start, 15));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 15));
 
-        gd = new GoogleDirection(this);
-        gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
+        googleDirection = new GoogleDirection(this);
+        googleDirection.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
             public void onResponse(String status, Document doc, GoogleDirection gd) {
-                mDoc = doc;
-                mMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
-                mMap.addMarker(new MarkerOptions().position(start)
+                document = doc;
+                googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
+                googleMap.addMarker(new MarkerOptions().position(userLocation)
                         .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));
+                                BitmapDescriptorFactory.HUE_RED)).title("Localização atual"));
 
-                mMap.addMarker(new MarkerOptions().position(end)
+                googleMap.addMarker(new MarkerOptions().position(targetLocation)
                         .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));
-
-                buttonAnimate.setVisibility(View.VISIBLE);
+                                BitmapDescriptorFactory.HUE_AZURE)).title("Estacionamento"));
             }
         });
 
-        gd.setOnAnimateListener(new OnAnimateListener() {
+        googleDirection.setOnAnimateListener(new OnAnimateListener() {
             public void onStart() {
-                textProgress.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             public void onProgress(int progress, int total) {
-                textProgress.setText(progress + " / " + total);
+                progressBar.setProgress(progress);
             }
 
             public void onFinish() {
-                buttonAnimate.setVisibility(View.VISIBLE);
-                textProgress.setVisibility(View.GONE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 
-        textProgress = (TextView) findViewById(R.id.textProgress);
-        textProgress.setVisibility(View.GONE);
+        progressBar = (ProgressBar) findViewById(R.id.map_progressbar);
 
-        buttonRequest = (Button) findViewById(R.id.buttonRequest);
-        buttonRequest.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                v.setVisibility(View.GONE);
-                gd.setLogging(true);
-                gd.request(start, end, GoogleDirection.MODE_DRIVING);
-            }
-        });
-
-        buttonAnimate = (Button) findViewById(R.id.buttonAnimate);
-        buttonAnimate.setVisibility(View.GONE);
-        buttonAnimate.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                v.setVisibility(View.GONE);
-                gd.animateDirection(mMap, gd.getDirection(mDoc), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
-            }
-        });
-
-
-        mLocationClient = new LocationClient(this, this, this);
+        locationClient = new LocationClient(this, this, this);
     }
 
     private void showGPSAlertMessage() {
@@ -151,6 +131,10 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_map, menu);
+        menu.findItem(R.id.action_normal).setVisible(false);
+        menu.findItem(R.id.action_sattelite).setVisible(true);
+        menu.findItem(R.id.action_hybrid).setVisible(true);
+        this.menu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -158,28 +142,49 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_search:
-                gd.animateDirection(mMap, gd.getDirection(mDoc), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
+            case R.id.action_animate:
+                googleDirection.cancelAnimated();
+                googleDirection.animateDirection(googleMap, googleDirection.getDirection(document), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
                 return true;
-            case R.id.action_settings:
-                gd.setLogging(true);
-                gd.request(start, end, GoogleDirection.MODE_DRIVING);
+
+            case R.id.action_normal:
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                menu.findItem(R.id.action_normal).setVisible(false);
+                menu.findItem(R.id.action_sattelite).setVisible(true);
+                menu.findItem(R.id.action_hybrid).setVisible(true);
                 return true;
+
+            case R.id.action_sattelite:
+                googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                menu.findItem(R.id.action_normal).setVisible(true);
+                menu.findItem(R.id.action_sattelite).setVisible(false);
+                menu.findItem(R.id.action_hybrid).setVisible(true);
+                return true;
+
+            case R.id.action_hybrid:
+                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                menu.findItem(R.id.action_normal).setVisible(true);
+                menu.findItem(R.id.action_sattelite).setVisible(true);
+                menu.findItem(R.id.action_hybrid).setVisible(false);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
-        gd.cancelAnimated();
+        googleDirection.cancelAnimated();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        mCurrentLocation = mLocationClient.getLastLocation();
-        start = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        Location location = locationClient.getLastLocation();
+        userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        googleDirection.request(userLocation, targetLocation, GoogleDirection.MODE_WALKING);
     }
 
     @Override
@@ -189,32 +194,16 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-    /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
+
         if (connectionResult.hasResolution()) {
             try {
                 // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                        this,
-                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
                 e.printStackTrace();
             }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the
-             * user with the error.
-             */
-            //showErrorDialog(connectionResult.getErrorCode());
         }
     }
 
@@ -223,7 +212,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
     public void onStop() {
 
         // After disconnect() is called, the client is considered "dead".
-        mLocationClient.disconnect();
+        locationClient.disconnect();
 
         super.onStop();
     }
@@ -246,7 +235,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
              * Connect the client. Don't re-start any requests here;
              * instead, wait for onResume()
              */
-            mLocationClient.connect();
+            locationClient.connect();
         }
 
     }
@@ -267,7 +256,7 @@ public class MapActivity extends FragmentActivity implements GooglePlayServicesC
              * Connect the client. Don't re-start any requests here;
              * instead, wait for onResume()
              */
-            mLocationClient.connect();
+            locationClient.connect();
         }
     }
 }

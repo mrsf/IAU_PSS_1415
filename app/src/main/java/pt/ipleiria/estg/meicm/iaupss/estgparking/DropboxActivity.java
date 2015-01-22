@@ -15,6 +15,7 @@ import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxTable;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.RankingsTable;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfoProvider;
 
 public class DropboxActivity extends ActionBarActivity {
 
@@ -98,14 +99,17 @@ public class DropboxActivity extends ActionBarActivity {
     }
 
     private void CreateUserRanking() {
-        /*try {
+
+        IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
+
+        try {
             // criar a base de dados
             this.app.initDatastore();
             // criar tabela e inserir registo
             RankingsTable rankings = new RankingsTable(this.app.getDatastore());
-            rankings.createRanking(this.app.getUserInfo().getName(), this.app.getUserInfo().getEmail(), 5, this.app.getUserInfo().getPhotoURL());
+            rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
         } catch (DbxException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 }

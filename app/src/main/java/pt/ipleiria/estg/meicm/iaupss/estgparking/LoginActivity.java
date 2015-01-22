@@ -100,11 +100,6 @@ public class LoginActivity extends FragmentActivity
 
     private ActivityRecognitionClient mActivityRecognitionClient;
 
-
-
-
-
-
     /* Client used to interact with Google APIs. */
     private GoogleApiClient mGoogleApiClient;
 
@@ -139,12 +134,7 @@ public class LoginActivity extends FragmentActivity
     @Override
     protected void onStart() {
         super.onStart();
-
-        //app.getTracker(ESTGParkingApplication.TrackerName.APP_TRACKER).setScreenName("Login");
-        //app.getTracker(ESTGParkingApplication.TrackerName.APP_TRACKER).send(new HitBuilders.ScreenViewBuilder().build());
-
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
-        //mGoogleApiClient.connect();
     }
 
     @Override
