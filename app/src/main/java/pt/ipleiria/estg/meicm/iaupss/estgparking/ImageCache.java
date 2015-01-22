@@ -45,12 +45,10 @@ public class ImageCache {
 
     }
 
-    public synchronized void addElement(String key, Bitmap value) {
+    public void addElement(String key, Bitmap value) {
 
-        if (key != "" && key != null) {
             this.imgCache.put(key, value);
             Log.i(TAG, "Add Element: " + key + "(key)");
-        }
     }
 
     public Bitmap getElement(String key) {

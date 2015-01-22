@@ -57,8 +57,12 @@ public class RankingViewHolder extends RecyclerView.ViewHolder implements View.O
         this.emailText.setText(ranking.getEmail());
         this.scoreText.setText(ranking.getScore() + " pontos");
         this.ratingBar.setRating(ranking.getRating());
-        this.downloader = new ImageDownloader(cache);
-        this.downloader.executeOnExecutor(exec, new DownloadTask(ranking.getImagePath(), this.rankingImage, this.imageProgress));
+        if (!this.ranking.getImagePath().equals(null) && !this.ranking.getImagePath().equals("")) {
+            this.downloader = new ImageDownloader(cache);
+            this.downloader.executeOnExecutor(exec, new DownloadTask(ranking.getImagePath(), this.rankingImage, this.imageProgress));
+        } else {
+            this.imageProgress.setVisibility(ProgressBar.GONE);
+        }
     }
 
     protected ImageDownloader getDownloader() {
