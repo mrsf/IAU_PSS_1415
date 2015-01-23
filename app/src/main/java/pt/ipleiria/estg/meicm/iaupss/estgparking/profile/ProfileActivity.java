@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -189,6 +190,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 //makeUseOfNewLocation(location);
+                Toast.makeText(ProfileActivity.this, "bla", Toast.LENGTH_SHORT).show();
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
