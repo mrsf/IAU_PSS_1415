@@ -144,7 +144,6 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
 
             // criar tabela e inserir registo
             RankingsTable rankings = new RankingsTable(this.app.getDatastore());
-            rankings.createRanking(this.app.getUserInfoProvider().getName(), this.app.getUserInfoProvider().getEmail(), 5, this.app.getUserInfoProvider().getPhotoURL());
             rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
         } catch (DbxException e) {
             e.printStackTrace();
