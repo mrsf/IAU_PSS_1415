@@ -1,11 +1,8 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.app.ActionBar;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -29,10 +26,10 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 public class ParkingSpotActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
 
-    GoogleDirection gd;
-    Document mDoc;
+    private GoogleDirection googleDirection;
+    private Document document;
 
     private ESTGParkingApplication app;
 
@@ -49,8 +46,9 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         setContentView(R.layout.activity_parking_spot);
 
         ActionBar actionBar = getActionBar();
-        if(actionBar != null)
+        if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         app = ESTGParkingApplication.getInstance();
         parkingLocation = app.getParkingLocation();
@@ -75,29 +73,29 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_animate:
-                gd.animateDirection(mMap, gd.getDirection(mDoc), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
+                googleDirection.animateDirection(googleMap, googleDirection.getDirection(document), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
                 return true;
             case R.id.action_parking_spot_show_path:
-                gd.setLogging(true);
-                gd.request(userLocation, parkingLocation, GoogleDirection.MODE_WALKING);
+                googleDirection.setLogging(true);
+                googleDirection.request(userLocation, parkingLocation, GoogleDirection.MODE_WALKING);
                 return true;
 
             case R.id.action_normal:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 menu.findItem(R.id.action_normal).setVisible(false);
                 menu.findItem(R.id.action_sattelite).setVisible(true);
                 menu.findItem(R.id.action_hybrid).setVisible(true);
                 return true;
 
             case R.id.action_sattelite:
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 menu.findItem(R.id.action_normal).setVisible(true);
                 menu.findItem(R.id.action_sattelite).setVisible(false);
                 menu.findItem(R.id.action_hybrid).setVisible(true);
                 return true;
 
             case R.id.action_hybrid:
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 menu.findItem(R.id.action_normal).setVisible(true);
                 menu.findItem(R.id.action_sattelite).setVisible(true);
                 menu.findItem(R.id.action_hybrid).setVisible(false);
@@ -119,17 +117,17 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
      */
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
+        if (googleMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
+            if (googleMap != null) {
                 setUpMap();
             }
 
-            mMap.getUiSettings().setZoomControlsEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            mMap.getUiSettings().setCompassEnabled(true);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
         }
     }
 
@@ -137,28 +135,28 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
      * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
+     * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+        googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
 
-        gd = new GoogleDirection(this);
-        gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
+        googleDirection = new GoogleDirection(this);
+        googleDirection.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
             public void onResponse(String status, Document doc, GoogleDirection gd) {
-                mDoc = doc;
-                mMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
-                mMap.addMarker(new MarkerOptions().position(parkingLocation)
+                document = doc;
+                googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
+                googleMap.addMarker(new MarkerOptions().position(parkingLocation)
                         .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));
+                                BitmapDescriptorFactory.HUE_AZURE)).title("Veículo"));
 
-                mMap.addMarker(new MarkerOptions().position(userLocation)
+                googleMap.addMarker(new MarkerOptions().position(userLocation)
                         .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));
+                                BitmapDescriptorFactory.HUE_GREEN)).title("Localização atual"));
             }
         });
 
-        gd.setLogging(true);
+        googleDirection.setLogging(true);
     }
 
     @Override

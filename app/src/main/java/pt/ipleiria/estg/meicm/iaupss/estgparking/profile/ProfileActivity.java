@@ -1,12 +1,15 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.profile;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -76,6 +80,8 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
         fetchUserInfo();
 
+        startLocationListener();
+
 
         final TextView txtStatus = (TextView) findViewById(R.id.profile_txt_status);
 
@@ -97,11 +103,11 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             if (app.isParked()) {
                 app.depart(new LatLng(lat, lng));
                 txtStatus.setText(app.getCurrentUserActivity());
-                parkButton.setText("Estacionar");
+                parkButton.setText("Libertar estacionamento");
             } else {
                 app.park(new LatLng(lat, lng));
                 txtStatus.setText(app.getCurrentUserActivity());
-                parkButton.setText("Desestacionar");
+                parkButton.setText("Estacionar");
             }
             }
         });
@@ -174,6 +180,40 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             }
         }
     }
+
+    private void startLocationListener() {
+        // Acquire a reference to the system Location Manager
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                //makeUseOfNewLocation(location);
+                Toast.makeText(ProfileActivity.this, "bla", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+        boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (gpsEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        } else if (networkEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        } else {
+            // Alert
+        }
+    }
+
+
+
 
     /**
      * Background Async task to load user profile picture from url

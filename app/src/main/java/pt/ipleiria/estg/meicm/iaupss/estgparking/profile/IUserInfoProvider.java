@@ -5,5 +5,6 @@ public interface IUserInfoProvider {
     String getName();
     String getEmail();
     String getPhotoURL();
+    boolean isInfoFetched();
 
 }

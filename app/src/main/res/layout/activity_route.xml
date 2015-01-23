@@ -32,22 +32,6 @@ THE SOFTWARE.
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment" />
 
-    <Button
-        android:id="@+id/buttonRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Request" />
-
-    <Button
-        android:id="@+id/buttonAnimate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Animate" />
-
     <TextView
         android:id="@+id/textProgress"
         android:layout_width="wrap_content"
@@ -55,5 +39,13 @@ THE SOFTWARE.
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:text="0 / 0" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/map_progressbar"
+        android:focusableInTouchMode="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

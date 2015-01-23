@@ -12,10 +12,9 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxRecord;
-import com.dropbox.sync.android.DbxTable;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.RankingsTable;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfoProvider;
 
 public class DropboxActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
 
@@ -36,8 +35,6 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
                     // show menu activity
                 } catch (DbxException.Unauthorized e) {
                     Log.e(TAG, "Account was unlinked remotely: ", e);
-                } catch (DbxException e) {
-                    e.printStackTrace();
                 }
             } else {
                 // Account isn't linked yet, use local datastores
@@ -133,6 +130,9 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
     }
 
     private void CreateUserRanking() {
+
+        IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
+
         try {
             // criar a base de dados
             this.app.initDatastore();
@@ -145,6 +145,7 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
             // criar tabela e inserir registo
             RankingsTable rankings = new RankingsTable(this.app.getDatastore());
             rankings.createRanking(this.app.getUserInfoProvider().getName(), this.app.getUserInfoProvider().getEmail(), 5, this.app.getUserInfoProvider().getPhotoURL());
+            rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
         } catch (DbxException e) {
             e.printStackTrace();
         }

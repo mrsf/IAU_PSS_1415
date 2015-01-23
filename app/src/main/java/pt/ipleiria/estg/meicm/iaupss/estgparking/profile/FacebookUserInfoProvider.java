@@ -11,40 +11,36 @@ import com.facebook.model.GraphUser;
 public class FacebookUserInfoProvider implements IUserInfoProvider {
 
     private String id = "";
-
     private String name = "";
-
     private String email = "";
-
     private String photoURL = "";
+    private boolean isInfoFetched;
+
+    public static final Object LOCK = new Object();
 
 
     public FacebookUserInfoProvider() {
+
         final Session session = Session.getActiveSession();
 
-        //if (session != null && session.isOpened()) {
-            // If the session is open, make an API call to get user data
-            // and define a new callback to handle the response
-            Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
-                @Override
-                public void onCompleted(GraphUser user, Response response) {
-                    // If the response is successful
-                    if (session == Session.getActiveSession()) {
-                        if (user != null) {
-                            id = user.getId();//user id
-                            //profileName = user.getName();//user's profile name
-                            //userNameView.setText(user.getName());
-                            email = user.getProperty("email").toString();
-
-                            name = user.getName();
-
-                            photoURL = "https://graph.facebook.com/" + id + "/picture?type=large";
-                        }
+        // If the session is open, make an API call to get user data
+        // and define a new callback to handle the response
+        Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+            @Override
+            public void onCompleted(GraphUser user, Response response) {
+                // If the response is successful
+                if (session == Session.getActiveSession()) {
+                    if (user != null) {
+                        id = user.getId();
+                        name = user.getName();
+                        email = user.getProperty("email").toString();
+                        photoURL = "https://graph.facebook.com/" + id + "/picture?type=large";
                     }
+                    isInfoFetched = true;
                 }
-            });
-            Request.executeBatchAsync(request);
-        //}
+            }
+        });
+        Request.executeBatchAsync(request);
     }
 
     @Override
@@ -60,5 +56,10 @@ public class FacebookUserInfoProvider implements IUserInfoProvider {
     @Override
     public String getPhotoURL() {
         return photoURL;
+    }
+
+    @Override
+    public boolean isInfoFetched() {
+        return isInfoFetched;
     }
 }

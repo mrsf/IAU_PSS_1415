@@ -17,6 +17,8 @@ public class GooglePlusUserInfoProvider implements IUserInfoProvider {
 
     private String photoURL = "";
 
+    private boolean isInfoFetched;
+
     public GooglePlusUserInfoProvider() {
         ESTGParkingApplication app = ESTGParkingApplication.getInstance();
         GoogleApiClient googleApiClient = app.getGoogleApiClient();
@@ -34,6 +36,8 @@ public class GooglePlusUserInfoProvider implements IUserInfoProvider {
             photoURL = personPhoto.getUrl().substring(0,
                     personPhoto.getUrl().length() - 2)
                     + 512;
+
+            isInfoFetched = true;
         }
     }
 
@@ -50,5 +54,10 @@ public class GooglePlusUserInfoProvider implements IUserInfoProvider {
     @Override
     public String getPhotoURL() {
         return photoURL;
+    }
+
+    @Override
+    public boolean isInfoFetched() {
+        return isInfoFetched;
     }
 }

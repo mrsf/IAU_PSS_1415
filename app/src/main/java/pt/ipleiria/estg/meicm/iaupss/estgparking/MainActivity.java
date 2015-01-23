@@ -1,6 +1,7 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -107,6 +108,20 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+
+        Button aboutButton = (Button) findViewById(R.id.main_btn_about);
+        aboutButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
+                dlgAlert.setMessage(R.string.about_msg);
+                dlgAlert.setTitle(R.string.app_name);
+                dlgAlert.setPositiveButton("OK", null);
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
+            }
+        });
+
     }
 
     @Override

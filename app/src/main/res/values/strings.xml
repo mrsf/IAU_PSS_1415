@@ -26,11 +26,13 @@
     <string name="disconnected">Disconnected from Location Services</string>
     <string name="no_resolution">Google Play services: unable to resolve connection error.</string>
     <string name="unknown_activity_request_code">        Received an unknown activity request code %1$d in onActivityResult.</string>
-    <string name="title_activity_map">MapActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_map">Estacionamento</string>
+    <string name="title_activity_main">Menu Principal</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_my_ranking">Visualizar o meu score</string>
+
+    <string name="about_msg">2015, Escola Superior de Tecnologia e Gestão de leiria\n\nMárcio Francisco\nPedro Sousa</string>
 
     <!-- User interface labels and strings -->
 
