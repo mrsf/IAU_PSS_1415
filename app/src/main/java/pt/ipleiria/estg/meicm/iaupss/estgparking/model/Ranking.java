@@ -1,6 +1,9 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking.model;
 
-public class Ranking {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Ranking implements Parcelable {
 
     private String id;
     private String name;
@@ -9,6 +12,11 @@ public class Ranking {
     private String imagePath;
 
     public Ranking() {}
+
+    public Ranking(Parcel in) {
+
+        this.readFromParcel(in);
+    }
 
     public Ranking(String id, String name, String email, int score, String imagePath) {
 
@@ -62,4 +70,42 @@ public class Ranking {
     public float getRating() {
         return (this.score * 5) / 10000;
     }
+
+    @Override
+    public int describeContents() {
+
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.email);
+        dest.writeInt(this.score);
+        dest.writeString(this.imagePath);
+    }
+
+    private void readFromParcel(Parcel in) {
+
+        this.id = in.readString();
+        this.name = in.readString();
+        this.email = in.readString();
+        this.score = in.readInt();
+        this.imagePath = in.readString();
+    }
+
+    public static final Parcelable.Creator<Ranking> CREATOR = new Parcelable.Creator<Ranking>() {
+
+        @Override
+        public Ranking createFromParcel(Parcel source) {
+            return new Ranking(source);
+        }
+
+        @Override
+        public Ranking[] newArray(int size) {
+            return new Ranking[size];
+        }
+    };
 }

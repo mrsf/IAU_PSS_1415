@@ -14,10 +14,9 @@ import com.dropbox.sync.android.DbxException;
 
 import java.util.List;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.RankingsAdapter;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.SpacerItemDecoration;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.RankingsAdapter;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Ranking;
-
 
 public class RankingsActivity extends BaseRecyclerViewActivity {
 
@@ -65,13 +64,18 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == android.R.id.home) {
-            //super.getApp().getDatastoreManager().shutDown();
-            finish();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.action_my_ranking:
+                List<Ranking> rankings = super.getApp().getRankingRepository().fetchMyRanking(super.getApp().getUserInfoProvider().getEmail());
+                super.setViewAdapter(new RankingsAdapter(rankings, this.imageCache));
+                super.getRecyclerView().setAdapter(super.getViewAdapter());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

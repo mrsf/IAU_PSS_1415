@@ -11,17 +11,12 @@ import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxRecord;
 
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.SpacerItemDecoration;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.LotsAdapter;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.LotsTable;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.SectionsTable;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Lot;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Dot;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Rectangle;
 
 public class LotsActivity extends BaseRecyclerViewActivity {
 

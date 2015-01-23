@@ -54,8 +54,12 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingViewHolder> {
     public void onViewRecycled(RankingViewHolder holder) {
         super.onViewRecycled(holder);
 
-        if (holder.getDownloader().getStatus() != AsyncTask.Status.FINISHED)
-            holder.getDownloader().cancel(true);
+        try {
+            if (holder.getDownloader().getStatus() != AsyncTask.Status.FINISHED)
+                holder.getDownloader().cancel(true);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

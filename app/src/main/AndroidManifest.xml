@@ -70,7 +70,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:parentActivityName=".StartActivity"
             android:screenOrientation="portrait" >
 
@@ -129,6 +129,18 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
+            android:name=".RankingsActivity"
+            android:label="@string/title_activity_users_ranking"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name=".LotDetailsActivity"
             android:label="@string/title_activity_lot_details"
             android:launchMode="singleTop"
@@ -151,18 +163,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LotDetailsActivity" />
-        </activity>
-        <activity
-            android:name=".RankingsActivity"
-            android:label="@string/title_activity_users_ranking"
-            android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
-
-            <!-- Parent activity meta-data to support API level 7+ -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
 
         <!-- Dropbox Datastore API -->

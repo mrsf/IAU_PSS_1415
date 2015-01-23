@@ -12,11 +12,12 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxDatastoreManager;
 import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxRecord;
 import com.dropbox.sync.android.DbxTable;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.RankingsTable;
 
-public class DropboxActivity extends ActionBarActivity {
+public class DropboxActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
 
     private static final String TAG = "DROPBOX_ACTIVITY";
 
@@ -31,14 +32,12 @@ public class DropboxActivity extends ActionBarActivity {
                 try {
                     // Use Dropbox datastores
                     app.setDatastoreManager(DbxDatastoreManager.forAccount(mgr.getLinkedAccount()));
-                    // show menu activity
-                    Intent i = new Intent(getBaseContext(), MainActivity.class);
-                    //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
                     CreateUserRanking();
-                    finish();
+                    // show menu activity
                 } catch (DbxException.Unauthorized e) {
                     Log.e(TAG, "Account was unlinked remotely: ", e);
+                } catch (DbxException e) {
+                    e.printStackTrace();
                 }
             } else {
                 // Account isn't linked yet, use local datastores
@@ -64,6 +63,14 @@ public class DropboxActivity extends ActionBarActivity {
         super.onPause();
 
         this.app.getAccountManager().removeListener(accountListener);
+
+        try {
+            this.app.getDatastore().removeSyncStatusListener(this);
+            this.app.getDatastore().close();
+            this.app.setDatastore(null);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -73,6 +80,34 @@ public class DropboxActivity extends ActionBarActivity {
 
         this.app.getAccountManager().addListener(accountListener);
         this.accountListener.onLinkedAccountChange(app.getAccountManager(), app.getAccountManager().getLinkedAccount());
+
+        try {
+            if (this.app.getDatastoreManager().isShutDown()) {
+                try {
+                    this.app.setDatastoreManager(DbxDatastoreManager.forAccount(this.app.getAccountManager().getLinkedAccount()));
+                } catch (DbxException.Unauthorized unauthorized) {
+                    unauthorized.printStackTrace();
+                }
+            }
+            this.app.initDatastore();
+            this.app.getDatastore().addSyncStatusListener(this);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!this.app.getDatastoreManager().isShutDown())
+            this.app.getDatastoreManager().shutDown();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        //System.exit(0);
     }
 
     @Override
@@ -101,11 +136,36 @@ public class DropboxActivity extends ActionBarActivity {
         try {
             // criar a base de dados
             this.app.initDatastore();
+
+            /*for(DbxRecord record : this.app.getDatastore().getTable("ranking").query()) {
+                record.deleteRecord();
+                this.app.getDatastore().sync();
+            }*/
+
             // criar tabela e inserir registo
             RankingsTable rankings = new RankingsTable(this.app.getDatastore());
             rankings.createRanking(this.app.getUserInfoProvider().getName(), this.app.getUserInfoProvider().getEmail(), 5, this.app.getUserInfoProvider().getPhotoURL());
         } catch (DbxException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDatastoreStatusChange(DbxDatastore datastore) {
+
+        if (datastore.getSyncStatus().isConnected) {
+            if (!(datastore.getSyncStatus().hasOutgoing || datastore.getSyncStatus().hasIncoming)) {
+                Intent i = new Intent(getBaseContext(), MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
+            } else {
+                try {
+                    datastore.sync();
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

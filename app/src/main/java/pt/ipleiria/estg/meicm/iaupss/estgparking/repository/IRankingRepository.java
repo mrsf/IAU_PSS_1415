@@ -7,4 +7,6 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Ranking;
 public interface IRankingRepository {
 
     List<Ranking> fetchRankings();
+
+    List<Ranking> fetchMyRanking(String email);
 }

@@ -58,7 +58,8 @@ public class RankingsTable {
 
     public void createRanking(String name, String email, int score, String imagePath) throws DbxException {
 
-        if (this.getMyRanking(email) == null) {
+        RankingRecord rankingRecord = this.getMyRanking(email);
+        if (rankingRecord == null) {
 
             DbxFields rankingFields = new DbxFields()
                     .set("name", name)
@@ -66,6 +67,9 @@ public class RankingsTable {
                     .set("score", score)
                     .set("image_path", imagePath);
             table.insert(rankingFields);
+            datastore.sync();
+        } else {
+            rankingRecord.record.set("score", rankingRecord.record.getLong("score") + 5);
             datastore.sync();
         }
     }
