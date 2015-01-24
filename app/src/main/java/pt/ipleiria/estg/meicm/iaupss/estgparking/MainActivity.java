@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,16 +21,16 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.DetectionRe
 import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.ProfileActivity;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     /*
      *  Intent filter for incoming broadcasts from the
      *  IntentService.
      */
-    IntentFilter mBroadcastFilter;
+    IntentFilter broadcastFilter;
 
     // Instance of a local broadcast manager
-    private LocalBroadcastManager mBroadcastManager;
+    private LocalBroadcastManager broadcastManager;
 
     // The activity recognition update request object
     private DetectionRequester detectionRequester;
@@ -41,20 +42,27 @@ public class MainActivity extends Activity {
     private ESTGParkingApplicationUtils.REQUEST_TYPE mRequestType;
 
 
+    private Button aboutButton;
+    private Button rankingsButton;
+    private Button lotsButton;
+    private Button facebookPostButton;
+    private Button profileButton;
+    private Button postPhotoButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         // Location stuff
         // Set the broadcast receiver intent filer
-        mBroadcastManager = LocalBroadcastManager.getInstance(this);
+        broadcastManager = LocalBroadcastManager.getInstance(this);
 
         // Create a new Intent filter for the broadcast receiver
-        mBroadcastFilter = new IntentFilter(ESTGParkingApplicationUtils.ACTION_REFRESH_STATUS_LIST);
-        mBroadcastFilter.addCategory(ESTGParkingApplicationUtils.CATEGORY_LOCATION_SERVICES);
+        broadcastFilter = new IntentFilter(ESTGParkingApplicationUtils.ACTION_REFRESH_STATUS_LIST);
+        broadcastFilter.addCategory(ESTGParkingApplicationUtils.CATEGORY_LOCATION_SERVICES);
 
         // Get detection requester and remover objects
         detectionRequester = new DetectionRequester(this);
@@ -63,35 +71,39 @@ public class MainActivity extends Activity {
         detectionRequester.requestUpdates();
 
 
-        Button postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
+        postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
         postPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                postPhotoButton.setBackground(getResources().getDrawable(R.drawable.settings_selected));
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 startActivity(intent);
             }
         });
 
-        Button profileButton = (Button) findViewById(R.id.main_btn_profile);
+        profileButton = (Button) findViewById(R.id.main_btn_profile);
         profileButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                profileButton.setBackground(getResources().getDrawable(R.drawable.map_marker_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
                 startActivity(intent);
             }
         });
 
-        Button facebookPostButton = (Button) findViewById(R.id.main_btn_facebook_post);
+        facebookPostButton = (Button) findViewById(R.id.main_btn_facebook_post);
         facebookPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                facebookPostButton.setBackground(getResources().getDrawable(R.drawable.facebook_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, FacebookPostPhotoActivity.class);
                 startActivity(intent);
             }
         });
 
-        Button lotsButton = (Button) findViewById(R.id.main_btn_lots);
+        lotsButton = (Button) findViewById(R.id.main_btn_lots);
         lotsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                lotsButton.setBackground(getResources().getDrawable(R.drawable.parking_lot_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, LotsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -99,9 +111,11 @@ public class MainActivity extends Activity {
             }
         });
 
-        Button rankingsButton = (Button) findViewById(R.id.main_btn_rankings);
+
+        rankingsButton = (Button) findViewById(R.id.main_btn_rankings);
         rankingsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                rankingsButton.setBackground(getResources().getDrawable(R.drawable.rankings_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, RankingsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -110,9 +124,10 @@ public class MainActivity extends Activity {
         });
 
 
-        Button aboutButton = (Button) findViewById(R.id.main_btn_about);
+        aboutButton = (Button) findViewById(R.id.main_btn_about);
         aboutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                aboutButton.setBackground(getResources().getDrawable(R.drawable.about_selected));
                 AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
                 dlgAlert.setMessage(R.string.about_msg);
                 dlgAlert.setTitle(R.string.app_name);
@@ -129,13 +144,21 @@ public class MainActivity extends Activity {
         super.onResume();
 
         // Register the broadcast receiver
-        mBroadcastManager.registerReceiver(updateListReceiver, mBroadcastFilter);
+        broadcastManager.registerReceiver(updateListReceiver, broadcastFilter);
+
+        postPhotoButton.setBackground(getResources().getDrawable(R.drawable.settings));
+        profileButton.setBackground(getResources().getDrawable(R.drawable.map_marker));
+        facebookPostButton.setBackground(getResources().getDrawable(R.drawable.facebook));
+        lotsButton.setBackground(getResources().getDrawable(R.drawable.parking_lot));
+        rankingsButton.setBackground(getResources().getDrawable(R.drawable.rankings));
+        aboutButton.setBackground(getResources().getDrawable(R.drawable.about));
+
     }
 
     @Override
     public void onPause() {
         // Stop listening to broadcasts when the Activity isn't visible.
-        mBroadcastManager.unregisterReceiver(updateListReceiver);
+        broadcastManager.unregisterReceiver(updateListReceiver);
         super.onPause();
     }
 
