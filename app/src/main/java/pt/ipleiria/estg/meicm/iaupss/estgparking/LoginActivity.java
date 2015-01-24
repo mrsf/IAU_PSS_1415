@@ -175,7 +175,7 @@ public class LoginActivity extends FragmentActivity
                 // status update.
                 handlePendingAction();
 
-                if (LoginActivity.this.user != null) {
+                if (app.getUserInfoProvider() == null && LoginActivity.this.user != null) {
                     // Set facebook session necessary permissions
                     Session session = new Session(LoginActivity.this);
                     Session.OpenRequest openRequest = new Session.OpenRequest(LoginActivity.this).setPermissions("basic_info", "email");
@@ -228,7 +228,6 @@ public class LoginActivity extends FragmentActivity
         findViewById(R.id.sign_in_button).setOnClickListener(this);
 
         app.setGoogleApiClient(mGoogleApiClient);
-
 
         updateUI();
     }
