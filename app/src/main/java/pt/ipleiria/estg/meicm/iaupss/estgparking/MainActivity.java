@@ -51,6 +51,8 @@ public class MainActivity extends ActionBarActivity {
     private Button profileButton;
     private Button postPhotoButton;
 
+    private ESTGParkingApplication app;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -60,6 +62,9 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+
+        app = ESTGParkingApplication.getInstance();
 
         // Location stuff
         // Set the broadcast receiver intent filer
@@ -175,6 +180,12 @@ public class MainActivity extends ActionBarActivity {
         // Stop listening to broadcasts when the Activity isn't visible.
         broadcastManager.unregisterReceiver(updateListReceiver);
         super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        app.setUserInfoProvider(null);
+        super.onBackPressed();
     }
 
     @Override

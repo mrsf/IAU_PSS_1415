@@ -57,6 +57,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     private ImageView imgProfilePic;
     private TextView txtUsername;
     private TextView txtEmail;
+    private TextView txtMapHeader;
     private ProgressBar progressBar;
     private LocationClient locationClient;
     private LatLng currentLocation;
@@ -87,6 +88,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
 
         final TextView txtStatus = (TextView) findViewById(R.id.profile_txt_status);
+        final TextView txtMapHeader = (TextView) findViewById(R.id.profile_txt_map_header);
 
         final Button parkButton = (Button) findViewById(R.id.profile_btn_park);
         parkButton.setOnClickListener(new View.OnClickListener() {
@@ -118,9 +120,11 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         if (app.isParked()) {
             parkButton.setText("Libertar estacionamento");
             txtStatus.setText("Nao estacionado");
+            txtMapHeader.setText("Localização do veículo:");
         } else {
             parkButton.setText("Estacionar");
             txtStatus.setText("Estacionado");
+            txtMapHeader.setText("Localização atual:");
         }
 
         parkingLocation = app.getParkingLocation();
