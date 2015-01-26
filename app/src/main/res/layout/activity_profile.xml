@@ -51,27 +51,37 @@
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="10dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Large Text"
-                        android:id="@+id/textUsername" />
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="128dp"
+                        android:background="@drawable/shadow">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="-"
-                        android:id="@+id/textEmail"
-                        android:textSize="10dp" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="Large Text"
+                            android:id="@+id/textUsername"
+                            android:layout_marginLeft="4dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Small Text"
-                        android:id="@+id/profile_txt_status" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="-"
+                            android:id="@+id/textEmail"
+                            android:textSize="10dp"
+                            android:layout_marginLeft="4dp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="Small Text"
+                            android:id="@+id/profile_txt_status"
+                            android:layout_marginLeft="4dp" />
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
@@ -92,11 +102,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="0px"
                 android:layout_weight=".8"
-                android:background="@drawable/rectangle">
+                android:background="@drawable/rectangle"
+                android:layout_marginBottom="10dp">
 
                 <fragment
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="fill_parent"
                     android:name="com.google.android.gms.maps.SupportMapFragment"
                     tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSpotActivity"
                     android:id="@+id/map" />
@@ -113,7 +124,9 @@
                     android:layout_height="wrap_content"
                     android:text="New Button"
                     android:id="@+id/profile_btn_park"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/button_selector"
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
 
         </LinearLayout>
