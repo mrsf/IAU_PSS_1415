@@ -131,9 +131,6 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
 
     private void CreateUserRanking() {
 
-        IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
-
-        try {
             // criar a base de dados
             this.app.initDatastore();
 
@@ -142,12 +139,26 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
                 this.app.getDatastore().sync();
             }*/
 
-            // criar tabela e inserir registo
-            RankingsTable rankings = new RankingsTable(this.app.getDatastore());
-            rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
-        } catch (DbxException e) {
-            e.printStackTrace();
-        }
+        new Thread(new Runnable() {
+            public void run() {
+
+                IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
+
+                try {
+                    synchronized (userInfoProvider) {
+                        // Wait for user ifo
+                        if (!userInfoProvider.isInfoFetched()) {
+                            userInfoProvider.wait();
+                        }
+                        // criar tabela e inserir registo
+                        RankingsTable rankings = new RankingsTable(app.getDatastore());
+                        rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override

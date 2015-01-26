@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -34,7 +35,7 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
     private ESTGParkingApplication app;
 
     private LatLng parkingLocation;
-    private LatLng userLocation;
+    private LatLng currentLocation;
 
     private LocationClient locationClient;
 
@@ -50,10 +51,13 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        locationClient = new LocationClient(this, this, this);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
         app = ESTGParkingApplication.getInstance();
         parkingLocation = app.getParkingLocation();
         setUpMapIfNeeded();
-        locationClient = new LocationClient(this, this, this);
     }
 
     @Override
@@ -77,7 +81,7 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
                 return true;
             case R.id.action_parking_spot_show_path:
                 googleDirection.setLogging(true);
-                googleDirection.request(userLocation, parkingLocation, GoogleDirection.MODE_WALKING);
+                googleDirection.request(currentLocation, parkingLocation, GoogleDirection.MODE_WALKING);
                 return true;
 
             case R.id.action_normal:
@@ -138,8 +142,14 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
      * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
     private void setUpMap() {
-        googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+        // Show parking location if parked, else show current location.
+        if (app.isParked()) {
+            googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+        } else if (currentLocation != null) {
+            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        }
 
         googleDirection = new GoogleDirection(this);
         googleDirection.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
@@ -150,7 +160,7 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
                         .icon(BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_AZURE)).title("Veículo"));
 
-                googleMap.addMarker(new MarkerOptions().position(userLocation)
+                googleMap.addMarker(new MarkerOptions().position(currentLocation)
                         .icon(BitmapDescriptorFactory.defaultMarker(
                                 BitmapDescriptorFactory.HUE_GREEN)).title("Localização atual"));
             }
@@ -168,7 +178,13 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
     @Override
     public void onConnected(Bundle bundle) {
         Location location = locationClient.getLastLocation();
-        userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        // if not parked, show current location in the map.
+        if (!app.isParked() && googleMap != null) {
+            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        }
     }
 
     @Override

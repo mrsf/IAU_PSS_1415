@@ -57,10 +57,9 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     private ImageView imgProfilePic;
     private TextView txtUsername;
     private TextView txtEmail;
-
     private ProgressBar progressBar;
-
     private LocationClient locationClient;
+    private LatLng currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +69,10 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         ActionBar actionBar = getActionBar();
         if(actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
+
+        locationClient = new LocationClient(this, this, this);
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         app = ESTGParkingApplication.getInstance();
 
@@ -120,12 +123,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             txtStatus.setText("Estacionado");
         }
 
-        locationClient = new LocationClient(this, this, this);
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
-
         parkingLocation = app.getParkingLocation();
         setUpMapIfNeeded();
     }
@@ -162,6 +159,13 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     @Override
     public void onConnected(Bundle bundle) {
         Location location = locationClient.getLastLocation();
+        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        // if not parked, show current location in the map.
+        if (!app.isParked() && googleMap != null) {
+            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        }
     }
 
     @Override
@@ -304,8 +308,8 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
     private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
 
-    GoogleDirection gd;
-    Document mDoc;
+    private GoogleDirection googleDirection;
+    private Document document;
     private LatLng parkingLocation;
 
     /**
@@ -320,32 +324,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             if (googleMap != null) {
                 setUpMap();
             }
-
-            googleMap.getUiSettings().setZoomControlsEnabled(false);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            googleMap.getUiSettings().setCompassEnabled(false);
-            googleMap.getUiSettings().setAllGesturesEnabled(false);
-            //googleMap.getUiSettings().setRotateGesturesEnabled(false);
-
-            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng position) {
-                    Intent intent;
-                    intent = new Intent(ProfileActivity.this, ParkingSpotActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-
-                @Override
-                public boolean onMarkerClick(Marker marker) {
-                    Intent intent;
-                    intent = new Intent(ProfileActivity.this, ParkingSpotActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-            });
         }
     }
 
@@ -357,24 +335,40 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
      * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
     private void setUpMap() {
-        googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
 
-        gd = new GoogleDirection(this);
-        gd.setOnDirectionResponseListener(new GoogleDirection.OnDirectionResponseListener() {
-            public void onResponse(String status, Document doc, GoogleDirection gd) {
-                mDoc = doc;
-                googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
-                googleMap.addMarker(new MarkerOptions().position(parkingLocation)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));
+        googleMap.clear();
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMap.getUiSettings().setCompassEnabled(false);
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-/*                mMap.addMarker(new MarkerOptions().position(userLocation)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)));*/
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng position) {
+                Intent intent;
+                intent = new Intent(ProfileActivity.this, ParkingSpotActivity.class);
+                startActivity(intent);
             }
         });
 
-        gd.setLogging(true);
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Intent intent;
+                intent = new Intent(ProfileActivity.this, ParkingSpotActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
+
+        // Show parking location if parked, else show current location.
+        if (app.isParked()) {
+            googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+        } else if (currentLocation != null) {
+            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        }
     }
 }
