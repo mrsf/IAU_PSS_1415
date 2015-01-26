@@ -24,6 +24,8 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
     private FrameLayout containerFrameLayout;
     private FrameLayout progressFrameLayout;
 
+    private Thread thread;
+
     private DbxAccountManager.AccountListener accountListener = new DbxAccountManager.AccountListener() {
 
         @Override
@@ -120,7 +122,7 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
                 this.app.getDatastore().sync();
             }*/
 
-        new Thread(new Runnable() {
+        thread = new Thread(new Runnable() {
             public void run() {
 
                 IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
@@ -139,7 +141,8 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        thread.start();
     }
 
     @Override
@@ -160,11 +163,16 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
                     Log.e(TAG, "Communication with datastore failed: ", e);
                 }
             } else if (!datastore.getSyncStatus().isDownloading) {
-                CreateUserRanking();
-                Intent i = new Intent(getBaseContext(), MainActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
+                if (thread == null) {
+                    CreateUserRanking();
+                } else {
+                    if (!thread.isAlive()) {
+                        Intent i = new Intent(getBaseContext(), MainActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+                }
             }
         }
     }
