@@ -124,12 +124,7 @@ public class ESTGParkingApplication extends Application {
     public void initDatastore() {
         if (this.datastore == null) {
 
-            if (datastoreManager == null) {
-                Log.w(ESTGParkingApplicationUtils.APPTAG, "Couldn't Initialize datastore: Datastore manager not initialized");
-                return;
-            }
-
-            if (datastoreManager.isShutDown()) {
+            if (datastoreManager == null || datastoreManager.isShutDown()) {
                 try {
                     setDatastoreManager(DbxDatastoreManager.forAccount(getAccountManager().getLinkedAccount()));
                 } catch (DbxException.Unauthorized unauthorized) {
@@ -257,6 +252,15 @@ public class ESTGParkingApplication extends Application {
     }
 
     public DbxDatastoreManager getDatastoreManager() {
+
+        if (datastoreManager == null || datastoreManager.isShutDown()) {
+            try {
+                setDatastoreManager(DbxDatastoreManager.forAccount(getAccountManager().getLinkedAccount()));
+            } catch (DbxException.Unauthorized unauthorized) {
+                unauthorized.printStackTrace();
+            }
+        }
+
         return datastoreManager;
     }
 

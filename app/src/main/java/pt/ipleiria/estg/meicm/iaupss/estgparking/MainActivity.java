@@ -145,13 +145,12 @@ public class MainActivity extends ActionBarActivity {
                 AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
                 dlgAlert.setMessage(R.string.about_msg);
                 dlgAlert.setTitle(R.string.app_name);
-                dlgAlert.setPositiveButton("OK", null);
-                dlgAlert.setCancelable(true);
-                dlgAlert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    public void onDismiss(DialogInterface dialog) {
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog,  final int id) {
                         aboutButton.setBackground(getResources().getDrawable(R.drawable.about));
                     }
                 });
+                dlgAlert.setCancelable(true);
 
                 dlgAlert.create().show();
             }
