@@ -87,19 +87,22 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
             }
             this.app.initDatastore();
             this.app.getDatastore().addSyncStatusListener(this);
+            this.app.getDatastore().sync();
         } catch (NullPointerException e) {
             Log.e(TAG, "Datastore is not initialized: ", e);
         } catch (DbxException.Unauthorized unauthorized) {
             Log.e(TAG, "Account was unlinked remotely: ", unauthorized);
+        } catch (DbxException e) {
+            Log.e(TAG, "Communication with datastore failed: ", e);
         }
     }
 
-    @Override
+    /*@Override
     protected void onDestroy() {
         super.onDestroy();
         if (!this.app.getDatastoreManager().isShutDown())
             this.app.getDatastoreManager().shutDown();
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -127,23 +130,25 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
     public void onDatastoreStatusChange(DbxDatastore datastore) {
 
         if (datastore.getSyncStatus().isConnected) {
-            try {
-                datastore.sync();
+            if (datastore.getSyncStatus().hasIncoming) {
+                try {
+                    datastore.sync();
+                } catch (DbxException e) {
+                    Log.e(TAG, "Communication with datastore failed: ", e);
+                }
                 this.containerFrameLayout.setVisibility(FrameLayout.GONE);
                 this.progressFrameLayout.setVisibility(FrameLayout.VISIBLE);
-                if (datastore.getSyncStatus().hasOutgoing || datastore.getSyncStatus().hasIncoming) {
+                try {
                     datastore.sync();
-                } else {
-                    CreateUserRanking();
-                    Intent i = new Intent(getBaseContext(), MainActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    finish();
+                } catch (DbxException e) {
+                    Log.e(TAG, "Communication with datastore failed: ", e);
                 }
-            } catch (DbxException e) {
-                this.progressFrameLayout.setVisibility(FrameLayout.GONE);
-                this.containerFrameLayout.setVisibility(FrameLayout.VISIBLE);
-                Log.e(TAG, "Communication with datastore failed: ", e);
+            } else if (!datastore.getSyncStatus().isDownloading) {
+                CreateUserRanking();
+                Intent i = new Intent(getBaseContext(), MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
             }
         }
     }
