@@ -115,7 +115,9 @@
         </activity>
         <activity
             android:name=".DropboxActivity"
-            android:label="@string/title_activity_dropbox" >
+            android:label="@string/title_activity_dropbox"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Theme">
         </activity>
         <activity
             android:name=".LotsActivity"

@@ -83,7 +83,6 @@
     <!-- Login Activity Strings -->
     <string name="login_description">Entrar com:</string>
     <string name="logo_image_content_decription">Logótipo da aplicação ESTG Parking</string>
-    <string name="title_activity_dropbox">Conta Dropbox</string>
     <string name="title_activity_lot_details">Detalhes do Lote</string>
     <string name="title_activity_parking_sections">Secções do Lote</string>
     <string name="title_activity_users_ranking">Ranking</string>

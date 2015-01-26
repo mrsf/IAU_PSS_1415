@@ -1,5 +1,55 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.DropboxActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:gravity="center_horizontal"
+    android:background="#8da8ed">
+
+    <ImageView
+        android:layout_width="@dimen/logo_image_width"
+        android:layout_height="0dp"
+        android:id="@+id/dropbox_logo_image_view"
+        android:layout_weight="0.4"
+        android:contentDescription="@string/activity_dropbox_logo_image_view_content_description"
+        android:src="@drawable/estg_parking_logo"
+        android:scaleType="fitCenter"
+        android:cropToPadding="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6">
+
+        <FrameLayout android:id="@+id/dropbox_container_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/dropbox_progress_frame_layout"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dropbox_progress_bar"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/activity_vertical_margin" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_dropbox_progress_text_view_text"
+                android:id="@+id/dropbox_progress_text_view"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

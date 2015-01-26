@@ -2,10 +2,9 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
@@ -16,11 +15,14 @@ import com.dropbox.sync.android.DbxException;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.datastore.RankingsTable;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfoProvider;
 
-public class DropboxActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
+public class DropboxActivity extends FragmentActivity implements DbxDatastore.SyncStatusListener {
 
     private static final String TAG = "DROPBOX_ACTIVITY";
 
     private ESTGParkingApplication app;
+
+    private FrameLayout containerFrameLayout;
+    private FrameLayout progressFrameLayout;
 
     private DbxAccountManager.AccountListener accountListener = new DbxAccountManager.AccountListener() {
 
@@ -31,8 +33,6 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
                 try {
                     // Use Dropbox datastores
                     app.setDatastoreManager(DbxDatastoreManager.forAccount(mgr.getLinkedAccount()));
-                    CreateUserRanking();
-                    // show menu activity
                 } catch (DbxException.Unauthorized e) {
                     Log.e(TAG, "Account was unlinked remotely: ", e);
                 }
@@ -40,7 +40,7 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
                 // Account isn't linked yet, use local datastores
                 app.setDatastoreManager(DbxDatastoreManager.localManager(mgr));
                 // Show link button
-                getFragmentManager().beginTransaction().replace(R.id.container, new DropboxFragment(mgr, app.getDatastoreManager())).commitAllowingStateLoss();
+                getFragmentManager().beginTransaction().replace(containerFrameLayout.getId(), new DropboxFragment(mgr, app.getDatastoreManager())).commitAllowingStateLoss();
             }
         }
     };
@@ -52,6 +52,9 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
         setContentView(R.layout.activity_dropbox);
 
         this.app = ESTGParkingApplication.getInstance();
+
+        this.containerFrameLayout = (FrameLayout) findViewById(R.id.dropbox_container_frame_layout);
+        this.progressFrameLayout = (FrameLayout) findViewById(R.id.dropbox_progress_frame_layout);
     }
 
     @Override
@@ -66,7 +69,7 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
             this.app.getDatastore().close();
             this.app.setDatastore(null);
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Datastore is not initialized: ", e);
         }
     }
 
@@ -80,16 +83,14 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
 
         try {
             if (this.app.getDatastoreManager().isShutDown()) {
-                try {
-                    this.app.setDatastoreManager(DbxDatastoreManager.forAccount(this.app.getAccountManager().getLinkedAccount()));
-                } catch (DbxException.Unauthorized unauthorized) {
-                    unauthorized.printStackTrace();
-                }
+                this.app.setDatastoreManager(DbxDatastoreManager.forAccount(this.app.getAccountManager().getLinkedAccount()));
             }
             this.app.initDatastore();
             this.app.getDatastore().addSyncStatusListener(this);
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Datastore is not initialized: ", e);
+        } catch (DbxException.Unauthorized unauthorized) {
+            Log.e(TAG, "Account was unlinked remotely: ", unauthorized);
         }
     }
 
@@ -104,29 +105,6 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        //System.exit(0);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_dropbox, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void CreateUserRanking() {
@@ -134,19 +112,14 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
         IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
 
         try {
-            // criar a base de dados
+            // inicializa a base de dados
             this.app.initDatastore();
-
-            /*for(DbxRecord record : this.app.getDatastore().getTable("ranking").query()) {
-                record.deleteRecord();
-                this.app.getDatastore().sync();
-            }*/
 
             // criar tabela e inserir registo
             RankingsTable rankings = new RankingsTable(this.app.getDatastore());
             rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
         } catch (DbxException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Communication with datastore failed: ", e);
         }
     }
 
@@ -154,17 +127,23 @@ public class DropboxActivity extends ActionBarActivity implements DbxDatastore.S
     public void onDatastoreStatusChange(DbxDatastore datastore) {
 
         if (datastore.getSyncStatus().isConnected) {
-            if (!(datastore.getSyncStatus().hasOutgoing || datastore.getSyncStatus().hasIncoming)) {
-                Intent i = new Intent(getBaseContext(), MainActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
-            } else {
-                try {
+            try {
+                datastore.sync();
+                this.containerFrameLayout.setVisibility(FrameLayout.GONE);
+                this.progressFrameLayout.setVisibility(FrameLayout.VISIBLE);
+                if (datastore.getSyncStatus().hasOutgoing || datastore.getSyncStatus().hasIncoming) {
                     datastore.sync();
-                } catch (DbxException e) {
-                    e.printStackTrace();
+                } else {
+                    CreateUserRanking();
+                    Intent i = new Intent(getBaseContext(), MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
                 }
+            } catch (DbxException e) {
+                this.progressFrameLayout.setVisibility(FrameLayout.GONE);
+                this.containerFrameLayout.setVisibility(FrameLayout.VISIBLE);
+                Log.e(TAG, "Communication with datastore failed: ", e);
             }
         }
     }
