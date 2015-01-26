@@ -18,25 +18,33 @@ public class FacebookUserInfoProvider implements IUserInfoProvider {
 
     public static final Object LOCK = new Object();
 
-
     public FacebookUserInfoProvider() {
+        fetchUserInfo();
+    }
 
+    private void fetchUserInfo() {
         final Session session = Session.getActiveSession();
-
         // If the session is open, make an API call to get user data
         // and define a new callback to handle the response
         Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
+
             @Override
-            public void onCompleted(GraphUser user, Response response) {
-                // If the response is successful
-                if (session == Session.getActiveSession()) {
-                    if (user != null) {
-                        id = user.getId();
-                        name = user.getName();
-                        email = user.getProperty("email").toString();
-                        photoURL = "https://graph.facebook.com/" + id + "/picture?type=large";
+            public void onCompleted (GraphUser user, Response response){
+
+                synchronized(FacebookUserInfoProvider.this) {
+                        // If the response is successful
+                        if (session == Session.getActiveSession()) {
+                            if (user != null) {
+                                id = user.getId();
+                                name = user.getName();
+                                email = user.getProperty("email").toString();
+                                photoURL = "https://graph.facebook.com/" + id + "/picture?type=large";
+                            }
+                            isInfoFetched = true;
+
+                        FacebookUserInfoProvider.this.notifyAll();
+                        session.close();
                     }
-                    isInfoFetched = true;
                 }
             }
         });

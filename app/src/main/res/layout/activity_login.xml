@@ -23,7 +23,7 @@
                 android:layout_width="300px"
                 android:layout_height="300px"
                 android:id="@+id/login_img_profile"
-                android:background="@drawable/ic_launcher"
+                android:background="@drawable/logo"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="50dp" />
 

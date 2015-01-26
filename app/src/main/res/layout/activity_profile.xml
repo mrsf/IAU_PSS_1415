@@ -27,25 +27,29 @@
                 android:layout_height="fill_parent">
 
                 <FrameLayout
-                android:layout_width="150dp"
-                android:layout_height="150dp">
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                    android:background="@drawable/rectangle">
 
                     <ImageView
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:id="@+id/imagePhoto" />
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:id="@+id/imagePhoto"
+                        android:layout_gravity="center" />
 
                     <ProgressBar
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/progressBar"
                         android:layout_gravity="center" />
+
                 </FrameLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="10dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -58,8 +62,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="Large Text"
-                        android:id="@+id/textEmail" />
+                        android:text="-"
+                        android:id="@+id/textEmail"
+                        android:textSize="10dp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -86,7 +91,8 @@
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="0px"
-                android:layout_weight=".8">
+                android:layout_weight=".8"
+                android:background="@drawable/rectangle">
 
                 <fragment
                     android:layout_width="match_parent"

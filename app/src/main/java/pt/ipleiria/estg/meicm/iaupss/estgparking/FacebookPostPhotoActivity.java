@@ -83,7 +83,7 @@ public class FacebookPostPhotoActivity extends FragmentActivity {
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
-            onSessionStateChange(session, state, exception);
+        onSessionStateChange(session, state, exception);
         }
     };
 
@@ -161,9 +161,8 @@ public class FacebookPostPhotoActivity extends FragmentActivity {
 
                 // If any other request code was received
             default:
-                // Report that this Activity received an unknown requestCode
-                Log.d(ESTGParkingApplicationUtils.APPTAG, getString(R.string.unknown_activity_request_code, requestCode));
-
+                // Terminate the activity on unknown result
+                finish();
                 break;
         }
 

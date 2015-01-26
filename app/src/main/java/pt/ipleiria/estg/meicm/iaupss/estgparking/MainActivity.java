@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -51,7 +53,10 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setProgressBarIndeterminateVisibility(true);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -103,11 +108,13 @@ public class MainActivity extends ActionBarActivity {
         lotsButton = (Button) findViewById(R.id.main_btn_lots);
         lotsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                setProgressBarIndeterminateVisibility(true);
                 lotsButton.setBackground(getResources().getDrawable(R.drawable.parking_lot_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, LotsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                setProgressBarIndeterminateVisibility(false);
             }
         });
 
@@ -115,11 +122,13 @@ public class MainActivity extends ActionBarActivity {
         rankingsButton = (Button) findViewById(R.id.main_btn_rankings);
         rankingsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                setProgressBarIndeterminateVisibility(true);
                 rankingsButton.setBackground(getResources().getDrawable(R.drawable.rankings_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, RankingsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                setProgressBarIndeterminateVisibility(false);
             }
         });
 
@@ -133,6 +142,12 @@ public class MainActivity extends ActionBarActivity {
                 dlgAlert.setTitle(R.string.app_name);
                 dlgAlert.setPositiveButton("OK", null);
                 dlgAlert.setCancelable(true);
+                dlgAlert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    public void onDismiss(DialogInterface dialog) {
+                        aboutButton.setBackground(getResources().getDrawable(R.drawable.about));
+                    }
+                });
+
                 dlgAlert.create().show();
             }
         });

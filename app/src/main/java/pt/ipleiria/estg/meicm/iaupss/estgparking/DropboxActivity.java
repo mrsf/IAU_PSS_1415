@@ -112,18 +112,34 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
 
     private void CreateUserRanking() {
 
-        IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
-
-        try {
-            // inicializa a base de dados
+            // criar a base de dados
             this.app.initDatastore();
 
-            // criar tabela e inserir registo
-            RankingsTable rankings = new RankingsTable(this.app.getDatastore());
-            rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
-        } catch (DbxException e) {
-            Log.e(TAG, "Communication with datastore failed: ", e);
-        }
+            /*for(DbxRecord record : this.app.getDatastore().getTable("ranking").query()) {
+                record.deleteRecord();
+                this.app.getDatastore().sync();
+            }*/
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                IUserInfoProvider userInfoProvider = app.getUserInfoProvider();
+
+                try {
+                    synchronized (userInfoProvider) {
+                        // Wait for user ifo
+                        if (!userInfoProvider.isInfoFetched()) {
+                            userInfoProvider.wait();
+                        }
+                        // criar tabela e inserir registo
+                        RankingsTable rankings = new RankingsTable(app.getDatastore());
+                        rankings.createRanking(userInfoProvider.getName(), userInfoProvider.getEmail(), 5, userInfoProvider.getPhotoURL());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override

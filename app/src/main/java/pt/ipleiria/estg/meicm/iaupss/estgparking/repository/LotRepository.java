@@ -55,7 +55,7 @@ public class LotRepository implements ILotRepository {
             this.datastore.sync();
             LotsTable lotsTable = new LotsTable(datastore);
             lotId = lotsTable.getLotIdForLocation(lat, lng);
-        } catch (DbxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

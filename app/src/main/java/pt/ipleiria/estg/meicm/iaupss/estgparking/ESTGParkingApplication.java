@@ -129,6 +129,14 @@ public class ESTGParkingApplication extends Application {
                 return;
             }
 
+            if (datastoreManager.isShutDown()) {
+                try {
+                    setDatastoreManager(DbxDatastoreManager.forAccount(getAccountManager().getLinkedAccount()));
+                } catch (DbxException.Unauthorized unauthorized) {
+                    unauthorized.printStackTrace();
+                }
+            }
+
             try {
                 this.datastore = this.datastoreManager.openDatastore(".hhSgxW6D63kRmT-eiB69OuFN6jP8SydcsQopEJ1QGFs");
                 Log.i(ESTGParkingApplicationUtils.APPTAG, "Initializing datastore...");
