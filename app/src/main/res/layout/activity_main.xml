@@ -17,16 +17,16 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/map_marker"
-                android:paddingTop="100dp"
-                android:textSize="24dp" />
+                android:paddingTop="80dp" />
 
             <Button
                 android:id="@+id/postPhotoButton"
-                android:text="Mapa"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/settings" />
+                android:background="@drawable/settings"
+                android:paddingTop="80dp"
+                android:text="Definições" />
         </LinearLayout>
 
         <LinearLayout
@@ -43,18 +43,16 @@
                 android:layout_weight="1"
                 android:background="@drawable/parking_lot"
                 android:textAlignment="viewStart"
-                android:textSize="24dp"
-                android:paddingTop="100dp" />
+                android:paddingTop="80dp" />
 
             <Button
                 android:id="@+id/main_btn_facebook_post"
-                android:text="Criar post no Facebook"
+                android:text="Criar post"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/facebook"
-                android:paddingTop="100dp"
-                android:textSize="20dp" />
+                android:paddingTop="80dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,16 +69,15 @@
                 android:layout_weight="1"
                 android:background="@drawable/rankings"
                 android:layout_margin="0dp"
-                android:textSize="18dp"
-                android:paddingTop="100dp" />
+                android:paddingTop="80dp" />
 
             <Button
                 android:id="@+id/main_btn_about"
-                android:text="Acerca do ESTG Parking"
+                android:text="Sobre"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/about"
-                android:paddingTop="100dp" />
+                android:paddingTop="80dp" />
         </LinearLayout>
     </LinearLayout>
