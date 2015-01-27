@@ -14,8 +14,12 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/fragment_dropbox_image_button_content_description"
-        android:background="#4064c1"
-        android:focusable="true" />
+        android:background="#007ee5"
+        android:focusable="true"
+        android:src="@drawable/dropbox_button_image"
+        android:scaleType="centerInside"
+        android:clickable="true"
+        android:adjustViewBounds="false" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -3,6 +3,6 @@
 
     <!-- Dropbox Activity and Fragment Dimens -->
     <dimen name="fragment_dropbox_image_button_width">230dp</dimen>
-    <dimen name="fragment_dropbox_image_button_height">48dp</dimen>
+    <dimen name="fragment_dropbox_image_button_height">64dp</dimen>
 
 </resources>

@@ -79,6 +79,8 @@ public class ESTGParkingApplication extends Application {
 
     private String currentUserActivity;
 
+    private ImageCache imageCache;
+
     public static ESTGParkingApplication getInstance() {
         return singleton;
     }
@@ -274,6 +276,13 @@ public class ESTGParkingApplication extends Application {
 
     public void setDatastore(DbxDatastore datastore) {
         this.datastore = datastore;
+    }
+
+    public ImageCache getImageCache() {
+        if (this.imageCache == null)
+            return new ImageCache();
+        else
+            return this.imageCache;
     }
 
     // </editor-fold>
