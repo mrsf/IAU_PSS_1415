@@ -74,7 +74,7 @@
     <string name="stop_updates">Stop Updates</string>
     <string name="unknown">--Unknown--</string>
     <string name="title_activity_profile">Perfil</string>
-    <string name="title_activity_parking_spot">Localização do veículo</string>
+    <string name="title_activity_parking_spot">Mapa</string>
     <string name="title_activity_facebook_post_photo">FacebookPostPhoto</string>
     <string name="title_activity_parking_lots">Lotes de Estacionamento</string>
     <string name="title_activity_login">LoginActivity</string>

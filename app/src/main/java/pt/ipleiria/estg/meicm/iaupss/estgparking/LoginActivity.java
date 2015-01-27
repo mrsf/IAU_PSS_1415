@@ -190,14 +190,14 @@ public class LoginActivity extends FragmentActivity
             }
         });
 
-        controlsContainer = (ViewGroup) findViewById(R.id.main_ui_container);
+        //controlsContainer = (ViewGroup) findViewById(R.id.main_ui_container);
 
         final FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment != null) {
             // If we're being re-created and have a fragment, we need to a) hide the main UI controls and
             // b) hook up its listeners again.
-            controlsContainer.setVisibility(View.GONE);
+            //controlsContainer.setVisibility(View.GONE);
         }
 
         // Listen for changes in the back stack so we know if a fragment got popped off because the user
@@ -207,7 +207,7 @@ public class LoginActivity extends FragmentActivity
             public void onBackStackChanged() {
                 if (fm.getBackStackEntryCount() == 0) {
                     // We need to re-show our UI.
-                    controlsContainer.setVisibility(View.VISIBLE);
+                    //controlsContainer.setVisibility(View.VISIBLE);
                 }
             }
         });

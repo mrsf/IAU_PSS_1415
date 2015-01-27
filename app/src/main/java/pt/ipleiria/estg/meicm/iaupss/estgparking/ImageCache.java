@@ -18,7 +18,7 @@ public class ImageCache {
             + "/Android/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/"
             : Environment.getDataDirectory().getPath()
             + "/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/");
-    private static final int MAX_SIZE = 64 * 1024 * 1024; // 64 MiB
+    private static final int MAX_SIZE = 16 * 1024 * 1024; // 16 MiB
 
     private LruCache<String, Bitmap> imgCache;
 
