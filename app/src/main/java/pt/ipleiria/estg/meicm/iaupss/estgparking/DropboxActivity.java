@@ -35,6 +35,8 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
                 try {
                     // Use Dropbox datastores
                     app.setDatastoreManager(DbxDatastoreManager.forAccount(mgr.getLinkedAccount()));
+                    containerFrameLayout.setVisibility(FrameLayout.GONE);
+                    progressFrameLayout.setVisibility(FrameLayout.VISIBLE);
                 } catch (DbxException.Unauthorized e) {
                     Log.e(TAG, "Account was unlinked remotely: ", e);
                 }
@@ -150,13 +152,6 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
 
         if (datastore.getSyncStatus().isConnected) {
             if (datastore.getSyncStatus().hasIncoming) {
-                try {
-                    datastore.sync();
-                } catch (DbxException e) {
-                    Log.e(TAG, "Communication with datastore failed: ", e);
-                }
-                this.containerFrameLayout.setVisibility(FrameLayout.GONE);
-                this.progressFrameLayout.setVisibility(FrameLayout.VISIBLE);
                 try {
                     datastore.sync();
                 } catch (DbxException e) {
