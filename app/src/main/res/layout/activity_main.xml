@@ -3,81 +3,113 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:orientation="horizontal"
-            android:layout_weight="1" >
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
-            <Button
-                android:id="@+id/main_btn_profile"
-                android:text="Perfil"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/map_marker"
-                android:paddingTop="80dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:orientation="horizontal"
+                android:layout_weight="1" >
 
-            <Button
-                android:id="@+id/postPhotoButton"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/settings"
-                android:paddingTop="80dp"
-                android:text="Definições" />
+                <Button
+                    android:id="@+id/main_btn_profile"
+                    android:text="Perfil"
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/map_marker"
+                    android:paddingTop="90dp" />
+
+                <Button
+                    android:id="@+id/postPhotoButton"
+                    android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings"
+                    android:paddingTop="90dp"
+                    android:text="Definições" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:orientation="horizontal"
+                    android:layout_weight="1" >
+
+                    <Button
+                        android:id="@+id/main_btn_lots"
+                        android:text="Lotes"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/parking_lot"
+                        android:textAlignment="viewStart"
+                        android:paddingTop="90dp" />
+
+                    <Button
+                        android:id="@+id/main_btn_facebook_post"
+                        android:text="Criar post"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/facebook"
+                        android:paddingTop="90dp" />
+                </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:orientation="horizontal"
+                    android:layout_weight="1" >
+
+                    <Button
+                        android:id="@+id/main_btn_rankings"
+                        android:text="Rankings"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/rankings"
+                        android:layout_margin="0dp"
+                        android:paddingTop="90dp" />
+
+                    <Button
+                        android:id="@+id/main_btn_about"
+                        android:text="Sobre"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/about"
+                        android:paddingTop="90dp" />
+                </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="0px"
+                android:layout_height="0px">
+
+                <ProgressBar
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/progressBar2" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:orientation="horizontal"
-            android:layout_weight="1" >
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_progressBar"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
-            <Button
-                android:id="@+id/main_btn_lots"
-                android:text="Lotes"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/parking_lot"
-                android:textAlignment="viewStart"
-                android:paddingTop="80dp" />
+    </FrameLayout>
 
-            <Button
-                android:id="@+id/main_btn_facebook_post"
-                android:text="Criar post"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/facebook"
-                android:paddingTop="80dp" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dip"
-            android:orientation="horizontal"
-            android:layout_weight="1" >
-
-            <Button
-                android:id="@+id/main_btn_rankings"
-                android:text="Rankings"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/rankings"
-                android:layout_margin="0dp"
-                android:paddingTop="80dp" />
-
-            <Button
-                android:id="@+id/main_btn_about"
-                android:text="Sobre"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/about"
-                android:paddingTop="80dp" />
-        </LinearLayout>
-    </LinearLayout>
+</LinearLayout>

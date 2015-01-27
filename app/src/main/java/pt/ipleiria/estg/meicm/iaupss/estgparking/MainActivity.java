@@ -1,5 +1,6 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -42,6 +45,8 @@ public class MainActivity extends ActionBarActivity {
 
     // Store the current request type (ADD or REMOVE)
     private ESTGParkingApplicationUtils.REQUEST_TYPE mRequestType;
+
+    private ProgressBar progressBar;
 
 
     private Button aboutButton;
@@ -80,10 +85,12 @@ public class MainActivity extends ActionBarActivity {
 
         detectionRequester.requestUpdates();
 
+        progressBar = (ProgressBar) findViewById(R.id.main_progressBar);
 
         postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
         postPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                progressBar.setVisibility(ProgressBar.VISIBLE);
                 postPhotoButton.setBackground(getResources().getDrawable(R.drawable.settings_selected));
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 startActivity(intent);
@@ -93,6 +100,7 @@ public class MainActivity extends ActionBarActivity {
         profileButton = (Button) findViewById(R.id.main_btn_profile);
         profileButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                progressBar.setVisibility(ProgressBar.VISIBLE);
                 profileButton.setBackground(getResources().getDrawable(R.drawable.map_marker_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
@@ -103,6 +111,7 @@ public class MainActivity extends ActionBarActivity {
         facebookPostButton = (Button) findViewById(R.id.main_btn_facebook_post);
         facebookPostButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                progressBar.setVisibility(ProgressBar.VISIBLE);
                 facebookPostButton.setBackground(getResources().getDrawable(R.drawable.facebook_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, FacebookPostPhotoActivity.class);
@@ -113,13 +122,12 @@ public class MainActivity extends ActionBarActivity {
         lotsButton = (Button) findViewById(R.id.main_btn_lots);
         lotsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                setProgressBarIndeterminateVisibility(true);
+                progressBar.setVisibility(ProgressBar.VISIBLE);
                 lotsButton.setBackground(getResources().getDrawable(R.drawable.parking_lot_selected));
                 Intent intent;
                 intent = new Intent(MainActivity.this, LotsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                setProgressBarIndeterminateVisibility(false);
             }
         });
 
@@ -127,15 +135,16 @@ public class MainActivity extends ActionBarActivity {
         rankingsButton = (Button) findViewById(R.id.main_btn_rankings);
         rankingsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                setProgressBarIndeterminateVisibility(true);
-                rankingsButton.setBackground(getResources().getDrawable(R.drawable.rankings_selected));
-                Intent intent;
-                intent = new Intent(MainActivity.this, RankingsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                setProgressBarIndeterminateVisibility(false);
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+            rankingsButton.setBackground(getResources().getDrawable(R.drawable.rankings_selected));
+            Intent intent;
+            intent = new Intent(MainActivity.this, RankingsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            setProgressBarIndeterminateVisibility(false);
             }
         });
+
 
 
         aboutButton = (Button) findViewById(R.id.main_btn_about);
@@ -161,6 +170,8 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        progressBar.setVisibility(ProgressBar.GONE);
 
         // Register the broadcast receiver
         broadcastManager.registerReceiver(updateListReceiver, broadcastFilter);

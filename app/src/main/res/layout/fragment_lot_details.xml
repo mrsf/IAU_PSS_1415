@@ -8,7 +8,6 @@
     tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.LotDetailsActivity$PlaceholderFragment"
     android:weightSum="1">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -61,12 +60,14 @@
         android:layout_height="wrap_content"
         android:text="Ver no Mapa"
         android:id="@+id/button"
-        android:layout_marginBottom="@dimen/activity_vertical_margin" />
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:background="@drawable/button_selector" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Ver Secções"
-        android:id="@+id/show_sections_button" />
+        android:id="@+id/show_sections_button"
+        android:background="@drawable/button_selector" />
 
 </LinearLayout>
