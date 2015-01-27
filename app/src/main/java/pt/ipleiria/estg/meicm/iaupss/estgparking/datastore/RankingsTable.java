@@ -82,7 +82,7 @@ public class RankingsTable {
         Collections.sort(rankingsList, new Comparator<RankingRecord>() {
             @Override
             public int compare(RankingRecord ranking1, RankingRecord ranking2) {
-                return (ranking1.getScore() < ranking2.getScore() ? 0 : 1);
+                return (ranking1.getScore() <= ranking2.getScore() ? 1 : -1);
             }
         });
         return rankingsList;
