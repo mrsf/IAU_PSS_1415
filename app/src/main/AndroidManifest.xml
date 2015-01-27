@@ -124,7 +124,7 @@
             android:label="@string/title_activity_parking_lots"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data

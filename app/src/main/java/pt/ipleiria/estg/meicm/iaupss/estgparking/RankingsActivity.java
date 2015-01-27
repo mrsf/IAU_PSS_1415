@@ -22,8 +22,6 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
 
     private static final String TAG = "RANKINGS_ACTIVITY";
 
-    private ImageCache imageCache;
-
     public RankingsActivity() {
         super(R.layout.activity_rankings, R.id.rankings_progress_bar, R.id.rankings_recycler_view, R.menu.menu_rankings);
         Log.d(TAG, "Activity is Initialized.");
@@ -32,8 +30,6 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        this.imageCache = new ImageCache();
     }
 
     @Override
@@ -70,7 +66,7 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
                 return true;
             case R.id.action_my_ranking:
                 List<Ranking> rankings = super.getApp().getRankingRepository().fetchMyRanking(super.getApp().getUserInfoProvider().getEmail());
-                super.setViewAdapter(new RankingsAdapter(rankings, this.imageCache));
+                super.setViewAdapter(new RankingsAdapter(rankings, super.getApp().getImageCache()));
                 super.getRecyclerView().setAdapter(super.getViewAdapter());
                 return true;
             default:
@@ -101,7 +97,7 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
         }
 
         // specify adapter
-        super.setViewAdapter(new RankingsAdapter(rankings, this.imageCache));
+        super.setViewAdapter(new RankingsAdapter(rankings, super.getApp().getImageCache()));
         super.getRecyclerView().setAdapter(super.getViewAdapter());
 
         RecyclerView.ItemDecoration itemDecoration = new SpacerItemDecoration(this);

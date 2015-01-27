@@ -22,8 +22,6 @@ public class LotsActivity extends BaseRecyclerViewActivity {
 
     private static final String TAG = "LOTS_ACTIVITY";
 
-    private ImageCache imageCache;
-
     public LotsActivity() {
         super(R.layout.activity_lots, R.id.my_progress_bar, R.id.my_recycler_view, R.menu.menu_parking_lots);
         Log.d(TAG, "Activity is Initialized.");
@@ -64,7 +62,6 @@ public class LotsActivity extends BaseRecyclerViewActivity {
 //        rectangle.setDotC(new Dot(39.733560, -8.820874));
 //        rectangle.setDotD(new Dot(39.734286, -8.821641));
 //        Log.i("TESTE", String.valueOf(rectangle.dotIsInside(new Dot(39.734347, -8.821465))));
-        this.imageCache = new ImageCache();
     }
 
     @Override
@@ -133,7 +130,7 @@ public class LotsActivity extends BaseRecyclerViewActivity {
         }
 
         // specify adapter
-        super.setViewAdapter(new LotsAdapter(lots, this.imageCache));
+        super.setViewAdapter(new LotsAdapter(lots, super.getApp().getImageCache()));
         super.getRecyclerView().setAdapter(super.getViewAdapter());
 
         RecyclerView.ItemDecoration itemDecoration = new SpacerItemDecoration(this);

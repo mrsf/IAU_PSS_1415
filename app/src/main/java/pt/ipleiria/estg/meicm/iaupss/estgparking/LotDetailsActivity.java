@@ -32,8 +32,10 @@ public class LotDetailsActivity extends ActionBarActivity {
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
 
+            ESTGParkingApplication app = ESTGParkingApplication.getInstance();
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment(getIntent()))
+                    .add(R.id.container, new PlaceholderFragment(getIntent(), app.getImageCache()))
                     .commit();
         }
     }
@@ -79,7 +81,6 @@ public class LotDetailsActivity extends ActionBarActivity {
     public static class PlaceholderFragment extends Fragment {
 
         private ImageDownloader downloader;
-        private ImageCache cache;
 
         private Intent intent;
         private Lot lot;
@@ -93,9 +94,8 @@ public class LotDetailsActivity extends ActionBarActivity {
 
         public PlaceholderFragment() {}
 
-        public PlaceholderFragment(Intent intent) {
+        public PlaceholderFragment(Intent intent, ImageCache cache) {
             this.intent = intent;
-            this.cache = new ImageCache();
             this.downloader = new ImageDownloader(cache);
         }
 
