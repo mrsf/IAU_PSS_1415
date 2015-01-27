@@ -106,24 +106,27 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             }
 
             if (app.isParked()) {
-                app.depart(new LatLng(lat, lng));
-                txtStatus.setText(app.getCurrentUserActivity());
-                parkButton.setText("Libertar estacionamento");
+                boolean res = app.depart(new LatLng(lat, lng));
+                if (res) {
+                    parkButton.setText("Libertar estacionamento");
+                }
             } else {
-                app.park(new LatLng(lat, lng));
-                txtStatus.setText(app.getCurrentUserActivity());
-                parkButton.setText("Estacionar");
+                boolean res = app.park(new LatLng(lat, lng));
+
+                if (res) {
+                    parkButton.setText("Estacionar");
+                }
             }
             }
         });
 
         if (app.isParked()) {
             parkButton.setText("Libertar estacionamento");
-            txtStatus.setText("Nao estacionado");
+            txtStatus.setText("Estacionado");
             txtMapHeader.setText("Localização do veículo:");
         } else {
             parkButton.setText("Estacionar");
-            txtStatus.setText("Estacionado");
+            txtStatus.setText("Não Estacionado");
             txtMapHeader.setText("Localização atual:");
         }
 
