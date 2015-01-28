@@ -45,13 +45,10 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
 
         DownloadTask task = tasks[0];
         String imageUrl = task.getUrl();
-        //String checksum = this.imageCache.generateChecksum(imageUrl);
         String checksum = null;
         try {
             checksum = HashConvertion.SHA1(imageUrl);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
@@ -133,7 +130,7 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
         InputStream inputStream;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
-        options.inTempStorage = new byte[1024 * 16];
+        options.inTempStorage = new byte[1024 * 1];
         options.inSampleSize = 1;
         options.inDither = false;
         options.inPurgeable = true;

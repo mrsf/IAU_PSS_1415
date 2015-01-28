@@ -15,10 +15,10 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Lot;
 
 public class LotsAdapter extends RecyclerView.Adapter<LotViewHolder> {
 
-    private ThreadPoolExecutor exec;
+    private final ImageCache cache;
 
+    private ThreadPoolExecutor exec;
     private List<Lot> lots;
-    private ImageCache cache;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public LotsAdapter(List<Lot> lots, ImageCache cache) {
