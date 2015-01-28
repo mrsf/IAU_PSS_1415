@@ -85,8 +85,7 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
                                 BitmapDescriptorFactory.HUE_RED)).title("Localização atual"));
 
                 googleMap.addMarker(new MarkerOptions().position(targetLocation)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_AZURE)).title("Estacionamento"));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.parking_spot_marker)).title("Estacionamento"));
             }
         });
 

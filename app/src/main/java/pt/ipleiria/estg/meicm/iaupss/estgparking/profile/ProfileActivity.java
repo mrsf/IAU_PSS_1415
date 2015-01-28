@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -35,14 +34,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.w3c.dom.Document;
-
 import java.io.InputStream;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSpotActivity;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 
 public class ProfileActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
@@ -64,6 +60,8 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     private LatLng currentLocation;
 
     private Button parkButton;
+
+    private Marker currentLocationMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,11 +124,11 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         if (app.isParked()) {
             parkButton.setText("Libertar estacionamento");
             txtStatus.setText("Estacionado");
-            txtMapHeader.setText("Localização do veículo:");
+            txtMapHeader.setText("Localização do veículo");
         } else {
             parkButton.setText("Estacionar");
             txtStatus.setText("Não Estacionado");
-            txtMapHeader.setText("Localização atual:");
+            txtMapHeader.setText("Localização atual");
         }
     }
 
@@ -167,11 +165,11 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         Location location = locationClient.getLastLocation();
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // if not parked, show current location in the map.
-        if (!app.isParked() && googleMap != null) {
-            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-        }
+//        // if not parked, show current location in the map.
+//        if (!app.isParked() && googleMap != null) {
+//            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
+//            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+//        }
     }
 
     @Override
@@ -201,6 +199,11 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
                 // Called when a new location is found by the network location provider.
                 //makeUseOfNewLocation(location);
                 Toast.makeText(ProfileActivity.this, "bla", Toast.LENGTH_SHORT).show();
+
+                currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                refreshCurrentLocationMarker();
+
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -222,8 +225,17 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         }
     }
 
-
-
+    private void refreshCurrentLocationMarker() {
+        // if not parked, show current location in the map.
+        if (googleMap != null) {
+            if (currentLocationMarker != null) {
+                currentLocationMarker.setPosition(currentLocation);
+            } else {
+                googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual").icon(BitmapDescriptorFactory.fromResource(R.drawable.person)));
+            }
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        }
+    }
 
     /**
      * Background Async task to load user profile picture from url
@@ -314,8 +326,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
     private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
 
-    private GoogleDirection googleDirection;
-    private Document document;
     private LatLng parkingLocation;
 
     /**

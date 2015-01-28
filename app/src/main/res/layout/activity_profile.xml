@@ -19,7 +19,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0px"
             android:weightSum="1"
-            android:layout_weight=".3">
+            android:layout_weight=".35">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -60,7 +60,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                             android:text="Large Text"
                             android:id="@+id/textUsername"
                             android:layout_marginLeft="4dp" />
@@ -80,7 +80,8 @@
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:text="Small Text"
                             android:id="@+id/profile_txt_status"
-                            android:layout_marginLeft="4dp" />
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginTop="20dp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -95,12 +96,12 @@
             android:layout_width="fill_parent"
             android:layout_height="0px"
             android:weightSum="1"
-            android:layout_weight=".6">
+            android:layout_weight=".7">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:text="Large Text"
                 android:id="@+id/profile_txt_map_header" />
 
@@ -124,8 +125,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
-                android:layout_height="0px"
-                android:layout_weight=".5">
+                android:layout_height="wrap_content">
 
                 <Button
                     android:layout_width="fill_parent"
