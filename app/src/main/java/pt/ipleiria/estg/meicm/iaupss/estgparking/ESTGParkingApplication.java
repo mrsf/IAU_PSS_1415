@@ -193,48 +193,57 @@ public class ESTGParkingApplication extends Application {
         return new LatLng(latitude, longitude);
     }
 
-    public void park(LatLng location) {
+    public boolean park(LatLng location) {
 
         setParked(true);
 
-        SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putBoolean("parked", true);
-        editor.putFloat(getString(R.string.user_parking_lat), (float)location.latitude);
-        editor.putFloat(getString(R.string.user_parking_lng), (float)location.longitude);
-        editor.commit();
-
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
         if (lotId != null) {
-            getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
+            boolean res = getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
+
+            if (res == true) {
+                SharedPreferences.Editor editor = getSharedPreferences().edit();
+                editor.putBoolean("parked", true);
+                editor.putFloat(getString(R.string.user_parking_lat), (float) location.latitude);
+                editor.putFloat(getString(R.string.user_parking_lng), (float) location.longitude);
+                editor.commit();
+
+                Log.i(ESTGParkingApplicationUtils.APPTAG, "Parked in (" + location.latitude + ", " + location.longitude);
+                return true;
+            }
         } else {
             Log.w(ESTGParkingApplicationUtils.APPTAG, "No lot found with the specified coordinates");
-            Toast.makeText(this, "No lot found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Não se encontra dentro de um lote de estacionamento válido", Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(ESTGParkingApplicationUtils.APPTAG, "Parked in (" + location.latitude + ", " + location.longitude);
+        return false;
     }
 
-    public void depart(LatLng location) {
+    public boolean depart(LatLng location) {
 
         setParked(false);
 
-        //LatLng location = getParkingLocation();
-
-        SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putBoolean("parked", false);
-        editor.commit();
-
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
         if (lotId != null) {
-            getSectionRepository(lotId).abandonSection(location.latitude, location.longitude);
+            boolean res = getSectionRepository(lotId).abandonSection(location.latitude, location.longitude);
+
+            if (res == true) {
+                SharedPreferences.Editor editor = getSharedPreferences().edit();
+                editor.putBoolean("parked", false);
+                editor.commit();
+
+                Log.i(ESTGParkingApplicationUtils.APPTAG, "Departed from (" + location.latitude + ", " + location.longitude);
+
+                return true;
+            }
         } else {
             Log.w(ESTGParkingApplicationUtils.APPTAG, "No lot found with the specified coordinates");
-            Toast.makeText(this, "No lot found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Não se encontra dentro de um lote de estacionamento válido", Toast.LENGTH_SHORT).show();
         }
 
-        Log.i(ESTGParkingApplicationUtils.APPTAG, "Departed from (" + location.latitude + ", " + location.longitude);
+        return false;
     }
 
     // <editor-fold desc="Getters and setters">
