@@ -63,6 +63,9 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
     private Marker currentLocationMarker;
 
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,10 +194,10 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
     private void startLocationListener() {
         // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 //makeUseOfNewLocation(location);
@@ -231,10 +234,17 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             if (currentLocationMarker != null) {
                 currentLocationMarker.setPosition(currentLocation);
             } else {
-                googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual").icon(BitmapDescriptorFactory.fromResource(R.drawable.person)));
+                currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual").icon(BitmapDescriptorFactory.fromResource(R.drawable.person)));
             }
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        locationManager.removeUpdates(locationListener);
+        locationManager = null;
+        super.onDestroy();
     }
 
     /**
