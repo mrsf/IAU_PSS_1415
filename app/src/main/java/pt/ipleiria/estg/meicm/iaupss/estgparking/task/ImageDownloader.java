@@ -129,12 +129,8 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
         Bitmap bitmap = null;
         InputStream inputStream;
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = false;
-        options.inTempStorage = new byte[1024 * 1];
-        options.inSampleSize = 1;
-        options.inDither = false;
-        options.inPurgeable = true;
-        options.inInputShareable = true;
+        options.inJustDecodeBounds = true;
+
         try {
             inputStream = OpenHttpConnection(imageUrl);
             bitmap = BitmapFactory.decodeStream(inputStream, null, options);
@@ -142,7 +138,51 @@ public class ImageDownloader extends AsyncTask<DownloadTask, DownloadTask, Downl
         } catch (IOException e1) {
             Log.d(TAG, e1.getLocalizedMessage());
         }
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, 480, 320);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+
+
+        /*options.inTempStorage = new byte[1024 * 1];
+        options.inSampleSize = 1;
+        options.inDither = false;
+        options.inPurgeable = true;
+        options.inInputShareable = true;*/
+        try {
+            inputStream = OpenHttpConnection(imageUrl);
+            bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+            inputStream.close();
+        } catch (IOException e1) {
+            Log.d(TAG, e1.getLocalizedMessage());
+        }
+
         return bitmap;
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
     private File createDirIfNotExits() {
