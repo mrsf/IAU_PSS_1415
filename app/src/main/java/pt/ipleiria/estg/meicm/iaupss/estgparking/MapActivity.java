@@ -39,6 +39,8 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
+    private LocationManager manager;
+
     private Section section;
 
     private LatLng userLocation;
@@ -105,6 +107,11 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
         progressBar = (ProgressBar) findViewById(R.id.map_progressbar);
 
         locationClient = new LocationClient(this, this, this);
+
+        this.manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+            showGPSAlertMessage();
     }
 
     private void showGPSAlertMessage() {
@@ -177,14 +184,24 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
     @Override
     public void onPause() {
         super.onPause();
-        googleDirection.cancelAnimated();
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            googleDirection.cancelAnimated();
+        }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        Location location = locationClient.getLastLocation();
-        userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        googleDirection.request(userLocation, targetLocation, GoogleDirection.MODE_WALKING);
+
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            Location location = locationClient.getLastLocation();
+            if (location != null) {
+                userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                googleDirection.request(userLocation, targetLocation, GoogleDirection.MODE_WALKING);
+            } else {
+                finish();
+            }
+        }
     }
 
     @Override
@@ -211,8 +228,10 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
     @Override
     public void onStop() {
 
-        // After disconnect() is called, the client is considered "dead".
-        locationClient.disconnect();
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // After disconnect() is called, the client is considered "dead".
+            locationClient.disconnect();
+        }
 
         super.onStop();
     }
@@ -226,18 +245,13 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
 
         super.onStart();
 
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showGPSAlertMessage();
-        } else {
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             /*
              * Connect the client. Don't re-start any requests here;
              * instead, wait for onResume()
              */
             locationClient.connect();
         }
-
     }
 
     /*
@@ -247,11 +261,7 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
     public void onResume() {
         super.onResume();
 
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showGPSAlertMessage();
-        } else {
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             /*
              * Connect the client. Don't re-start any requests here;
              * instead, wait for onResume()

@@ -62,6 +62,7 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
 
         switch (item.getItemId()) {
             case android.R.id.home:
+                super.onBackPressed();
                 finish();
                 return true;
             case R.id.action_my_ranking:

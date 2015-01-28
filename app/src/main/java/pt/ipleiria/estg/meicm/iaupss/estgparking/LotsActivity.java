@@ -94,6 +94,7 @@ public class LotsActivity extends BaseRecyclerViewActivity {
 
         if (item.getItemId() == android.R.id.home) {
             //super.getApp().getDatastoreManager().shutDown();
+            super.onBackPressed();
             finish();
             return true;
         }

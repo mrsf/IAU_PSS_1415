@@ -91,6 +91,8 @@ public class ESTGParkingApplication extends Application {
 
         singleton = this;
 
+        this.imageCache = new ImageCache();
+
         this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
 
         sharedPreferences = this.getBaseContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -288,9 +290,6 @@ public class ESTGParkingApplication extends Application {
     }
 
     public ImageCache getImageCache() {
-        if (this.imageCache == null)
-            return new ImageCache();
-        else
             return this.imageCache;
     }
 

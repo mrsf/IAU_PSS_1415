@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ImageCache;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.LotDetailsActivity;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
@@ -93,5 +94,9 @@ public class LotViewHolder extends RecyclerView.ViewHolder implements View.OnCli
         intent.putExtra("Lot", lot);
 
         v.getContext().startActivity(intent);
+
+        ESTGParkingApplication app = ESTGParkingApplication.getInstance();
+        if (!app.getDatastoreManager().isShutDown())
+            app.getDatastoreManager().shutDown();
     }
 }

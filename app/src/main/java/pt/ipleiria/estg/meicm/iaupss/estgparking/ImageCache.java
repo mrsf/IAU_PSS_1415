@@ -1,25 +1,19 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.util.Log;
 import android.util.LruCache;
-
-import java.io.File;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 public class ImageCache {
 
     private static final String TAG = "IMAGE_CACHE";
-    private static final String CACHE_FOLDER = (Environment
+    private static final int MAX_SIZE = 16 * 1024 * 1024; // 16 MiB
+    /*private static final String CACHE_FOLDER = (Environment
             .getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ? Environment
             .getExternalStorageDirectory().getPath()
             + "/Android/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/"
             : Environment.getDataDirectory().getPath()
-            + "/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/");
-
-    private static final int MAX_SIZE = 16 * 1024 * 1024; // 16 MiB
+            + "/data/pt.ipleiria.estg.meicm.iaupss.estgparking/cache/");*/
 
     private LruCache<String, Bitmap> imgCache;
 
@@ -32,27 +26,31 @@ public class ImageCache {
         this.imgCache = new LruCache<String, Bitmap>(MAX_SIZE) {
 
             @Override
-            protected int sizeOf(String key, Bitmap value) {
-                return value.getByteCount();
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount();
             }
 
             @Override
             protected void entryRemoved(boolean evicted, String key,
-                                        Bitmap oldValue, Bitmap newValue) {
-                super.entryRemoved(evicted, key, oldValue, newValue);
+                                        Bitmap oldBitmap, Bitmap newBitmap) {
+                super.entryRemoved(evicted, key, oldBitmap, newBitmap);
             }
 
         };
 
     }
 
-    public void addElement(String key, Bitmap value) {
+    public synchronized void addElement(String key, Bitmap bitmap) {
 
-            this.imgCache.put(key, value);
+        if (this.imgCache.get(key) == null) {
+            this.imgCache.put(key, bitmap);
             Log.i(TAG, "Add Element: " + key + "(key)");
+        }
     }
 
-    public Bitmap getElement(String key) {
+    public synchronized Bitmap getElement(String key) {
 		/*
 		 * value = this.newCache.get(key); this.autoRemoveContext = false;
 		 * this.newCache.remove(key); this.newCache.put(key, value);
@@ -61,12 +59,12 @@ public class ImageCache {
         return this.imgCache.get(key);
     }
 
-    public boolean containsElement(String key) {
-        Bitmap element = this.imgCache.get(key);
-        return (element != null);
+    public synchronized boolean containsElement(String key) {
+
+        return (this.imgCache.get(key) != null);
     }
 
-    public void removeImage(String imageName) {
+    /*public void removeImage(String imageName) {
 
         File imageFile = new File(CACHE_FOLDER + generateChecksum(imageName));
         imageFile.delete();
@@ -84,5 +82,5 @@ public class ImageCache {
         Log.i(TAG, "Image Name Checksum is " + s);
 
         return s;
-    }
+    }*/
 }
