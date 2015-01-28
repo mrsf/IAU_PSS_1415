@@ -58,9 +58,12 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     private TextView txtUsername;
     private TextView txtEmail;
     private TextView txtMapHeader;
+    private TextView txtStatus;
     private ProgressBar progressBar;
     private LocationClient locationClient;
     private LatLng currentLocation;
+
+    private Button parkButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,39 +90,39 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         startLocationListener();
 
 
-        final TextView txtStatus = (TextView) findViewById(R.id.profile_txt_status);
-        final TextView txtMapHeader = (TextView) findViewById(R.id.profile_txt_map_header);
+        txtStatus = (TextView) findViewById(R.id.profile_txt_status);
+        txtMapHeader = (TextView) findViewById(R.id.profile_txt_map_header);
 
-        final Button parkButton = (Button) findViewById(R.id.profile_btn_park);
+        parkButton = (Button) findViewById(R.id.profile_btn_park);
         parkButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
 
-            Location location = locationClient.getLastLocation();
+                Location location = locationClient.getLastLocation();
 
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
 
-            String lotId = app.getLotRepository(true).findLot(lat, lng);
-
-            if (lotId != null) {
-                app.getSectionRepository(lotId).occupySection(lat, lng);
-            }
-
-            if (app.isParked()) {
-                boolean res = app.depart(new LatLng(lat, lng));
-                if (res) {
-                    parkButton.setText("Libertar estacionamento");
+                if (app.isParked()) {
+                    boolean res = app.depart(new LatLng(lat, lng));
+                    if (res) {
+                        refreshLabels();
+                    }
+                } else {
+                    boolean res = app.park(new LatLng(lat, lng));
+                    if (res) {
+                        refreshLabels();
+                    }
                 }
-            } else {
-                boolean res = app.park(new LatLng(lat, lng));
-
-                if (res) {
-                    parkButton.setText("Estacionar");
-                }
-            }
             }
         });
 
+        refreshLabels();
+
+        parkingLocation = app.getParkingLocation();
+        setUpMapIfNeeded();
+    }
+
+    private void refreshLabels() {
         if (app.isParked()) {
             parkButton.setText("Libertar estacionamento");
             txtStatus.setText("Estacionado");
@@ -129,9 +132,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             txtStatus.setText("Não Estacionado");
             txtMapHeader.setText("Localização atual:");
         }
-
-        parkingLocation = app.getParkingLocation();
-        setUpMapIfNeeded();
     }
 
     @Override
@@ -145,7 +145,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            //super.getApp().getDatastoreManager().shutDown();
             finish();
             return true;
         }
