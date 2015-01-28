@@ -91,13 +91,10 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
             }
             this.app.initDatastore();
             this.app.getDatastore().addSyncStatusListener(this);
-            this.app.getDatastore().sync();
         } catch (NullPointerException e) {
             Log.e(TAG, "Datastore is not initialized: ", e);
         } catch (DbxException.Unauthorized unauthorized) {
             Log.e(TAG, "Account was unlinked remotely: ", unauthorized);
-        } catch (DbxException e) {
-            Log.e(TAG, "Communication with datastore failed: ", e);
         }
     }
 

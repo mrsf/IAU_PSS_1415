@@ -69,6 +69,7 @@ public class SectionsActivity extends BaseRecyclerViewActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
+            super.onBackPressed();
             finish();
             return true;
         }
