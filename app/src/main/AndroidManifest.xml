@@ -66,7 +66,14 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map"
-            android:parentActivityName=".LotDetailsActivity">
+            android:launchMode="singleTop"
+            android:parentActivityName=".SectionsActivity"
+            android:screenOrientation="portrait">
+
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SectionsActivity" />
         </activity>
         <activity
             android:name=".MainActivity"
