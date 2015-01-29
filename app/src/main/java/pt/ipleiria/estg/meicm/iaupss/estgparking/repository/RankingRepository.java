@@ -34,6 +34,44 @@ public class RankingRepository implements IRankingRepository {
         return this.dataStoreRankings();
     }
 
+//    @Override
+//    public List<Ranking> fetchMyRanking(String email) {
+//
+//        List<RankingRecord> rankingRecords = new ArrayList<>();
+//
+//        try {
+//            this.datastore.sync();
+//            RankingsTable rankingsTable = new RankingsTable(datastore);
+//            rankingRecords.add(rankingsTable.getMyRanking(email));
+//        } catch (DbxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        List<Ranking> rankings = new LinkedList<>();
+//
+//        for(RankingRecord rankingRecord: rankingRecords) {
+//
+//            Ranking ranking = new Ranking();
+//
+//            ranking.setId(rankingRecord.getId());
+//            ranking.setName(rankingRecord.getName());
+//            ranking.setEmail(rankingRecord.getEmail());
+//            ranking.setScore(rankingRecord.getScore());
+//            ranking.setImagePath(rankingRecord.getImagePath());
+//
+//            rankings.add(ranking);
+//
+//            Log.d(TAG, "Add: " + ranking.getId() + " | " + ranking.getName() + " | " + ranking.getEmail()
+//                    + " | " + ranking.getScore() + " | " + ranking.getImagePath());
+//        }
+//
+//        /*this.rankingsData.open();
+//        this.rankingsData.insertRankings(rankings);
+//        this.rankingsData.close();*/
+//
+//        return rankings;
+//    }
+
     @Override
     public List<Ranking> fetchMyRanking(String email) {
 
@@ -42,27 +80,38 @@ public class RankingRepository implements IRankingRepository {
         try {
             this.datastore.sync();
             RankingsTable rankingsTable = new RankingsTable(datastore);
-            rankingRecords.add(rankingsTable.getMyRanking(email));
+            rankingRecords.addAll(rankingsTable.getRankingsSorted());
         } catch (DbxException e) {
             e.printStackTrace();
         }
 
         List<Ranking> rankings = new LinkedList<>();
+        int position = 0;
+        int topScore = 0;
 
         for(RankingRecord rankingRecord: rankingRecords) {
 
-            Ranking ranking = new Ranking();
+            position += 1;
 
-            ranking.setId(rankingRecord.getId());
-            ranking.setName(rankingRecord.getName());
-            ranking.setEmail(rankingRecord.getEmail());
-            ranking.setScore(rankingRecord.getScore());
-            ranking.setImagePath(rankingRecord.getImagePath());
+            if (position == 1)
+                topScore = rankingRecord.getScore();
 
-            rankings.add(ranking);
+            if (rankingRecord.getEmail().equals(email)) {
+                Ranking ranking = new Ranking();
 
-            Log.d(TAG, "Add: " + ranking.getId() + " | " + ranking.getName() + " | " + ranking.getEmail()
-                    + " | " + ranking.getScore() + " | " + ranking.getImagePath());
+                ranking.setPosition(position);
+                ranking.setId(rankingRecord.getId());
+                ranking.setName(rankingRecord.getName());
+                ranking.setEmail(rankingRecord.getEmail());
+                ranking.setScore(rankingRecord.getScore());
+                ranking.setImagePath(rankingRecord.getImagePath());
+                ranking.setTopScore(topScore);
+
+                rankings.add(ranking);
+
+                Log.d(TAG, "Add: " + ranking.getId() + " | " + ranking.getName() + " | " + ranking.getEmail()
+                        + " | " + ranking.getScore() + " | " + ranking.getImagePath());
+            }
         }
 
         /*this.rankingsData.open();
@@ -85,16 +134,24 @@ public class RankingRepository implements IRankingRepository {
         }
 
         List<Ranking> rankings = new LinkedList<>();
+        int position = 0;
+        int topScore = 0;
 
         for(RankingRecord rankingRecord: rankingRecords) {
 
+            position += 1;
             Ranking ranking = new Ranking();
 
+            if (position == 1)
+                topScore = rankingRecord.getScore();
+
+            ranking.setPosition(position);
             ranking.setId(rankingRecord.getId());
             ranking.setName(rankingRecord.getName());
             ranking.setEmail(rankingRecord.getEmail());
             ranking.setScore(rankingRecord.getScore());
             ranking.setImagePath(rankingRecord.getImagePath());
+            ranking.setTopScore(topScore);
 
             rankings.add(ranking);
 

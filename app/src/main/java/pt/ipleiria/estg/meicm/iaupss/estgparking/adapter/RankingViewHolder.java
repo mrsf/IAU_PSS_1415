@@ -23,6 +23,7 @@ public class RankingViewHolder extends RecyclerView.ViewHolder implements View.O
     private View view;
 
     private Ranking ranking;
+    private TextView positionText;
     private TextView nameText;
     private TextView emailText;
     private ImageView rankingImage;
@@ -40,6 +41,7 @@ public class RankingViewHolder extends RecyclerView.ViewHolder implements View.O
         this.view = v;
 
         this.ranking = new Ranking();
+        this.positionText = (TextView) v.findViewById(R.id.ranking_user_position_text_view);
         this.nameText = (TextView) v.findViewById(R.id.ranking_user_name_text_view);
         this.emailText = (TextView) v.findViewById(R.id.ranking_user_email_text_view);
         this.rankingImage = (ImageView) v.findViewById(R.id.ranking_user_photo_image_view);
@@ -53,6 +55,7 @@ public class RankingViewHolder extends RecyclerView.ViewHolder implements View.O
 
         this.ranking = ranking;
 
+        this.positionText.setText(ranking.getPosition() + "º");
         this.nameText.setText(ranking.getName());
         this.emailText.setText(ranking.getEmail());
         this.scoreText.setText(ranking.getScore() + " pontos");

@@ -61,7 +61,7 @@ public class RankingsData extends ESTGParkingData {
         if (cursor != null) {
             if (cursor.moveToFirst())
                 do {
-                    rankings.add(new Ranking(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                    rankings.add(new Ranking(1, cursor.getString(0), cursor.getString(1), cursor.getString(2),
                                                 cursor.getInt(3), cursor.getString(4)));
                 } while (cursor.moveToNext());
 
