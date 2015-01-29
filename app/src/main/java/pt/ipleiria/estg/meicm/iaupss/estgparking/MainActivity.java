@@ -212,6 +212,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         app.setUserInfoProvider(null);
+        app.getGoogleApiClient().disconnect();
 
         if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

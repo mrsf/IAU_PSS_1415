@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,6 +61,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     private Button parkButton;
 
     private Marker currentLocationMarker;
+    private Marker parkingLocationMarker;
 
     private LocationListener locationListener;
     private LocationManager locationManager;
@@ -111,11 +111,13 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
                     boolean res = app.depart(new LatLng(lat, lng));
                     if (res) {
                         refreshLabels();
+                        refreshParkingLocationMarker();
                     }
                 } else {
                     boolean res = app.park(new LatLng(lat, lng));
                     if (res) {
                         refreshLabels();
+                        refreshParkingLocationMarker();
                     }
                 }
             }
@@ -141,36 +143,15 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        if (item.getItemId() == android.R.id.home) {
-//            finish();
-//            return true;
-//        }
-//
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     public void onConnected(Bundle bundle) {
         Location location = locationClient.getLastLocation();
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
 
         // if not parked, show current location in the map.
         if (googleMap != null) {
@@ -235,7 +216,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     }
 
     private void refreshCurrentLocationMarker() {
-        // if not parked, show current location in the map.
         if (googleMap != null) {
             if (currentLocationMarker != null) {
                 currentLocationMarker.setPosition(currentLocation);
@@ -311,9 +291,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         }
     }
 
-    /**
-     * Sets up the map
-     */
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (googleMap == null) {
@@ -326,13 +303,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         }
     }
 
-
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #googleMap} is not null.
-     */
     private void setUpMap() {
 
         googleMap.clear();
@@ -361,11 +331,20 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             }
         });
 
-        // Show parking location if parked, else show current location.
+        refreshParkingLocationMarker();
+    }
+
+    private void refreshParkingLocationMarker() {
+        if (parkingLocationMarker != null) {
+            parkingLocationMarker.remove();
+        }
+        // Show parking location if parked
         if (app.isParked()) {
-            googleMap.addMarker(new MarkerOptions().position(parkingLocation)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+            if (parkingLocation != null) {
+                parkingLocationMarker = googleMap.addMarker(new MarkerOptions().position(parkingLocation)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+            }
         }
     }
 }

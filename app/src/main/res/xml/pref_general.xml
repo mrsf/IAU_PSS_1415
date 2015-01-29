@@ -2,14 +2,14 @@
 
     <CheckBoxPreference
         android:key="automatic_park"
-        android:title="Detecção automática"
-        android:summary="Detetar automaticamente "
+        android:title="@string/pref_activity_service_title"
+        android:summary="@string/pref_activity_service_summary"
         android:defaultValue="true" />
 
     <CheckBoxPreference
         android:key="allow_outside_lot"
-        android:title="Permitir submeter estacionamento fora do lote"
-        android:summary="Permite à aplicação memorizar o local de estacionamento mesmo que este se encontrfora de um lote"
+        android:title="@string/pref_free_parking_title"
+        android:summary="@string/pref_free_parking_summary"
         android:defaultValue="true" />
 
 </PreferenceScreen>

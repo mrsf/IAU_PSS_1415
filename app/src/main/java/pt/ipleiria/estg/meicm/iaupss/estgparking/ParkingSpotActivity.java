@@ -109,11 +109,15 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_animate:
-                googleDirection.animateDirection(googleMap, googleDirection.getDirection(document), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
+                if (googleDirection != null) {
+                    googleDirection.animateDirection(googleMap, googleDirection.getDirection(document), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
+                }
                 return true;
             case R.id.action_parking_spot_show_path:
                 googleDirection.setLogging(true);
-                googleDirection.request(currentLocation, parkingLocation, GoogleDirection.MODE_WALKING);
+                if (currentLocation != null && parkingLocation != null) {
+                    googleDirection.request(currentLocation, parkingLocation, GoogleDirection.MODE_WALKING);
+                }
                 return true;
 
             case R.id.action_normal:
@@ -142,7 +146,9 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
                 return true;
 
             case R.id.action_parking_location:
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+                if (parkingLocation != null) {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+                }
                 return true;
 
             default:
@@ -190,11 +196,15 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
 
         // Show parking location if parked, else show current location.
         if (app.isParked()) {
-            googleMap.addMarker(new MarkerOptions().position(parkingLocation)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+            if (parkingLocation != null) {
+                googleMap.addMarker(new MarkerOptions().position(parkingLocation)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+            }
         } else {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            if (currentLocation != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            }
         }
 
         googleDirection = new GoogleDirection(this);

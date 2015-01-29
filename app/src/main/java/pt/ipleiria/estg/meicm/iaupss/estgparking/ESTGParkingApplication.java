@@ -188,9 +188,14 @@ public class ESTGParkingApplication extends Application {
     }
 
     public LatLng getParkingLocation() {
-        double latitude = (double)getSharedPreferences().getFloat(getString(R.string.user_parking_lat), (float)0);
-        double longitude = (double)getSharedPreferences().getFloat(getString(R.string.user_parking_lng), (float)0);
-        return new LatLng(latitude, longitude);
+        if (getSharedPreferences().contains(getString(R.string.user_parking_lat))) {
+            double latitude = (double) getSharedPreferences().getFloat(getString(R.string.user_parking_lat), (float) 0);
+            double longitude = (double) getSharedPreferences().getFloat(getString(R.string.user_parking_lng), (float) 0);
+
+            return new LatLng(latitude, longitude);
+        }
+
+        return null;
     }
 
     public boolean park(LatLng location) {
