@@ -66,6 +66,10 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     private LocationListener locationListener;
     private LocationManager locationManager;
 
+    private GoogleMap googleMap;
+
+    private LatLng parkingLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,37 +146,39 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        if (item.getItemId() == android.R.id.home) {
+//            finish();
+//            return true;
+//        }
+//
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onConnected(Bundle bundle) {
         Location location = locationClient.getLastLocation();
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-//        // if not parked, show current location in the map.
-//        if (!app.isParked() && googleMap != null) {
-//            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
-//            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-//        }
+        // if not parked, show current location in the map.
+        if (googleMap != null) {
+            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
+            if (!app.isParked()) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            }
+        }
     }
 
     @Override
@@ -234,7 +240,9 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             if (currentLocationMarker != null) {
                 currentLocationMarker.setPosition(currentLocation);
             } else {
-                currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual").icon(BitmapDescriptorFactory.fromResource(R.drawable.person)));
+                currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation)
+                        .title("Localização atual")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
         }
@@ -282,35 +290,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         locationClient.connect();
     }
 
-
-    /**
-     * Background Async task to load user profile picture from url
-     * */
-    private class LoadFacebookProfileImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadFacebookProfileImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
-
     private void fetchUserInfo() {
 
         String name = null;
@@ -331,12 +310,6 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             new LoadProfileImage(imgProfilePic).execute(photoUrl);
         }
     }
-
-
-
-    private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
-
-    private LatLng parkingLocation;
 
     /**
      * Sets up the map
@@ -390,11 +363,9 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
         // Show parking location if parked, else show current location.
         if (app.isParked()) {
-            googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
+            googleMap.addMarker(new MarkerOptions().position(parkingLocation)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
-        } else if (currentLocation != null) {
-            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
         }
     }
 }

@@ -15,4 +15,10 @@
     <item android:id="@+id/action_hybrid"
         android:title="Ver mapa modo híbrido" />
 
+    <item android:id="@+id/action_current_location"
+        android:title="Ir para localização atual" />
+
+    <item android:id="@+id/action_parking_location"
+        android:title="Ir para localização do veículo" />
+
     </menu>

@@ -30,14 +30,13 @@
         <activity
             android:name=".StartActivity"
             android:label="@string/title_activity_start"
-            android:theme="@style/AppTheme.Theme">
+            android:theme="@style/AppTheme.Theme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
@@ -58,7 +57,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.gms.analytics.globalConfigResource"
-            android:resource="@xml/global_tracker"/>
+            android:resource="@xml/global_tracker" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyB2acScPPyaurojJDF1ESmrvW3D9ScyNX0" />
@@ -68,7 +67,7 @@
             android:label="@string/title_activity_map"
             android:launchMode="singleTop"
             android:parentActivityName=".SectionsActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
@@ -92,6 +91,7 @@
             android:label="@string/title_activity_profile"
             android:parentActivityName=".StartActivity"
             android:screenOrientation="portrait" >
+
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -101,6 +101,7 @@
             android:name=".ParkingSpotActivity"
             android:label="@string/title_activity_parking_spot"
             android:parentActivityName=".profile.ProfileActivity" >
+
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -124,14 +125,14 @@
             android:name=".DropboxActivity"
             android:label="@string/title_activity_dropbox"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Theme">
+            android:theme="@style/AppTheme.Theme" >
         </activity>
         <activity
             android:name=".LotsActivity"
             android:label="@string/title_activity_parking_lots"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
@@ -190,13 +191,18 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".notification.ScheduleService"/>
+        <service android:name=".notification.ScheduleService" />
         <service android:name=".notification.NotifyService" />
         <service
             android:name="com.dropbox.sync.android.DbxSyncService"
             android:enabled="true"
             android:exported="false"
             android:label="Dropbox Sync" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

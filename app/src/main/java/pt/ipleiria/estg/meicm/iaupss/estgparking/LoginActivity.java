@@ -119,17 +119,14 @@ public class LoginActivity extends FragmentActivity
     private FacebookDialog.Callback dialogCallback = new FacebookDialog.Callback() {
         @Override
         public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-            Log.d("HelloFacebook", String.format("Error: %s", error.toString()));
+            Log.d("Facebook", String.format("Error: %s", error.toString()));
         }
 
         @Override
         public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-            Log.d("HelloFacebook", "Success!");
+            Log.d("Facebook", "Success!");
         }
     };
-
-
-
 
     @Override
     protected void onStart() {
@@ -452,12 +449,6 @@ public class LoginActivity extends FragmentActivity
         fragment.loadData(false);
     }
 
-
-
-
-
-
-
     private boolean hasPublishPermission() {
         Session session = Session.getActiveSession();
         return session != null && session.getPermissions().contains("publish_actions");
@@ -531,7 +522,6 @@ public class LoginActivity extends FragmentActivity
     }
 
     private void startMainActivity() {
-        //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         Intent intent = new Intent(LoginActivity.this, DropboxActivity.class);
         startActivity(intent);
         finish();
@@ -557,21 +547,21 @@ public class LoginActivity extends FragmentActivity
      */
     private ConnectionResult mConnectionResult;
 
-    /* A helper method to resolve the current ConnectionResult error. */
-    private void resolveSignInError() {
-        Log.wtf("resolveSignInError","resolveSignInError");
-        if (mConnectionResult.hasResolution()) {
-            try {
-                intentInProgress = true;
-                startIntentSenderForResult(mConnectionResult.getResolution().getIntentSender(), RC_SIGN_IN, null, 0, 0, 0);
-            } catch (SendIntentException e) {
-                // The intent was canceled before it was sent.  Return to the default
-                // state and attempt to connect to get an updated ConnectionResult.
-                intentInProgress = false;
-                mGoogleApiClient.connect();
-            }
-        }
-    }
+//    /* A helper method to resolve the current ConnectionResult error. */
+//    private void resolveSignInError() {
+//        Log.wtf("resolveSignInError","resolveSignInError");
+//        if (mConnectionResult.hasResolution()) {
+//            try {
+//                intentInProgress = true;
+//                startIntentSenderForResult(mConnectionResult.getResolution().getIntentSender(), RC_SIGN_IN, null, 0, 0, 0);
+//            } catch (SendIntentException e) {
+//                // The intent was canceled before it was sent.  Return to the default
+//                // state and attempt to connect to get an updated ConnectionResult.
+//                intentInProgress = false;
+//                mGoogleApiClient.connect();
+//            }
+//        }
+//    }
 
     // Google+ stuff
     @Override
@@ -606,31 +596,31 @@ public class LoginActivity extends FragmentActivity
     }
 
 
-    /**
-     * Background Async task to load user profile picture from url
-     * */
-    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadProfileImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
+//    /**
+//     * Background Async task to load user profile picture from url
+//     * */
+//    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
+//        ImageView bmImage;
+//
+//        public LoadProfileImage(ImageView bmImage) {
+//            this.bmImage = bmImage;
+//        }
+//
+//        protected Bitmap doInBackground(String... urls) {
+//            String urldisplay = urls[0];
+//            Bitmap mIcon11 = null;
+//            try {
+//                InputStream in = new java.net.URL(urldisplay).openStream();
+//                mIcon11 = BitmapFactory.decodeStream(in);
+//            } catch (Exception e) {
+//                Log.e("Error", e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return mIcon11;
+//        }
+//
+//        protected void onPostExecute(Bitmap result) {
+//            bmImage.setImageBitmap(result);
+//        }
+//    }
 }

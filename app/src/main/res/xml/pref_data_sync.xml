@@ -18,6 +18,4 @@
         <intent android:action="android.settings.SYNC_SETTINGS" />
     </Preference>
 
-    <SwitchPreference android:title="Dropbox Datastore Link"></SwitchPreference>
-
 </PreferenceScreen>

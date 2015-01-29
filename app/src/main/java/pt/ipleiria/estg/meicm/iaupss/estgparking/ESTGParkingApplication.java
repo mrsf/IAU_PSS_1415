@@ -199,10 +199,10 @@ public class ESTGParkingApplication extends Application {
 
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
-        if (lotId != null) {
+        if (lotId != null || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
             boolean res = getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
 
-            if (res == true) {
+            if (res == true || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
                 SharedPreferences.Editor editor = getSharedPreferences().edit();
                 editor.putBoolean("parked", true);
                 editor.putFloat(getString(R.string.user_parking_lat), (float) location.latitude);
@@ -226,10 +226,10 @@ public class ESTGParkingApplication extends Application {
 
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
-        if (lotId != null) {
+        if (lotId != null || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
             boolean res = getSectionRepository(lotId).abandonSection(location.latitude, location.longitude);
 
-            if (res == true) {
+            if (res == true || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
                 SharedPreferences.Editor editor = getSharedPreferences().edit();
                 editor.putBoolean("parked", false);
                 editor.commit();
