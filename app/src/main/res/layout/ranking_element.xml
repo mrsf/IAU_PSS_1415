@@ -44,9 +44,20 @@
             android:id="@+id/ranking_user_name_text_view"
             android:layout_alignTop="@+id/ranking_user_photo_frame_layout"
             android:layout_toRightOf="@+id/ranking_user_photo_frame_layout"
-            android:layout_toEndOf="@+id/ranking_user_photo_frame_layout"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:layout_toLeftOf="@+id/ranking_user_position_text_view"
+            android:layout_toStartOf="@+id/ranking_user_position_text_view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="1º"
+            android:id="@+id/ranking_user_position_text_view"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/ranking_user_name_text_view" />
 
         <TextView
             android:layout_width="match_parent"
