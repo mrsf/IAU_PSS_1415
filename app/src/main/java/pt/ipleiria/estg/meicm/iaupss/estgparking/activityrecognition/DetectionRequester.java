@@ -121,7 +121,7 @@ public class DetectionRequester implements ConnectionCallbacks, OnConnectionFail
      *
      * @return An ActivityRecognitionClient object
      */
-    private ActivityRecognitionClient getActivityRecognitionClient() {
+    public ActivityRecognitionClient getActivityRecognitionClient() {
         if (mActivityRecognitionClient == null) {
             mActivityRecognitionClient = new ActivityRecognitionClient(mContext, this, this);
         }

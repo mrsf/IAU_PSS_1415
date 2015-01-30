@@ -81,7 +81,8 @@ public class ESTGParkingApplication extends Application {
 
     private ImageCache imageCache;
 
-    private boolean isServiceOptionsChanged;
+    private boolean isServiceOptionsChanged = false;
+    private boolean isServiceRunning = false;
 
     public static ESTGParkingApplication getInstance() {
         return singleton;
@@ -308,6 +309,13 @@ public class ESTGParkingApplication extends Application {
         this.isServiceOptionsChanged = isServiceOptionsChanged;
     }
 
+    public boolean isServiceRunning() {
+        return isServiceRunning;
+    }
+
+    public void setServiceRunning(boolean isServiceRunning) {
+        this.isServiceRunning = isServiceRunning;
+    }
 
     // </editor-fold>
 }

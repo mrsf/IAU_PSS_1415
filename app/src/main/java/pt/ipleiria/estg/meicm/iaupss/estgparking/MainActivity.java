@@ -84,6 +84,7 @@ public class MainActivity extends ActionBarActivity {
         if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
             Log.i(ESTGParkingApplicationUtils.APPTAG, "Starting activity recognition service...");
             detectionRequester.requestUpdates();
+            app.setServiceRunning(true);
         }
 
         progressBar = (ProgressBar) findViewById(R.id.main_progressBar);
@@ -185,9 +186,9 @@ public class MainActivity extends ActionBarActivity {
 
         // Start or Stop the activity recognition service if the setting was changed
         if (app.isServiceOptionsChanged()) {
-            if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
+            if (app.getSharedPreferences().getBoolean("automatic_park", true) && !app.isServiceRunning()) {
                 startActivityRecognitionService();
-            } else {
+            } else if (!app.getSharedPreferences().getBoolean("automatic_park", true) && app.isServiceRunning()) {
                 stopActivityRecognitionService();
             }
             app.setServiceOptionsChanged(false);
@@ -206,31 +207,30 @@ public class MainActivity extends ActionBarActivity {
         Log.i(ESTGParkingApplicationUtils.APPTAG, "Stopping activity recognition service...");
         Toast.makeText(this, "Serviço de deteção automática de estacionamento terminado", Toast.LENGTH_SHORT).show();
         detectionRemover.removeUpdates(detectionRequester.getRequestPendingIntent());
+        app.setServiceRunning(false);
     }
 
     private void startActivityRecognitionService() {
         Log.i(ESTGParkingApplicationUtils.APPTAG, "Starting activity recognition service...");
         Toast.makeText(this, "Serviço de deteção automática de estacionamento iniciado", Toast.LENGTH_SHORT).show();
         detectionRequester.requestUpdates();
+        app.setServiceRunning(true);
     }
 
     @Override
-    public void onBackPressed() {
-        app.setUserInfoProvider(null);
-        app.getGoogleApiClient().disconnect();
-
+    protected void onStop() {
         if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            MainActivity.super.onBackPressed();
+                            MainActivity.super.onStop();
                             break;
 
                         case DialogInterface.BUTTON_NEGATIVE:
                             stopActivityRecognitionService();
-                            MainActivity.super.onBackPressed();
+                            MainActivity.super.onStop();
                             break;
                     }
                 }
@@ -240,8 +240,16 @@ public class MainActivity extends ActionBarActivity {
             builder.setMessage("O serviço de detecção de estacionamento xpto encontra-se activo.\nDeseja manter o serviço em execução?").setPositiveButton("Sim", dialogClickListener)
                     .setNegativeButton("Não", dialogClickListener).show();
         } else {
-             MainActivity.super.onBackPressed();
+            MainActivity.super.onStop();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        this.onStop();
+        app.setUserInfoProvider(null);
+        app.getGoogleApiClient().disconnect();
     }
 
     @Override
@@ -271,7 +279,7 @@ public class MainActivity extends ActionBarActivity {
                                  * PendingIntent.
                                  */
                             detectionRemover.removeUpdates(detectionRequester.getRequestPendingIntent());
-
+                            app.setServiceRunning(false);
                         }
                         break;
 

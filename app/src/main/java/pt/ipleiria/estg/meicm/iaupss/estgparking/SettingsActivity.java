@@ -93,9 +93,9 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onPause() {
         ESTGParkingApplication.getInstance().setServiceOptionsChanged(true);
-        super.onStop();
+        super.onPause();
     }
 
     /**
