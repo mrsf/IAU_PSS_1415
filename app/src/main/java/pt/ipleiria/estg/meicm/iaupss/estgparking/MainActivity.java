@@ -218,11 +218,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onStop() {
-
-    }
-
-    @Override
     public void onBackPressed() {
 
         this.onStop();
