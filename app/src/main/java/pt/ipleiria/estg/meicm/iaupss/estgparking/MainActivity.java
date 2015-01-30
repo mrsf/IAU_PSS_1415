@@ -220,7 +220,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
 
-        this.onStop();
         app.setUserInfoProvider(null);
         app.getGoogleApiClient().disconnect();
 
