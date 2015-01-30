@@ -145,6 +145,8 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" >
 
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

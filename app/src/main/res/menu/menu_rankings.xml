@@ -2,6 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.RankingsActivity">
+    <item android:id="@+id/action_refresh_ranking"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="@string/action_refresh_rankings"
+        app:showAsAction="always"  />
     <item android:id="@+id/action_my_ranking"
         android:icon="@drawable/ic_action_person"
         android:title="@string/action_my_ranking"

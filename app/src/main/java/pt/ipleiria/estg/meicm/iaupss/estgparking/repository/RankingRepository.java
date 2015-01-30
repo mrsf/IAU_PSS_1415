@@ -126,7 +126,7 @@ public class RankingRepository implements IRankingRepository {
         List<RankingRecord> rankingRecords = new ArrayList<>();
 
         try {
-            this.datastore.sync();
+            //this.datastore.sync();
             RankingsTable rankingsTable = new RankingsTable(datastore);
             rankingRecords.addAll(rankingsTable.getRankingsSorted());
         } catch (DbxException e) {
