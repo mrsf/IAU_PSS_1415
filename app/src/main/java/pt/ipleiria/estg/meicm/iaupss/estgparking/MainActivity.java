@@ -219,18 +219,28 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onStop() {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        this.onStop();
+        app.setUserInfoProvider(null);
+        app.getGoogleApiClient().disconnect();
+
         if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            MainActivity.super.onStop();
+                            MainActivity.super.onBackPressed();
                             break;
 
                         case DialogInterface.BUTTON_NEGATIVE:
                             stopActivityRecognitionService();
-                            MainActivity.super.onStop();
+                            MainActivity.super.onBackPressed();
                             break;
                     }
                 }
@@ -240,16 +250,8 @@ public class MainActivity extends ActionBarActivity {
             builder.setMessage("O serviço de detecção de estacionamento xpto encontra-se activo.\nDeseja manter o serviço em execução?").setPositiveButton("Sim", dialogClickListener)
                     .setNegativeButton("Não", dialogClickListener).show();
         } else {
-            MainActivity.super.onStop();
+             MainActivity.super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        this.onStop();
-        app.setUserInfoProvider(null);
-        app.getGoogleApiClient().disconnect();
     }
 
     @Override
