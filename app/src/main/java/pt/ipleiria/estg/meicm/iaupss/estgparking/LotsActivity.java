@@ -1,12 +1,14 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxDatastore;
@@ -22,14 +24,31 @@ public class LotsActivity extends BaseRecyclerViewActivity {
 
     private static final String TAG = "LOTS_ACTIVITY";
 
+    private boolean isConnected;
+    private boolean isWiFi;
+    private boolean isUpdated;
+
     public LotsActivity() {
-        super(R.layout.activity_lots, R.id.my_progress_bar, R.id.my_recycler_view, R.menu.menu_parking_lots);
+        super(R.layout.activity_lots, R.id.lots_progress_frame_layout, R.id.my_recycler_view, R.menu.menu_lots);
         Log.d(TAG, "Activity is Initialized.");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+
+            this.isUpdated = false;
+
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            isConnected = activeNetwork != null && activeNetwork.isConnected();
+
+            isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+        }
 
         /*try {
             super.getApp().initDatastore();
@@ -65,41 +84,32 @@ public class LotsActivity extends BaseRecyclerViewActivity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == android.R.id.home) {
-            //super.getApp().getDatastoreManager().shutDown();
-            super.onBackPressed();
-            finish();
-            return true;
-        }
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                finish();
+                return true;
+            case R.id.action_refresh_lots:
 
-        return super.onOptionsItemSelected(item);
+                if (super.getProgressFrameLayout().getVisibility() == FrameLayout.GONE) {
+                        if (super.getApp().getDatastore().getSyncStatus().hasIncoming) {
+                            try {
+                                super.getApp().getDatastore().sync();
+                                isUpdated = false;
+                                super.getProgressFrameLayout().setVisibility(FrameLayout.VISIBLE);
+                            } catch (DbxException e) {
+                                Log.e(TAG, e.getLocalizedMessage());
+                            }
+                        } else
+                            Toast.makeText(getApplicationContext(), "Os lotes estão atualizados", Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /*@Override
@@ -111,33 +121,37 @@ public class LotsActivity extends BaseRecyclerViewActivity {
     @Override
     public void onDatastoreStatusChange(DbxDatastore datastore) {
 
-        List<Lot> lots;
+        Log.d(TAG, datastore.getSyncStatus().toString());
 
-        if (datastore.getSyncStatus().hasIncoming) {
+        if (!isWiFi && datastore.getSyncStatus().hasIncoming) {
             try {
                 datastore.sync();
+                isUpdated = false;
             } catch (DbxException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getLocalizedMessage());
             }
-        } /*else {
-            lots = super.getApp().getLotRepository(false).fetchLots();
-        }*/
-
-        lots = super.getApp().getLotRepository(true).fetchLots();
-
-        if (lots == null || lots.isEmpty()) {
-            Toast.makeText(getBaseContext(), "Não existem lotes de estacionamento", Toast.LENGTH_LONG).show();
-            finish();
         }
 
-        // specify adapter
-        super.setViewAdapter(new LotsAdapter(lots, super.getApp().getImageCache()));
-        super.getRecyclerView().setAdapter(super.getViewAdapter());
+        if (!datastore.getSyncStatus().isDownloading && !isUpdated) {
+            List<Lot> lots;
+            lots = super.getApp().getLotRepository(true).fetchLots();
 
-        RecyclerView.ItemDecoration itemDecoration = new SpacerItemDecoration(this);
-        super.getRecyclerView().addItemDecoration(itemDecoration);
-        super.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
+            if (lots == null || lots.isEmpty()) {
+                Toast.makeText(getBaseContext(), "Não existem lotes de estacionamento", Toast.LENGTH_LONG).show();
+                finish();
+            }
 
-        super.getProgressBar().setVisibility(ProgressBar.GONE);
+            // specify adapter
+            super.setViewAdapter(new LotsAdapter(lots, super.getApp().getImageCache()));
+            super.getRecyclerView().setAdapter(super.getViewAdapter());
+
+            RecyclerView.ItemDecoration itemDecoration = new SpacerItemDecoration(this);
+            super.getRecyclerView().addItemDecoration(itemDecoration);
+            super.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
+
+            super.getProgressFrameLayout().setVisibility(FrameLayout.GONE);
+
+            this.isUpdated = true;
+        }
     }
 }

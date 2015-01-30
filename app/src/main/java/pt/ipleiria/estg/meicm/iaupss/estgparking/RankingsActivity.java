@@ -1,19 +1,21 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
-import android.content.ClipData;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxDatastore;
 import com.dropbox.sync.android.DbxException;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.SpacerItemDecoration;
@@ -24,10 +26,17 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
 
     private static final String TAG = "RANKINGS_ACTIVITY";
 
-    private boolean showFullRanking;
+    private MenuItem refreshMenuItem;
+
+    private List<Ranking> rankings;
+    private List<Ranking> filterRankings;
+    private boolean isFullRanking;
+    private boolean isConnected;
+    private boolean isWiFi;
+    private boolean isUpdated;
 
     public RankingsActivity() {
-        super(R.layout.activity_rankings, R.id.rankings_progress_bar, R.id.rankings_recycler_view, R.menu.menu_rankings);
+        super(R.layout.activity_rankings, R.id.rankings_progress_frame_layout, R.id.rankings_recycler_view, R.menu.menu_rankings);
         Log.d(TAG, "Activity is Initialized.");
     }
 
@@ -35,32 +44,29 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.showFullRanking = true;
-    }
+        if (savedInstanceState == null) {
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
+            this.isFullRanking = true;
+            this.isUpdated = false;
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            isConnected = activeNetwork != null && activeNetwork.isConnected();
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+            isWiFi = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_rankings, menu);
+
+        refreshMenuItem = menu.getItem(0);
+
+        return true;
     }
 
     @Override
@@ -71,22 +77,44 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
                 super.onBackPressed();
                 finish();
                 return true;
-            case R.id.action_my_ranking:
+            case R.id.action_refresh_ranking:
 
-                List<Ranking> rankings;
-
-                if (showFullRanking) {
-                    item.setIcon(R.drawable.ic_action_group);
-                    this.showFullRanking = false;
-                    rankings = super.getApp().getRankingRepository().fetchMyRanking(super.getApp().getUserInfoProvider().getEmail());
-                } else {
-                    item.setIcon(R.drawable.ic_action_person);
-                    this.showFullRanking = true;
-                    rankings = super.getApp().getRankingRepository().fetchRankings();
+                if (super.getProgressFrameLayout().getVisibility() == FrameLayout.GONE) {
+                    if (isFullRanking) {
+                        if (super.getApp().getDatastore().getSyncStatus().hasIncoming) {
+                            try {
+                                super.getApp().getDatastore().sync();
+                                isUpdated = false;
+                                super.getProgressFrameLayout().setVisibility(FrameLayout.VISIBLE);
+                            } catch (DbxException e) {
+                                Log.e(TAG, e.getLocalizedMessage());
+                            }
+                        } else
+                            Toast.makeText(getApplicationContext(), "O ranking está atualizado", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
-                super.setViewAdapter(new RankingsAdapter(rankings, super.getApp().getImageCache()));
-                super.getRecyclerView().setAdapter(super.getViewAdapter());
+                return true;
+            case R.id.action_my_ranking:
+
+                if (super.getProgressFrameLayout().getVisibility() == FrameLayout.GONE) {
+                    if (isFullRanking) {
+                        refreshMenuItem.setVisible(false);
+                        item.setIcon(R.drawable.ic_action_group);
+                        item.setTitle(R.string.action_all_rankings);
+                        this.isFullRanking = false;
+                        this.filterRankings = this.getMyRanking(super.getApp().getUserInfoProvider().getEmail());
+                    } else {
+                        refreshMenuItem.setVisible(true);
+                        item.setIcon(R.drawable.ic_action_person);
+                        item.setTitle(R.string.action_my_ranking);
+                        this.isFullRanking = true;
+                        this.filterRankings = this.rankings;
+                    }
+
+                    super.setViewAdapter(new RankingsAdapter(filterRankings, super.getApp().getImageCache()));
+                    super.getRecyclerView().setAdapter(super.getViewAdapter());
+                }
 
                 return true;
             default:
@@ -97,35 +125,51 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
     @Override
     public void onDatastoreStatusChange(DbxDatastore datastore) {
 
-        List<Ranking> rankings;
+        Log.d(TAG, datastore.getSyncStatus().toString());
 
-        if (datastore.getSyncStatus().hasIncoming) {
+        if (!isWiFi && datastore.getSyncStatus().hasIncoming) {
             try {
                 datastore.sync();
+                isUpdated = false;
             } catch (DbxException e) {
-                e.printStackTrace();
+                Log.e(TAG, e.getLocalizedMessage());
             }
-        } /*else {
-            rankings = super.getApp().getRankingRepository().fetchRankings();
-        }*/
+        }
 
-        if (showFullRanking) {
-            rankings = super.getApp().getRankingRepository().fetchRankings();
+        if (!datastore.getSyncStatus().isDownloading && isFullRanking && !isUpdated) {
+            this.filterRankings = super.getApp().getRankingRepository().fetchRankings();
 
-            if (rankings == null || rankings.isEmpty()) {
+            if (this.filterRankings == null || this.filterRankings.isEmpty()) {
                 Toast.makeText(getBaseContext(), "Não existe ranking de utilizadores", Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             // specify adapter
-            super.setViewAdapter(new RankingsAdapter(rankings, super.getApp().getImageCache()));
+            super.setViewAdapter(new RankingsAdapter(this.filterRankings, super.getApp().getImageCache()));
             super.getRecyclerView().setAdapter(super.getViewAdapter());
 
             RecyclerView.ItemDecoration itemDecoration = new SpacerItemDecoration(this);
             super.getRecyclerView().addItemDecoration(itemDecoration);
             super.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
 
-            super.getProgressBar().setVisibility(ProgressBar.GONE);
+            super.getProgressFrameLayout().setVisibility(FrameLayout.GONE);
+
+            this.rankings = this.filterRankings;
+            this.isUpdated = true;
         }
+    }
+
+    private List<Ranking> getMyRanking(String email) {
+
+        List<Ranking> myRanking = new LinkedList<>();
+
+        for (Ranking ranking: rankings) {
+            if (ranking.getEmail().equals(email)) {
+                myRanking.add(ranking);
+                break;
+            }
+        }
+
+        return myRanking;
     }
 }

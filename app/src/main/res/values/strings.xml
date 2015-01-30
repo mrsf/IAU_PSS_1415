@@ -30,7 +30,11 @@
     <string name="title_activity_main">Menu Principal</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="action_my_ranking">Visualizar o meu score</string>
+    <string name="action_my_ranking">Ver o meu</string>
+    <string name="action_all_rankings">Ver todos</string>
+    <string name="action_refresh_rankings">Atualizar</string>
+    <string name="action_refresh_lots">Atualizar</string>
+    <string name="action_refresh_sections">Atualizar</string>
 
     <string name="about_msg">2015, Escola Superior de Tecnologia e Gestão de leiria\n\nMárcio Francisco\nPedro Sousa</string>
 

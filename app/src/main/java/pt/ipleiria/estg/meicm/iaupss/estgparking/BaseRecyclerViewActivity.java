@@ -2,17 +2,15 @@ package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+import android.widget.FrameLayout;
 
 import com.dropbox.sync.android.DbxDatastore;
-import com.dropbox.sync.android.DbxDatastoreManager;
-import com.dropbox.sync.android.DbxException;
 
 public abstract class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
 
@@ -21,17 +19,17 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
     private RecyclerView recyclerView;
     private RecyclerView.Adapter viewAdapter;
 
-    private ProgressBar progressBar;
+    private FrameLayout progressFrameLayout;
 
     private int layoutResID;
-    private int progressBarID;
+    private int progressFrameLayoutID;
     private int recyclerViewID;
     private int menuResID;
 
-    public BaseRecyclerViewActivity(int layoutResID, int progressBarID, int recyclerViewID, int menuResID) {
+    public BaseRecyclerViewActivity(int layoutResID, int progressFrameLayoutID, int recyclerViewID, int menuResID) {
 
         this.layoutResID = layoutResID;
-        this.progressBarID = progressBarID;
+        this.progressFrameLayoutID = progressFrameLayoutID;
         this.recyclerViewID = recyclerViewID;
         this.menuResID = menuResID;
     }
@@ -43,13 +41,13 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
 
         if (savedInstanceState == null) {
 
-            ActionBar actionBar = getActionBar();
+            ActionBar actionBar = getSupportActionBar();
             if(actionBar != null)
                 actionBar.setDisplayHomeAsUpEnabled(true);
 
             this.app = ESTGParkingApplication.getInstance();
 
-            progressBar = (ProgressBar) findViewById(this.progressBarID);
+            progressFrameLayout = (FrameLayout) findViewById(this.progressFrameLayoutID);
             recyclerView = (RecyclerView) findViewById(this.recyclerViewID);
 
             // use this setting to improve performance if you know that changes
@@ -65,13 +63,13 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
     @Override
     public void onResume() {
         super.onResume();
-        if (this.app.getDatastoreManager().isShutDown()) {
+        /*if (this.app.getDatastoreManager().isShutDown()) {
             try {
                 this.app.setDatastoreManager(DbxDatastoreManager.forAccount(this.app.getAccountManager().getLinkedAccount()));
             } catch (DbxException.Unauthorized unauthorized) {
                 unauthorized.printStackTrace();
             }
-        }
+        }*/
         this.app.initDatastore();
         this.app.getDatastore().addSyncStatusListener(this);
     }
@@ -102,6 +100,7 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(this.menuResID, menu);
+
         return true;
     }
 
@@ -138,7 +137,7 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
         this.viewAdapter = viewAdapter;
     }
 
-    public ProgressBar getProgressBar() {
-        return progressBar;
+    public FrameLayout getProgressFrameLayout() {
+        return progressFrameLayout;
     }
 }
