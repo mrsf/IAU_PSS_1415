@@ -1,13 +1,19 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -18,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.w3c.dom.Document;
@@ -27,7 +34,7 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 public class ParkingSpotActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
 
-    private GoogleMap googleMap; // Might be null if Google Play services APK is not available.
+    private GoogleMap googleMap;
 
     private GoogleDirection googleDirection;
     private Document document;
@@ -41,15 +48,24 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
 
     private Menu menu;
 
+    private LocationListener locationListener;
+    private LocationManager locationManager;
+
+    private Marker currentLocationMarker;
+
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_parking_spot);
+        setContentView(R.layout.layout_map);
 
         ActionBar actionBar = getActionBar();
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        startLocationListener();
 
         locationClient = new LocationClient(this, this, this);
         LocationRequest locationRequest = LocationRequest.create();
@@ -58,6 +74,22 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         app = ESTGParkingApplication.getInstance();
         parkingLocation = app.getParkingLocation();
         setUpMapIfNeeded();
+
+        googleDirection.setOnAnimateListener(new GoogleDirection.OnAnimateListener() {
+            public void onStart() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+
+            public void onProgress(int progress, int total) {
+                progressBar.setProgress(progress);
+            }
+
+            public void onFinish() {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        progressBar = (ProgressBar) findViewById(R.id.map_progressbar);
     }
 
     @Override
@@ -77,11 +109,15 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_animate:
-                googleDirection.animateDirection(googleMap, googleDirection.getDirection(document), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
+                if (googleDirection != null) {
+                    googleDirection.animateDirection(googleMap, googleDirection.getDirection(document), GoogleDirection.SPEED_FAST, true, false, true, false, null, false, true, null);
+                }
                 return true;
             case R.id.action_parking_spot_show_path:
                 googleDirection.setLogging(true);
-                googleDirection.request(currentLocation, parkingLocation, GoogleDirection.MODE_WALKING);
+                if (currentLocation != null && parkingLocation != null) {
+                    googleDirection.request(currentLocation, parkingLocation, GoogleDirection.MODE_WALKING);
+                }
                 return true;
 
             case R.id.action_normal:
@@ -105,6 +141,16 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
                 menu.findItem(R.id.action_hybrid).setVisible(false);
                 return true;
 
+            case R.id.action_current_location:
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                return true;
+
+            case R.id.action_parking_location:
+                if (parkingLocation != null) {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+                }
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -116,22 +162,23 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         setUpMapIfNeeded();
     }
 
+    @Override
+    protected void onDestroy() {
+        locationManager.removeUpdates(locationListener);
+        locationManager = null;
+        super.onDestroy();
+    }
+
     /**
      * Sets up the map
      */
     private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
         if (googleMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
             googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-            // Check if we were successful in obtaining the map.
+
             if (googleMap != null) {
                 setUpMap();
             }
-
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-            googleMap.getUiSettings().setCompassEnabled(true);
         }
     }
 
@@ -142,13 +189,22 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
      * This should only be called once and when we are sure that {@link #googleMap} is not null.
      */
     private void setUpMap() {
+
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+
         // Show parking location if parked, else show current location.
         if (app.isParked()) {
-            googleMap.addMarker(new MarkerOptions().position(parkingLocation).title("Veículo"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
-        } else if (currentLocation != null) {
-            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            if (parkingLocation != null) {
+                googleMap.addMarker(new MarkerOptions().position(parkingLocation)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
+            }
+        } else {
+            if (currentLocation != null) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            }
         }
 
         googleDirection = new GoogleDirection(this);
@@ -156,13 +212,6 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
             public void onResponse(String status, Document doc, GoogleDirection gd) {
                 document = doc;
                 googleMap.addPolyline(gd.getPolyline(doc, 3, Color.RED));
-                googleMap.addMarker(new MarkerOptions().position(parkingLocation)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_AZURE)).title("Veículo"));
-
-                googleMap.addMarker(new MarkerOptions().position(currentLocation)
-                        .icon(BitmapDescriptorFactory.defaultMarker(
-                                BitmapDescriptorFactory.HUE_GREEN)).title("Localização atual"));
             }
         });
 
@@ -181,9 +230,11 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
         // if not parked, show current location in the map.
-        if (!app.isParked() && googleMap != null) {
-            googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        if (googleMap != null) {
+            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
+            if (!app.isParked()) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            }
         }
     }
 
@@ -195,5 +246,53 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+
+    private void startLocationListener() {
+        // Acquire a reference to the system Location Manager
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                //makeUseOfNewLocation(location);
+                Toast.makeText(ParkingSpotActivity.this, "bla", Toast.LENGTH_SHORT).show();
+
+                currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                refreshCurrentLocationMarker();
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+        boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean networkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (gpsEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        } else if (networkEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        } else {
+            // Alert
+        }
+    }
+
+    private void refreshCurrentLocationMarker() {
+        // if not parked, show current location in the map.
+        if (googleMap != null) {
+            if (currentLocationMarker != null) {
+                currentLocationMarker.setPosition(currentLocation);
+            } else {
+                currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation)
+                        .title("Localização atual")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            }
+        }
     }
 }

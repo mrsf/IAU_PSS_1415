@@ -81,6 +81,8 @@ public class ESTGParkingApplication extends Application {
 
     private ImageCache imageCache;
 
+    private boolean isServiceOptionsChanged;
+
     public static ESTGParkingApplication getInstance() {
         return singleton;
     }
@@ -188,9 +190,14 @@ public class ESTGParkingApplication extends Application {
     }
 
     public LatLng getParkingLocation() {
-        double latitude = (double)getSharedPreferences().getFloat(getString(R.string.user_parking_lat), (float)0);
-        double longitude = (double)getSharedPreferences().getFloat(getString(R.string.user_parking_lng), (float)0);
-        return new LatLng(latitude, longitude);
+        if (getSharedPreferences().contains(getString(R.string.user_parking_lat))) {
+            double latitude = (double) getSharedPreferences().getFloat(getString(R.string.user_parking_lat), (float) 0);
+            double longitude = (double) getSharedPreferences().getFloat(getString(R.string.user_parking_lng), (float) 0);
+
+            return new LatLng(latitude, longitude);
+        }
+
+        return null;
     }
 
     public boolean park(LatLng location) {
@@ -199,10 +206,10 @@ public class ESTGParkingApplication extends Application {
 
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
-        if (lotId != null) {
+        if (lotId != null || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
             boolean res = getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
 
-            if (res == true) {
+            if (res == true || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
                 SharedPreferences.Editor editor = getSharedPreferences().edit();
                 editor.putBoolean("parked", true);
                 editor.putFloat(getString(R.string.user_parking_lat), (float) location.latitude);
@@ -226,10 +233,10 @@ public class ESTGParkingApplication extends Application {
 
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
-        if (lotId != null) {
+        if (lotId != null || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
             boolean res = getSectionRepository(lotId).abandonSection(location.latitude, location.longitude);
 
-            if (res == true) {
+            if (res == true || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
                 SharedPreferences.Editor editor = getSharedPreferences().edit();
                 editor.putBoolean("parked", false);
                 editor.commit();
@@ -292,6 +299,15 @@ public class ESTGParkingApplication extends Application {
     public ImageCache getImageCache() {
             return this.imageCache;
     }
+
+    public boolean isServiceOptionsChanged() {
+        return isServiceOptionsChanged;
+    }
+
+    public void setServiceOptionsChanged(boolean isServiceOptionsChanged) {
+        this.isServiceOptionsChanged = isServiceOptionsChanged;
+    }
+
 
     // </editor-fold>
 }

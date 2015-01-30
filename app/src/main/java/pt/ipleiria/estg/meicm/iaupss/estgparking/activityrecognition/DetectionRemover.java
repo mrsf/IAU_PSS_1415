@@ -156,16 +156,22 @@ public class DetectionRemover implements ConnectionCallbacks, OnConnectionFailed
     private void continueRemoveUpdates() {
         
         // Remove the updates
-        mActivityRecognitionClient.removeActivityUpdates(mCurrentIntent);
-        
-        /*
+        if (mActivityRecognitionClient != null && mCurrentIntent != null) {
+            mActivityRecognitionClient.removeActivityUpdates(mCurrentIntent);
+
+                    /*
          * Cancel the PendingIntent. This stops Intents from arriving at the IntentService, even if
-         * request fails. 
+         * request fails.
          */
-        mCurrentIntent.cancel();
+            mCurrentIntent.cancel();
+
+            // Disconnect the client
+            requestDisconnection();
+        }
         
-        // Disconnect the client
-        requestDisconnection();
+
+        
+
     }
 
     /*

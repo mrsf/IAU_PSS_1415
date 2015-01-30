@@ -1,6 +1,5 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -17,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -29,8 +28,7 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.ProfileActivity;
 public class MainActivity extends ActionBarActivity {
 
     /*
-     *  Intent filter for incoming broadcasts from the
-     *  IntentService.
+     *  Intent filter for incoming broadcasts from the IntentService.
      */
     IntentFilter broadcastFilter;
 
@@ -54,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
     private Button lotsButton;
     private Button facebookPostButton;
     private Button profileButton;
-    private Button postPhotoButton;
+    private Button settings;
 
     private ESTGParkingApplication app;
 
@@ -83,16 +81,19 @@ public class MainActivity extends ActionBarActivity {
         detectionRequester = new DetectionRequester(this);
         detectionRemover = new DetectionRemover(this);
 
-        detectionRequester.requestUpdates();
+        if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
+            Log.i(ESTGParkingApplicationUtils.APPTAG, "Starting activity recognition service...");
+            detectionRequester.requestUpdates();
+        }
 
         progressBar = (ProgressBar) findViewById(R.id.main_progressBar);
 
-        postPhotoButton = (Button) findViewById(R.id.postPhotoButton);
-        postPhotoButton.setOnClickListener(new View.OnClickListener() {
+        settings = (Button) findViewById(R.id.main_btn_settings);
+        settings.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 progressBar.setVisibility(ProgressBar.VISIBLE);
-                postPhotoButton.setBackground(getResources().getDrawable(R.drawable.settings_selected));
-                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                settings.setBackground(getResources().getDrawable(R.drawable.settings_selected));
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         });
@@ -145,8 +146,6 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-
-
         aboutButton = (Button) findViewById(R.id.main_btn_about);
         aboutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -176,13 +175,23 @@ public class MainActivity extends ActionBarActivity {
         // Register the broadcast receiver
         broadcastManager.registerReceiver(updateListReceiver, broadcastFilter);
 
-        postPhotoButton.setBackground(getResources().getDrawable(R.drawable.settings));
+        // Reset button bitmaps
+        settings.setBackground(getResources().getDrawable(R.drawable.settings));
         profileButton.setBackground(getResources().getDrawable(R.drawable.map_marker));
         facebookPostButton.setBackground(getResources().getDrawable(R.drawable.facebook));
         lotsButton.setBackground(getResources().getDrawable(R.drawable.parking_lot));
         rankingsButton.setBackground(getResources().getDrawable(R.drawable.rankings));
         aboutButton.setBackground(getResources().getDrawable(R.drawable.about));
 
+        // Start or Stop the activity recognition service if the setting was changed
+        if (app.isServiceOptionsChanged()) {
+            if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
+                startActivityRecognitionService();
+            } else {
+                stopActivityRecognitionService();
+            }
+            app.setServiceOptionsChanged(false);
+        }
     }
 
     @Override
@@ -192,10 +201,47 @@ public class MainActivity extends ActionBarActivity {
         super.onPause();
     }
 
+
+    private void stopActivityRecognitionService() {
+        Log.i(ESTGParkingApplicationUtils.APPTAG, "Stopping activity recognition service...");
+        Toast.makeText(this, "Serviço de deteção automática de estacionamento terminado", Toast.LENGTH_SHORT).show();
+        detectionRemover.removeUpdates(detectionRequester.getRequestPendingIntent());
+    }
+
+    private void startActivityRecognitionService() {
+        Log.i(ESTGParkingApplicationUtils.APPTAG, "Starting activity recognition service...");
+        Toast.makeText(this, "Serviço de deteção automática de estacionamento iniciado", Toast.LENGTH_SHORT).show();
+        detectionRequester.requestUpdates();
+    }
+
     @Override
     public void onBackPressed() {
         app.setUserInfoProvider(null);
-        super.onBackPressed();
+        app.getGoogleApiClient().disconnect();
+
+        if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            MainActivity.super.onBackPressed();
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            stopActivityRecognitionService();
+                            MainActivity.super.onBackPressed();
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("O serviço de detecção de estacionamento xpto encontra-se activo.\nDeseja manter o serviço em execução?").setPositiveButton("Sim", dialogClickListener)
+                    .setNegativeButton("Não", dialogClickListener).show();
+        } else {
+             MainActivity.super.onBackPressed();
+        }
     }
 
     @Override

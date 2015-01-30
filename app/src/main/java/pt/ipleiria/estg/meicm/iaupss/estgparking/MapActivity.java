@@ -28,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection.OnAnimateListener;
@@ -58,7 +57,7 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route);
+        setContentView(R.layout.layout_map);
 
         ActionBar actionBar = getActionBar();
         if(actionBar != null)

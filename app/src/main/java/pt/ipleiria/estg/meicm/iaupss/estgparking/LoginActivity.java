@@ -109,27 +109,31 @@ public class LoginActivity extends FragmentActivity
 
 
 
+    /* Store the connection result from onConnectionFailed callbacks so that we can
+     * resolve them when the user clicks sign-in.
+     */
+    private ConnectionResult mConnectionResult;
+
+
+
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state, Exception exception) {
-            onSessionStateChange(session, state, exception);
+        onSessionStateChange(session, state, exception);
         }
     };
 
     private FacebookDialog.Callback dialogCallback = new FacebookDialog.Callback() {
         @Override
         public void onError(FacebookDialog.PendingCall pendingCall, Exception error, Bundle data) {
-            Log.d("HelloFacebook", String.format("Error: %s", error.toString()));
+            Log.d("Facebook", String.format("Error: %s", error.toString()));
         }
 
         @Override
         public void onComplete(FacebookDialog.PendingCall pendingCall, Bundle data) {
-            Log.d("HelloFacebook", "Success!");
+            Log.d("Facebook", "Success!");
         }
     };
-
-
-
 
     @Override
     protected void onStart() {
@@ -141,9 +145,6 @@ public class LoginActivity extends FragmentActivity
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-        if (mGoogleApiClient.isConnected()) {
-            //mGoogleApiClient.disconnect();
-        }
     }
 
     @Override
@@ -190,34 +191,11 @@ public class LoginActivity extends FragmentActivity
             }
         });
 
-        //controlsContainer = (ViewGroup) findViewById(R.id.main_ui_container);
-
-        final FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-        if (fragment != null) {
-            // If we're being re-created and have a fragment, we need to a) hide the main UI controls and
-            // b) hook up its listeners again.
-            //controlsContainer.setVisibility(View.GONE);
-        }
-
-        // Listen for changes in the back stack so we know if a fragment got popped off because the user
-        // clicked the back button.
-        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                if (fm.getBackStackEntryCount() == 0) {
-                    // We need to re-show our UI.
-                    //controlsContainer.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         // Can we present the share dialog for regular links?
         canPresentShareDialog = FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG);
+
         // Can we present the share dialog for photos?
         canPresentShareDialogWithPhotos = FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.PHOTOS);
-
-
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -452,12 +430,6 @@ public class LoginActivity extends FragmentActivity
         fragment.loadData(false);
     }
 
-
-
-
-
-
-
     private boolean hasPublishPermission() {
         Session session = Session.getActiveSession();
         return session != null && session.getPermissions().contains("publish_actions");
@@ -531,7 +503,6 @@ public class LoginActivity extends FragmentActivity
     }
 
     private void startMainActivity() {
-        //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         Intent intent = new Intent(LoginActivity.this, DropboxActivity.class);
         startActivity(intent);
         finish();
@@ -550,33 +521,9 @@ public class LoginActivity extends FragmentActivity
         startMainActivity();
     }
 
-
-
-    /* Store the connection result from onConnectionFailed callbacks so that we can
-     * resolve them when the user clicks sign-in.
-     */
-    private ConnectionResult mConnectionResult;
-
-    /* A helper method to resolve the current ConnectionResult error. */
-    private void resolveSignInError() {
-        Log.wtf("resolveSignInError","resolveSignInError");
-        if (mConnectionResult.hasResolution()) {
-            try {
-                intentInProgress = true;
-                startIntentSenderForResult(mConnectionResult.getResolution().getIntentSender(), RC_SIGN_IN, null, 0, 0, 0);
-            } catch (SendIntentException e) {
-                // The intent was canceled before it was sent.  Return to the default
-                // state and attempt to connect to get an updated ConnectionResult.
-                intentInProgress = false;
-                mGoogleApiClient.connect();
-            }
-        }
-    }
-
     // Google+ stuff
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.wtf("onConnectionSuspended","onConnectionSuspended");
         mGoogleApiClient.connect();
     }
 
@@ -584,7 +531,6 @@ public class LoginActivity extends FragmentActivity
         if (view.getId() == R.id.sign_in_button && !mGoogleApiClient.isConnecting()) {
             signInClicked = true;
             mGoogleApiClient.connect();
-            //resolveSignInError();
         }
     }
 
@@ -602,35 +548,6 @@ public class LoginActivity extends FragmentActivity
             }
         } catch (PackageManager.NameNotFoundException e) {
         } catch (NoSuchAlgorithmException e) {
-        }
-    }
-
-
-    /**
-     * Background Async task to load user profile picture from url
-     * */
-    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadProfileImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
         }
     }
 }
