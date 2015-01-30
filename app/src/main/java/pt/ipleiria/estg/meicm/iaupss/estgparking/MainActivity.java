@@ -82,7 +82,8 @@ public class MainActivity extends ActionBarActivity {
         detectionRemover = new DetectionRemover(this);
 
         if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
-            startActivityRecognitionService();
+            Log.i(ESTGParkingApplicationUtils.APPTAG, "Starting activity recognition service...");
+            detectionRequester.requestUpdates();
         }
 
         progressBar = (ProgressBar) findViewById(R.id.main_progressBar);
@@ -183,10 +184,13 @@ public class MainActivity extends ActionBarActivity {
         aboutButton.setBackground(getResources().getDrawable(R.drawable.about));
 
         // Start or Stop the activity recognition service if the setting was changed
-        if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
-            startActivityRecognitionService();
-        } else {
-            stopActivityRecognitionService();
+        if (app.isServiceOptionsChanged()) {
+            if (app.getSharedPreferences().getBoolean("automatic_park", true)) {
+                startActivityRecognitionService();
+            } else {
+                stopActivityRecognitionService();
+            }
+            app.setServiceOptionsChanged(false);
         }
     }
 
@@ -206,6 +210,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void startActivityRecognitionService() {
         Log.i(ESTGParkingApplicationUtils.APPTAG, "Starting activity recognition service...");
+        Toast.makeText(this, "Serviço de deteção automática de estacionamento iniciado", Toast.LENGTH_SHORT).show();
         detectionRequester.requestUpdates();
     }
 
@@ -234,6 +239,8 @@ public class MainActivity extends ActionBarActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("O serviço de detecção de estacionamento xpto encontra-se activo.\nDeseja manter o serviço em execução?").setPositiveButton("Sim", dialogClickListener)
                     .setNegativeButton("Não", dialogClickListener).show();
+        } else {
+             MainActivity.super.onBackPressed();
         }
     }
 

@@ -81,6 +81,8 @@ public class ESTGParkingApplication extends Application {
 
     private ImageCache imageCache;
 
+    private boolean isServiceOptionsChanged;
+
     public static ESTGParkingApplication getInstance() {
         return singleton;
     }
@@ -297,6 +299,15 @@ public class ESTGParkingApplication extends Application {
     public ImageCache getImageCache() {
             return this.imageCache;
     }
+
+    public boolean isServiceOptionsChanged() {
+        return isServiceOptionsChanged;
+    }
+
+    public void setServiceOptionsChanged(boolean isServiceOptionsChanged) {
+        this.isServiceOptionsChanged = isServiceOptionsChanged;
+    }
+
 
     // </editor-fold>
 }

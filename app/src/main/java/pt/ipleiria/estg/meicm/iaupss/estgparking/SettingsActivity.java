@@ -92,6 +92,12 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        ESTGParkingApplication.getInstance().setServiceOptionsChanged(true);
+        super.onStop();
+    }
+
     /**
      * Binds a preference's summary to its value. More specifically, when the
      * preference's value is changed, its summary (line of text below the
