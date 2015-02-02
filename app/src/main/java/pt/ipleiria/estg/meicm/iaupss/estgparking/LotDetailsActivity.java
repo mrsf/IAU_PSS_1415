@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.DownloadTask;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Lot;
@@ -30,7 +31,8 @@ public class LotDetailsActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
 
             ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            if (actionBar != null)
+                actionBar.setDisplayHomeAsUpEnabled(true);
 
             ESTGParkingApplication app = ESTGParkingApplication.getInstance();
 
@@ -43,7 +45,6 @@ public class LotDetailsActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         finish();
-        //System.exit(0);
     }
 
     @Override
@@ -89,7 +90,6 @@ public class LotDetailsActivity extends ActionBarActivity {
         private ProgressBar imageProgress;
         private TextView nameText;
         private TextView descriptionText;
-        private TextView coordinatesText;
         private Button showSections;
 
         public PlaceholderFragment() {}
@@ -111,26 +111,29 @@ public class LotDetailsActivity extends ActionBarActivity {
             this.imageProgress = (ProgressBar) rootView.findViewById(R.id.detail_image_progress_bar);
             this.nameText = (TextView) rootView.findViewById(R.id.detail_name_text_view);
             this.descriptionText = (TextView) rootView.findViewById(R.id.detail_description_text_view);
-            this.coordinatesText = (TextView) rootView.findViewById(R.id.detail_coordinates_text_view);
             this.showSections = (Button) rootView.findViewById(R.id.show_sections_button);
-            this.showSections.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), SectionsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("LotId", lot.getId());
 
-                    v.getContext().startActivity(intent);
-                }
-            });
+            if (lot != null) {
+                this.showSections.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), SectionsActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("LotId", lot.getId());
 
-            this.downloader.execute(new DownloadTask(this.lot.getImagePath(), this.lotImage, this.imageProgress));
+                        v.getContext().startActivity(intent);
+                    }
+                });
 
-            this.nameText.setText(this.nameText.getText() + this.lot.getName());
-            this.descriptionText.setText(this.descriptionText.getText() + this.lot.getDescription());
-            this.coordinatesText.setText(this.coordinatesText.getText() +
-                                            String.valueOf(this.lot.getLatitudeA())
-                                            + " ; " + String.valueOf(this.lot.getLongitudeA()));
+                this.downloader.execute(new DownloadTask(this.lot.getImagePath(), this.lotImage, this.imageProgress));
+
+                this.nameText.setText(this.nameText.getText() + this.lot.getName());
+                this.descriptionText.setText(this.descriptionText.getText() + this.lot.getDescription());
+            } else {
+                this.showSections.setEnabled(false);
+                this.imageProgress.setVisibility(ProgressBar.GONE);
+                Toast.makeText(rootView.getContext(), "Algo correu mal.", Toast.LENGTH_SHORT).show();
+            }
 
             return rootView;
         }

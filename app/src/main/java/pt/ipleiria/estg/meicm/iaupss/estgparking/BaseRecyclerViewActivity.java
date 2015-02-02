@@ -1,30 +1,40 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
-import android.content.Intent;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxException;
+
+import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.SpacerItemDecoration;
 
 public abstract class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
 
-    private ESTGParkingApplication app;
+    private static final String TAG = "BASE_RECYCLER_VIEW_ACTIVITY";
 
+    private ESTGParkingApplication app;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter viewAdapter;
-
     private FrameLayout progressFrameLayout;
-
     private int layoutResID;
     private int progressFrameLayoutID;
     private int recyclerViewID;
     private int menuResID;
+    private boolean isConnected;
+    private boolean isWiFi;
+    private boolean isUpdated;
 
     public BaseRecyclerViewActivity(int layoutResID, int progressFrameLayoutID, int recyclerViewID, int menuResID) {
 
@@ -57,43 +67,63 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
             // use a linear layout manager
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);
+
+            this.isUpdated = false;
+
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            this.isConnected = activeNetwork != null && activeNetwork.isConnected();
+
+            this.isWiFi = this.isConnected && activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        /*if (this.app.getDatastoreManager().isShutDown()) {
-            try {
-                this.app.setDatastoreManager(DbxDatastoreManager.forAccount(this.app.getAccountManager().getLinkedAccount()));
-            } catch (DbxException.Unauthorized unauthorized) {
-                unauthorized.printStackTrace();
-            }
-        }*/
+
         this.app.initDatastore();
-        this.app.getDatastore().addSyncStatusListener(this);
+        try {
+            this.app.getDatastore().addSyncStatusListener(this);
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+            Toast.makeText(getApplicationContext(), "Problema na conexão com o dropbox.", Toast.LENGTH_SHORT).show();
+            this.onBackPressed();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        this.app.getDatastore().removeSyncStatusListener(this);
-        this.app.getDatastore().close();
-        this.app.setDatastore(null);
+
+        try {
+            this.app.getDatastore().removeSyncStatusListener(this);
+            this.app.getDatastore().close();
+            this.app.setDatastore(null);
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!this.app.getDatastoreManager().isShutDown())
-            this.app.getDatastoreManager().shutDown();
+
+        try {
+            if (!this.app.getDatastoreManager().isShutDown())
+                this.app.getDatastoreManager().shutDown();
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
         finish();
-        //System.exit(0);
     }
 
     @Override
@@ -109,16 +139,43 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivity(i);
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    public void updateDatastore() {
+        try {
+            this.app.getDatastore().sync();
+            this.isUpdated = false;
+            this.progressFrameLayout.setVisibility(FrameLayout.VISIBLE);
+        } catch (DbxException e) {
+            Log.e(TAG, e.getLocalizedMessage());
+        }
+    }
+
+    public void updateIfWifi(DbxDatastore datastore) {
+        if (this.isWiFi && datastore.getSyncStatus().hasIncoming) {
+            this.updateDatastore();
+        }
+    }
+
+    public void specifyAdapter(RecyclerView.Adapter viewAdapter) {
+        this.viewAdapter = viewAdapter;
+        this.recyclerView.setAdapter(this.viewAdapter);
+
+        RecyclerView.ItemDecoration itemDecoration = new SpacerItemDecoration(this);
+        this.recyclerView.addItemDecoration(itemDecoration);
+        this.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        this.progressFrameLayout.setVisibility(FrameLayout.GONE);
+
+        this.isUpdated = true;
     }
 
     public ESTGParkingApplication getApp() {
@@ -139,5 +196,13 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
 
     public FrameLayout getProgressFrameLayout() {
         return progressFrameLayout;
+    }
+
+    public boolean isUpdated() {
+        return isUpdated;
+    }
+
+    public boolean isConnected() {
+        return isConnected;
     }
 }

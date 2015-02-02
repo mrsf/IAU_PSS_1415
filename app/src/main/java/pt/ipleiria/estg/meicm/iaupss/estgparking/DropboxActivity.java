@@ -108,6 +108,7 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
         finish();
     }
 
@@ -146,6 +147,8 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
 
     @Override
     public void onDatastoreStatusChange(DbxDatastore datastore) {
+
+        Log.d(TAG, datastore.getSyncStatus().toString());
 
         if (datastore.getSyncStatus().isConnected) {
             if (datastore.getSyncStatus().hasIncoming) {

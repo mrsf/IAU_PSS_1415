@@ -17,23 +17,23 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.notification.ScheduleClient;
 public class StartActivity extends ActionBarActivity {
 
     // This is a handle so that we can call methods on our service
-    private ScheduleClient scheduleClient;
+    //private ScheduleClient scheduleClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);*/
 
         // Create a new service client and bind our activity to this service
-        this.scheduleClient = new ScheduleClient(this.getApplicationContext());
-        this.scheduleClient.doBindService();
+        /*this.scheduleClient = new ScheduleClient(this.getApplicationContext());
+        this.scheduleClient.doBindService();*/
 
-        Button b = (Button) findViewById(R.id.button2);
+        /*Button b = (Button) findViewById(R.id.button2);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +54,7 @@ public class StartActivity extends ActionBarActivity {
 
                 scheduleClient.setAlarmForNotification(c);
             }
-        });
+        });*/
 
         // Notify the user what they just did
         // Toast.makeText(this, "Notification set for: " + day + "/" + (month + 1) + "/" + year, Toast.LENGTH_SHORT).show();
@@ -77,16 +77,16 @@ public class StartActivity extends ActionBarActivity {
 
     }
 
-    @Override
+    /*@Override
     protected void onStop() {
         // When our activity is stopped ensure we also stop the connection to the service
         // this stops us leaking our activity into the system *bad*
         if(this.scheduleClient != null)
             this.scheduleClient.doUnbindService();
         super.onStop();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_login, menu);
@@ -108,5 +108,5 @@ public class StartActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }
