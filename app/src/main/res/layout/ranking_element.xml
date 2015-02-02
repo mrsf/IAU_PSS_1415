@@ -13,26 +13,27 @@
         <FrameLayout
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:id="@+id/ranking_user_photo_frame_layout">
+            android:id="@+id/ranking_user_photo_frame_layout"
+            android:background="@drawable/rectangle"
+            android:padding="4dp">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/ranking_user_photo_image_view"
-                android:background="#393a40"
+                android:background="#23000000"
                 android:cropToPadding="true"
                 android:scaleType="centerCrop"
                 android:padding="1dp"
                 android:contentDescription="@string/element_ranking_user_photo_content_description" />
 
             <ProgressBar
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/ranking_user_photo_progress_bar"
-                android:layout_gravity="center"
-                android:indeterminateOnly="true"
-                android:padding="16dp"
-                android:outlineProvider="background" />
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center" />
 
         </FrameLayout>
 

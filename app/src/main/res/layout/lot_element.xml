@@ -11,31 +11,28 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/frameLayout">
+            android:id="@+id/frameLayout"
+            android:background="@drawable/rectangle"
+            android:padding="4dp">
 
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="80dp"
                 android:id="@+id/lot_image_view"
                 android:layout_centerVertical="true"
-                android:background="#393a40"
+                android:background="#23000000"
                 android:adjustViewBounds="false"
                 android:cropToPadding="true"
                 android:scaleType="centerCrop"
                 android:padding="1dp" />
 
             <ProgressBar
-                android:layout_width="120dp"
-                android:layout_height="80dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:id="@+id/image_progress_bar"
-                android:layout_gravity="center"
-                android:indeterminate="false"
-                android:indeterminateOnly="true"
-                android:longClickable="false"
-                android:nestedScrollingEnabled="false"
-                android:mirrorForRtl="false"
-                android:padding="16dp"
-                android:outlineProvider="background" />
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center" />
 
         </FrameLayout>
 

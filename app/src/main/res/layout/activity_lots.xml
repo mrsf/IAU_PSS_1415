@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.LotsActivity">
+    tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.LotsActivity"
+    android:background="#ffffffff">
 
     <!-- A RecyclerView with some commonly used attributes -->
     <android.support.v7.widget.RecyclerView
@@ -18,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lots_progress_frame_layout"
-        android:background="#26000000"
+        android:background="#23000000"
         android:layout_centerInParent="true"
         android:clickable="true">
 
@@ -29,6 +30,15 @@
             android:visibility="visible"
             style="?android:attr/progressBarStyleLarge"
             android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="A carregar ..."
+            android:id="@+id/lots_progress_text_view"
+            android:layout_gravity="center"
+            android:layout_marginTop="48dp" />
     </FrameLayout>
 
 </RelativeLayout>

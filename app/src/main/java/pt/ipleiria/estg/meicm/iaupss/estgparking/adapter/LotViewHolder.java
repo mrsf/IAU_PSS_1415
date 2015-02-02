@@ -74,7 +74,7 @@ public class LotViewHolder extends RecyclerView.ViewHolder implements View.OnCli
 
             @Override
             public void onAnimationStart(Animation animation) {
-                view.setBackgroundColor(Color.GRAY);
+                view.setBackgroundColor(Color.parseColor("#23000000"));
             }
             @Override
             public void onAnimationEnd(Animation animation) {
