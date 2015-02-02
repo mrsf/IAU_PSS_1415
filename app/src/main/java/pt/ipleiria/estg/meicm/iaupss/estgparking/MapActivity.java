@@ -11,6 +11,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -31,7 +33,9 @@ import android.widget.ProgressBar;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.directions.GoogleDirection.OnAnimateListener;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Section;;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.model.Section;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Dot;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.Rectangle;;
 
 public class MapActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
@@ -66,8 +70,15 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
         if (this.section == null) {
             Intent i = getIntent();
             this.section = i.getParcelableExtra("Section");
-            if (this.section != null)
-                targetLocation = new LatLng(this.section.getLatitudeA(), this.section.getLongitudeA());
+            if (this.section != null) {
+                Rectangle rectangle = new Rectangle();
+                rectangle.setDotA(new Dot(this.section.getLatitudeA(), this.section.getLongitudeA()));
+                rectangle.setDotB(new Dot(this.section.getLatitudeB(), this.section.getLongitudeB()));
+                rectangle.setDotC(new Dot(this.section.getLatitudeC(), this.section.getLongitudeC()));
+                rectangle.setDotD(new Dot(this.section.getLatitudeD(), this.section.getLongitudeD()));
+                Dot dot = rectangle.getCenterDot();
+                targetLocation = new LatLng(dot.getLat(), dot.getLng());
+            }
         }
 
         googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
@@ -196,6 +207,20 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
             if (location != null) {
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 googleDirection.request(userLocation, targetLocation, GoogleDirection.MODE_WALKING);
+
+                if (this.section != null) {
+                    // Instantiates a new Polyline object and adds points to define a rectangle
+                    PolylineOptions rectOptions = new PolylineOptions()
+                            .add(new LatLng(this.section.getLatitudeA(), this.section.getLongitudeA()))
+                            .add(new LatLng(this.section.getLatitudeB(), this.section.getLongitudeB()))  // North of the previous point, but at the same longitude
+                            .add(new LatLng(this.section.getLatitudeC(), this.section.getLongitudeC()))  // Same latitude, and 30km to the west
+                            .add(new LatLng(this.section.getLatitudeD(), this.section.getLongitudeD()))  // Same longitude, and 16km to the south
+                            .add(new LatLng(this.section.getLatitudeA(), this.section.getLongitudeA())); // Closes the polyline.
+
+                    // Get back the mutable Polyline
+                    Polyline polyline = googleMap.addPolyline(rectOptions);
+                }
+
             } else {
                 finish();
             }

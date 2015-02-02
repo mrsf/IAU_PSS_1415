@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
@@ -150,14 +151,14 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
 
         Log.d(TAG, datastore.getSyncStatus().toString());
 
-        if (datastore.getSyncStatus().isConnected) {
+        if (!datastore.getSyncStatus().needsReset && datastore.getSyncStatus().isConnected) {
             if (datastore.getSyncStatus().hasIncoming) {
                 try {
                     datastore.sync();
                 } catch (DbxException e) {
                     Log.e(TAG, "Communication with datastore failed: ", e);
                 }
-            } else if (!datastore.getSyncStatus().isDownloading) {
+            } else if (!datastore.getSyncStatus().isDownloading && !datastore.getSyncStatus().isUploading && !datastore.getSyncStatus().hasOutgoing) {
                 if (thread == null) {
                     CreateUserRanking();
                 } else {
@@ -169,6 +170,10 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
                     }
                 }
             }
+        } else {
+            Toast.makeText(getApplicationContext(), "Problema na conexão com o dropbox.", Toast.LENGTH_SHORT).show();
+            containerFrameLayout.setVisibility(FrameLayout.VISIBLE);
+            progressFrameLayout.setVisibility(FrameLayout.GONE);
         }
     }
 }
