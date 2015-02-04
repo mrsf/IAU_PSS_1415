@@ -2,45 +2,58 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#FFF"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity"
+    tools:ignore="MergeRootFrame"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:gravity="center_horizontal"
+    android:background="#ffffffff"
     >
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="0px"
+        android:layout_width="@dimen/logo_image_width"
+        android:layout_height="0dp"
         android:id="@+id/login_img_profile"
-        android:background="@drawable/logo"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.06"
+        android:src="@drawable/logo"
+        android:layout_weight="0.4"
+        android:scaleType="fitCenter"
         android:layout_marginLeft="100dp"
         android:layout_marginTop="80dp"
         android:layout_marginRight="100dp"
         android:layout_marginBottom="20dp"
-        android:scaleType="fitCenter" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="265dp"
-        android:layout_height="50dp"
+        android:cropToPadding="true"
         android:layout_gravity="center_horizontal" />
 
-    <com.facebook.widget.LoginButton
-        android:id="@+id/login_button"
-        android:layout_width="259dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        facebook:confirm_logout="false"
-        facebook:fetch_user_info="true"
-        android:layout_gravity="center_horizontal" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="fill_parent"
-        android:layout_height="0px"
-        android:layout_weight="0.1" />
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="265dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal" />
+
+        <com.facebook.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="259dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            facebook:confirm_logout="false"
+            facebook:fetch_user_info="true"
+            android:layout_gravity="center_horizontal" />
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="fill_parent"
+            android:layout_height="0px" />
+
+        </LinearLayout>
 
 </LinearLayout>
 

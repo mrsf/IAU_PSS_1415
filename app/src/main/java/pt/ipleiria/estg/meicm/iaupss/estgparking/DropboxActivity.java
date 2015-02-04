@@ -116,7 +116,7 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
     private void CreateUserRanking() {
 
             // criar a base de dados
-            this.app.initDatastore();
+            //this.app.initDatastore();
 
             /*for(DbxRecord record : this.app.getDatastore().getTable("ranking").query()) {
                 record.deleteRecord();
@@ -151,14 +151,15 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
 
         Log.d(TAG, datastore.getSyncStatus().toString());
 
-        if (!datastore.getSyncStatus().needsReset && datastore.getSyncStatus().isConnected) {
+        if (!datastore.getSyncStatus().needsReset) { //&& datastore.getSyncStatus().isConnected) {
             if (datastore.getSyncStatus().hasIncoming) {
                 try {
                     datastore.sync();
                 } catch (DbxException e) {
                     Log.e(TAG, "Communication with datastore failed: ", e);
                 }
-            } else if (!datastore.getSyncStatus().isDownloading && !datastore.getSyncStatus().isUploading && !datastore.getSyncStatus().hasOutgoing) {
+            }
+            if (!datastore.getSyncStatus().isDownloading && !datastore.getSyncStatus().isUploading && !datastore.getSyncStatus().hasOutgoing) {
                 if (thread == null) {
                     CreateUserRanking();
                 } else {

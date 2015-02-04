@@ -95,7 +95,8 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
                                 BitmapDescriptorFactory.HUE_RED)).title("Localização atual"));
 
                 googleMap.addMarker(new MarkerOptions().position(targetLocation)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.parking_spot_marker)).title("Estacionamento"));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.parking_spot_marker)).title((section != null ? section.getName() : "Estacionamento")))
+                .setSnippet((section != null ? section.getDescription() : null));
             }
         });
 
@@ -206,16 +207,19 @@ public class MapActivity extends ActionBarActivity implements GooglePlayServices
             Location location = locationClient.getLastLocation();
             if (location != null) {
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                googleDirection.request(userLocation, targetLocation, GoogleDirection.MODE_WALKING);
+                googleDirection.request(userLocation, targetLocation, GoogleDirection.MODE_DRIVING);
 
                 if (this.section != null) {
                     // Instantiates a new Polyline object and adds points to define a rectangle
                     PolylineOptions rectOptions = new PolylineOptions()
                             .add(new LatLng(this.section.getLatitudeA(), this.section.getLongitudeA()))
-                            .add(new LatLng(this.section.getLatitudeB(), this.section.getLongitudeB()))  // North of the previous point, but at the same longitude
-                            .add(new LatLng(this.section.getLatitudeC(), this.section.getLongitudeC()))  // Same latitude, and 30km to the west
-                            .add(new LatLng(this.section.getLatitudeD(), this.section.getLongitudeD()))  // Same longitude, and 16km to the south
+                            .add(new LatLng(this.section.getLatitudeB(), this.section.getLongitudeB()))
+                            .add(new LatLng(this.section.getLatitudeC(), this.section.getLongitudeC()))
+                            .add(new LatLng(this.section.getLatitudeD(), this.section.getLongitudeD()))
                             .add(new LatLng(this.section.getLatitudeA(), this.section.getLongitudeA())); // Closes the polyline.
+
+                    if (section != null)
+                        rectOptions.color(section.getStatusColor());
 
                     // Get back the mutable Polyline
                     Polyline polyline = googleMap.addPolyline(rectOptions);

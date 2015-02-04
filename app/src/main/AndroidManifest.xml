@@ -3,6 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="pt.ipleiria.estg.meicm.iaupss.estgparking" >
 
+    <compatible-screens>
+        <!-- all small size screens -->
+        <screen android:screenSize="small" android:screenDensity="mdpi" />
+        <screen android:screenSize="small" android:screenDensity="hdpi" />
+        <screen android:screenSize="small" android:screenDensity="xhdpi" />
+        <!-- all normal size screens -->
+        <screen android:screenSize="normal" android:screenDensity="mdpi" />
+        <screen android:screenSize="normal" android:screenDensity="hdpi" />
+        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
+    </compatible-screens>
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -39,7 +50,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name="com.facebook.LoginActivity"
@@ -124,6 +135,7 @@
         <activity
             android:name=".DropboxActivity"
             android:label="@string/title_activity_dropbox"
+            android:theme="@style/noAnimation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
         </activity>

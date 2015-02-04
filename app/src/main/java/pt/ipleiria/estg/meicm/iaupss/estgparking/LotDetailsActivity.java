@@ -127,8 +127,8 @@ public class LotDetailsActivity extends ActionBarActivity {
 
                 this.downloader.execute(new DownloadTask(this.lot.getImagePath(), this.lotImage, this.imageProgress));
 
-                this.nameText.setText(this.nameText.getText() + this.lot.getName());
-                this.descriptionText.setText(this.descriptionText.getText() + this.lot.getDescription());
+                this.nameText.setText(this.lot.getName());
+                this.descriptionText.setText(this.lot.getDescription());
             } else {
                 this.showSections.setEnabled(false);
                 this.imageProgress.setVisibility(ProgressBar.GONE);

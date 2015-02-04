@@ -13,4 +13,8 @@
         <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
     </style>
 
+    <style name="noAnimation" parent="AppTheme">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
 </resources>

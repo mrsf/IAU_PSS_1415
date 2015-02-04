@@ -17,7 +17,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.NoSuchAlgorithmException;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.HashConvertion;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.utils.HashConvertion;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.ImageCache;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.model.DownloadTask;
 

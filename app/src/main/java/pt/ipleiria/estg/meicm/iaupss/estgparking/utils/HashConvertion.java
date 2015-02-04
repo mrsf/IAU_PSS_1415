@@ -1,4 +1,4 @@
-package pt.ipleiria.estg.meicm.iaupss.estgparking;
+package pt.ipleiria.estg.meicm.iaupss.estgparking.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
