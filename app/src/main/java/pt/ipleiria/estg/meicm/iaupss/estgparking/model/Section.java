@@ -163,12 +163,18 @@ public class Section implements Parcelable {
     public int getStatusColor() {
         int color;
         double o = (Double.valueOf(String.valueOf(this.occupation)) / Double.valueOf(String.valueOf(this.capacity)));
-        if (o <= 0.5)
+        /*if (o <= 0.5)
             color = Color.GREEN;
         else if (o <= 0.75)
             color = Color.YELLOW;
         else
-            color = Color.RED;
+            color = Color.RED;*/
+
+        int c = (int) (Double.valueOf(String.valueOf(255 * 2)) * o);
+
+        color = Color.rgb((o <= 0.5 ? c : 255 ),
+                (o > 0.5 ? 255 - (c - 255) : 255),
+                            0);
 
         return color;
     }
