@@ -46,7 +46,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.profile.ProfileActivity"/>
+        className = "pt.ipleiria.estg.meicm.iaupss.estgparking.ProfileActivity"/>
       <point      
         x = "500"      
         y = "1480"/>

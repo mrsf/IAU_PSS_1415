@@ -11,8 +11,8 @@ public interface ISectionRepository {
     /**
      * Increment the occupation counter of a parking section.
      *
-     * @param lat
-     * @param lng
+     * @param lat - section latitude coordinate
+     * @param lng - section longitude coordinate
      * @return true if latitude and longitude are inside a known section and a parking
      * spot was marked as occupied, false otherwise.
      */
@@ -21,8 +21,8 @@ public interface ISectionRepository {
     /**
      * Decrement the occupation counter of a parking section.
      *
-     * @param lat
-     * @param lng
+     * @param lat - section latitude coordinate
+     * @param lng - section longitude coordinate
      * @return true if latitude and longitude are inside a known section and a parking
      * spot was marked as occupied, false otherwise.
      */

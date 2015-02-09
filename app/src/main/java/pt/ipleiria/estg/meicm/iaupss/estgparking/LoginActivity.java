@@ -151,63 +151,70 @@ public class LoginActivity extends FragmentActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        app = ESTGParkingApplication.getInstance();
-        app.getTracker(ESTGParkingApplication.TrackerName.APP_TRACKER);
-
-        // Facebook helper
-        uiHelper = new UiLifecycleHelper(this, callback);
-        uiHelper.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         if (savedInstanceState != null) {
+            uiHelper.onCreate(savedInstanceState);
             String name = savedInstanceState.getString(PENDING_ACTION_BUNDLE_KEY);
             pendingAction = PendingAction.valueOf(name);
         }
 
-        setContentView(R.layout.activity_login);
+        if (savedInstanceState == null) {
+            app = ESTGParkingApplication.getInstance();
 
-        // Facebook login button
-        fbLoginButton = (LoginButton) findViewById(R.id.login_button);
-        fbLoginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
-            @Override
-            public void onUserInfoFetched(GraphUser user) {
-                LoginActivity.this.user = user;
-                updateUI();
-                // It's possible that we were waiting for this.user to be populated in order to post a
-                // status update.
-                handlePendingAction();
+            app.setUserInfoProvider(null);
+            this.user = null;
 
-                if (app.getUserInfoProvider() == null && LoginActivity.this.user != null) {
-                    // Set facebook session necessary permissions
-                    Session session = new Session(LoginActivity.this);
-                    Session.OpenRequest openRequest = new Session.OpenRequest(LoginActivity.this).setPermissions("basic_info", "email");
-                    Session.setActiveSession(session);
-                    session.openForRead(openRequest);
+            app.getTracker(ESTGParkingApplication.TrackerName.APP_TRACKER);
 
-                    // Set the user info provider
-                    app.setUserInfoProvider(new FacebookUserInfoProvider());
+            // Facebook helper
+            uiHelper = new UiLifecycleHelper(this, callback);
+            uiHelper.onCreate(savedInstanceState);
 
-                    startMainActivity();
+            // Facebook login button
+            fbLoginButton = (LoginButton) findViewById(R.id.login_button);
+            fbLoginButton.setUserInfoChangedCallback(new LoginButton.UserInfoChangedCallback() {
+                @Override
+                public void onUserInfoFetched(GraphUser user) {
+                    LoginActivity.this.user = user;
+                    updateUI();
+                    // It's possible that we were waiting for this.user to be populated in order to post a
+                    // status update.
+                    handlePendingAction();
+
+                    if (app.getUserInfoProvider() == null && LoginActivity.this.user != null) {
+                        // Set facebook session necessary permissions
+                        Session session = new Session(LoginActivity.this);
+                        Session.OpenRequest openRequest = new Session.OpenRequest(LoginActivity.this).setPermissions("basic_info", "email");
+                        Session.setActiveSession(session);
+                        session.openForRead(openRequest);
+
+                        // Set the user info provider
+                        app.setUserInfoProvider(new FacebookUserInfoProvider(session));
+
+                        startMainActivity();
+                    }
                 }
-            }
-        });
+            });
 
-        // Can we present the share dialog for regular links?
-        canPresentShareDialog = FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG);
+            // Can we present the share dialog for regular links?
+            canPresentShareDialog = FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG);
 
-        // Can we present the share dialog for photos?
-        canPresentShareDialogWithPhotos = FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.PHOTOS);
+            // Can we present the share dialog for photos?
+            canPresentShareDialogWithPhotos = FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.PHOTOS);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .build();
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Plus.API)
+                    .addScope(Plus.SCOPE_PLUS_LOGIN)
+                    .build();
+            findViewById(R.id.sign_in_button).setOnClickListener(this);
 
-        app.setGoogleApiClient(mGoogleApiClient);
+            app.setGoogleApiClient(mGoogleApiClient);
 
-        updateUI();
+            updateUI();
+        }
     }
 
     @Override
@@ -254,6 +261,16 @@ public class LoginActivity extends FragmentActivity
 
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data, dialogCallback);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+
+        // Call the 'deactivateApp' method to log an app event for use in analytics and advertising
+        // reporting.  Do so in the onPause methods of the primary Activities that an app may be launched into.
+        AppEventsLogger.activateApp(this);
     }
 
     @Override

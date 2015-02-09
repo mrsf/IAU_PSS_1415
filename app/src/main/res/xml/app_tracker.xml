@@ -9,9 +9,18 @@
 
     <integer name="ga_sessionTimeout">-1</integer>
 
-    <screenName name="pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity">Main Activity</screenName>
-    <screenName name="pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity">Login Activity</screenName>
-    <screenName name="pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingLotsActivity">Parking Lots Activity</screenName>
-    <screenName name="pt.ipleiria.estg.meicm.iaupss.estgparking.LotDetailsActivity">Parking Lot Detail Activity</screenName>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.StartActivity">Start Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity">Login Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.DropboxActivity">Dropbox Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity">Main Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.ProfileActivity">Profile Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSpotActivity">Parking Spot Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.SettingsActivity">Settings Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.LotsActivity">Lots Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.LotDetailsActivity">Lot Details Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.SectionsActivity">Sections Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.MapActivity">Map Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.FacebookPostPhotoActivity">Facebook Post Photo Activity</string>
+    <string name="pt.ipleiria.estg.meicm.iaupss.estgparking.RankingsActivity">Rankings Activity</string>
 
 </resources>

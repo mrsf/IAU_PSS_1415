@@ -17,6 +17,12 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 
+import pt.ipleiria.estg.meicm.iaupss.estgparking.database.ESTGParkingData;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.database.LocationsData;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.database.LotsData;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.database.RankingsData;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.database.SectionsData;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.database.StatisticsData;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfoProvider;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ILotRepository;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.repository.ISectionRepository;
@@ -94,6 +100,8 @@ public class ESTGParkingApplication extends Application {
 
         singleton = this;
 
+        this.createCacheDB();
+
         this.imageCache = new ImageCache();
 
         this.accountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
@@ -113,19 +121,19 @@ public class ESTGParkingApplication extends Application {
         return accountManager;
     }
 
-    public ILotRepository getLotRepository(boolean update) {
+    public ILotRepository getLotRepository(boolean isUpdate) {
         this.initDatastore();
-        return new LotRepository(this.getApplicationContext(), this.datastore, update);
+        return new LotRepository(this.getApplicationContext(), this.datastore, isUpdate);
     }
 
-    public ISectionRepository getSectionRepository(String lotId) {
+    public ISectionRepository getSectionRepository(String lotId, boolean isUpdate) {
         this.initDatastore();
-        return new SectionRepository(this.getApplicationContext(), this.datastore, lotId);
+        return new SectionRepository(this.getApplicationContext(), this.datastore, lotId, isUpdate);
     }
 
-    public IRankingRepository getRankingRepository() {
+    public IRankingRepository getRankingRepository(boolean isUpdate) {
         this.initDatastore();
-        return new RankingRepository(this.getApplicationContext(), this.datastore);
+        return new RankingRepository(this.getApplicationContext(), this.datastore, isUpdate);
     }
 
     public void initDatastore() {
@@ -134,19 +142,15 @@ public class ESTGParkingApplication extends Application {
             if (datastoreManager == null || datastoreManager.isShutDown()) {
                 try {
                     setDatastoreManager(DbxDatastoreManager.forAccount(getAccountManager().getLinkedAccount()));
-                } catch (DbxException.Unauthorized unauthorized) {
+                } catch (DbxException.Unauthorized | NullPointerException unauthorized) {
                     unauthorized.printStackTrace();
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
                 }
             }
 
             try {
                 this.datastore = this.datastoreManager.openDatastore(".hhSgxW6D63kRmT-eiB69OuFN6jP8SydcsQopEJ1QGFs");
                 Log.i(ESTGParkingApplicationUtils.APPTAG, "Initializing datastore...");
-            } catch (DbxException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e) {
+            } catch (DbxException | NullPointerException e) {
                 e.printStackTrace();
             }
         }
@@ -156,8 +160,8 @@ public class ESTGParkingApplication extends Application {
 
     /**
      * Get Google Analytics tracker
-     * @param trackerId
-     * @return
+     * @param trackerId - TrackerName type
+     * @return Tracker
      */
     synchronized Tracker getTracker(TrackerName trackerId) {
         if (!trackers.containsKey(trackerId)) {
@@ -191,7 +195,7 @@ public class ESTGParkingApplication extends Application {
         this.isParked = isParked;
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean("parked", isParked);
-        editor.commit();
+        editor.apply();
     }
 
     public LatLng getParkingLocation() {
@@ -212,14 +216,14 @@ public class ESTGParkingApplication extends Application {
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
         if (lotId != null || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
-            boolean res = getSectionRepository(lotId).occupySection(location.latitude, location.longitude);
+            boolean res = getSectionRepository(lotId, true).occupySection(location.latitude, location.longitude);
 
-            if (res == true || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
+            if (res || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
                 SharedPreferences.Editor editor = getSharedPreferences().edit();
                 editor.putBoolean("parked", true);
                 editor.putFloat(getString(R.string.user_parking_lat), (float) location.latitude);
                 editor.putFloat(getString(R.string.user_parking_lng), (float) location.longitude);
-                editor.commit();
+                editor.apply();
 
                 Log.i(ESTGParkingApplicationUtils.APPTAG, "Parked in (" + location.latitude + ", " + location.longitude);
                 return true;
@@ -239,12 +243,12 @@ public class ESTGParkingApplication extends Application {
         String lotId = getLotRepository(true).findLot(location.latitude, location.longitude);
 
         if (lotId != null || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
-            boolean res = getSectionRepository(lotId).abandonSection(location.latitude, location.longitude);
+            boolean res = getSectionRepository(lotId, true).abandonSection(location.latitude, location.longitude);
 
-            if (res == true || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
+            if (res || getSharedPreferences().getBoolean("allow_outside_lot", false)) {
                 SharedPreferences.Editor editor = getSharedPreferences().edit();
                 editor.putBoolean("parked", false);
-                editor.commit();
+                editor.apply();
 
                 Log.i(ESTGParkingApplicationUtils.APPTAG, "Departed from (" + location.latitude + ", " + location.longitude);
 
@@ -256,6 +260,28 @@ public class ESTGParkingApplication extends Application {
         }
 
         return false;
+    }
+
+    private void createCacheDB() {
+
+        String[] sqlCreateEntries = new String[] {
+                LocationsData.CREATE_TABLE_LOCATION[0],
+                LotsData.CREATE_TABLE_LOT[0],
+                RankingsData.CREATE_TABLE_RANKING[0],
+                SectionsData.CREATE_TABLE_SECTION[0],
+                StatisticsData.CREATE_TABLE_STATISTIC[0] };
+
+        String[] sqlDeleteEntries = new String[] {
+                LocationsData.DELETE_TABLE_LOCATION[0],
+                LotsData.DELETE_TABLE_LOT[0],
+                RankingsData.DELETE_TABLE_RANKING[0],
+                SectionsData.DELETE_TABLE_SECTION[0],
+                StatisticsData.DELETE_TABLE_STATISTIC[0] };
+
+        ESTGParkingData estgParkingData = new ESTGParkingData(getApplicationContext(), false,
+                sqlCreateEntries, sqlDeleteEntries);
+        estgParkingData.open();
+        estgParkingData.close();
     }
 
     // <editor-fold desc="Getters and setters">

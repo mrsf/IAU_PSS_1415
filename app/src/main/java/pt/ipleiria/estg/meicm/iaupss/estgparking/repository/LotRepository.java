@@ -21,29 +21,25 @@ public class LotRepository implements ILotRepository {
 
     private DbxDatastore datastore;
     private LotsData lotsData;
-    private boolean update;
+    private boolean isUpdate;
 
-    public LotRepository(Context context, DbxDatastore datastore, boolean update) {
+    public LotRepository(Context context, DbxDatastore datastore, boolean isUpdate) {
 
         this.datastore = datastore;
-        this.update = update;
-        //this.lotsData = new LotsData(context, true);
+        this.isUpdate = isUpdate;
+        this.lotsData = new LotsData(context, isUpdate);
     }
 
     @Override
     public List<Lot> fetchLots() {
 
-        /*if (update) {
-            Log.wtf("VER", "DATASTORE");
+        if (isUpdate || this.dataBaseLots().isEmpty()) {
+            Log.d(TAG, "DATASTORE");
             return this.dataStoreLots();
         } else {
-            Log.wtf("VER", "DATABASE");
-            List<Lot> lots = this.dataBaseLots();
-            if (lots.size() > 0)
-                return this.dataBaseLots();*/
-            //else
-                return this.dataStoreLots();
-        //}
+            Log.d(TAG, "DATABASE");
+            return this.dataBaseLots();
+        }
     }
 
     @Override
@@ -56,7 +52,7 @@ public class LotRepository implements ILotRepository {
             LotsTable lotsTable = new LotsTable(datastore);
             lotId = lotsTable.getLotIdForLocation(lat, lng);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getLocalizedMessage());
         }
 
         return lotId;
@@ -71,7 +67,7 @@ public class LotRepository implements ILotRepository {
             LotsTable lotsTable = new LotsTable(datastore);
             lotRecords.addAll(lotsTable.getLotsSorted());
         } catch (DbxException e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getLocalizedMessage());
         }
 
         List<Lot> lots = new LinkedList<>();
@@ -99,14 +95,20 @@ public class LotRepository implements ILotRepository {
                     " | " + lot.getImagePath());
         }
 
-        /*this.lotsData.open();
+        this.lotsData.open();
         this.lotsData.insertLots(lots);
-        this.lotsData.close();*/
+        this.lotsData.close();
 
         return lots;
     }
 
     private List<Lot> dataBaseLots() {
+
+        try {
+            this.datastore.sync();
+        } catch (DbxException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+        }
 
         this.lotsData.open();
         List<Lot> lots = this.lotsData.getLots();

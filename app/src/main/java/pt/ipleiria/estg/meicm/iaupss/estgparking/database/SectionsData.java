@@ -79,7 +79,7 @@ public class SectionsData extends ESTGParkingData {
         List<Section> sections = new LinkedList<>();
         Cursor cursor = database().rawQuery("SELECT * FROM "
                         + ESTGParkingDBContract.SectionBase.TABLE_NAME + " WHERE "
-                        + ESTGParkingDBContract.SectionBase.LOT_ID + " = ? ORDERBY "
+                        + ESTGParkingDBContract.SectionBase.LOT_ID + " = ? ORDER BY "
                         + ESTGParkingDBContract.SectionBase.NAME,
                         new String[] { lotId });
 

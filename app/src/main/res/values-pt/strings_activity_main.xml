@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Main Activity Strings -->
+    <string name="main_activity_title">ESTG Parking</string>
+    <string name="main_btn_profile_text">Perfil</string>
+    <string name="main_btn_profile_content_description">Permite ver o perfil, e estacionar o veículo.</string>
+    <string name="main_btn_settings_text">Definições</string>
+    <string name="main_btn_lots_text">Lotes</string>
+    <string name="main_btn_facebook_post_text">Publicar</string>
+    <string name="main_btn_rankings_text">Classificações</string>
+    <string name="main_btn_about_text">Sobre</string>
+
+</resources>

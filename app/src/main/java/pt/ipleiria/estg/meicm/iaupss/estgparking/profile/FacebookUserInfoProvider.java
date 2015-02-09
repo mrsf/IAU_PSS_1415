@@ -16,14 +16,12 @@ public class FacebookUserInfoProvider implements IUserInfoProvider {
     private String photoURL = "";
     private boolean isInfoFetched;
 
-    public static final Object LOCK = new Object();
-
-    public FacebookUserInfoProvider() {
-        fetchUserInfo();
+    public FacebookUserInfoProvider(Session session) {
+        fetchUserInfo(session);
     }
 
-    private void fetchUserInfo() {
-        final Session session = Session.getActiveSession();
+    private void fetchUserInfo(Session s) {
+        final Session session = s;//Session.getActiveSession();
         // If the session is open, make an API call to get user data
         // and define a new callback to handle the response
         Request request = Request.newMeRequest(session, new Request.GraphUserCallback() {
