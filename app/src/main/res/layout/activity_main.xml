@@ -20,21 +20,23 @@
 
                 <Button
                     android:id="@+id/main_btn_profile"
-                    android:text="Perfil"
+                    android:text="@string/main_btn_profile_text"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:background="@drawable/map_marker"
-                    android:paddingTop="90dp" />
+                    android:paddingTop="90dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/main_btn_profile_content_description" />
 
                 <Button
                     android:id="@+id/main_btn_settings"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:background="@drawable/settings"
                     android:paddingTop="90dp"
-                    android:text="Definições" />
+                    android:text="@string/main_btn_settings_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -45,20 +47,20 @@
 
                     <Button
                         android:id="@+id/main_btn_lots"
-                        android:text="Lotes"
+                        android:text="@string/main_btn_lots_text"
                         android:layout_width="0dip"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:background="@drawable/parking_lot"
                         android:textAlignment="viewStart"
                         android:paddingTop="90dp" />
 
                     <Button
                         android:id="@+id/main_btn_facebook_post"
-                        android:text="Criar post"
+                        android:text="@string/main_btn_facebook_post_text"
                         android:layout_width="0dip"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:background="@drawable/facebook"
                         android:paddingTop="90dp" />
                 </LinearLayout>
@@ -71,20 +73,20 @@
 
                     <Button
                         android:id="@+id/main_btn_rankings"
-                        android:text="Rankings"
+                        android:text="@string/main_btn_rankings_text"
                         android:layout_width="0dip"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:background="@drawable/rankings"
                         android:layout_margin="0dp"
                         android:paddingTop="90dp" />
 
                     <Button
                         android:id="@+id/main_btn_about"
-                        android:text="Sobre"
+                        android:text="@string/main_btn_about_text"
                         android:layout_width="0dip"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:background="@drawable/about"
                         android:paddingTop="90dp" />
                 </LinearLayout>

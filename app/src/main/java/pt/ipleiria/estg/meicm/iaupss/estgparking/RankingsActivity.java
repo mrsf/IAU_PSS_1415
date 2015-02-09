@@ -96,8 +96,12 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
 
             super.updateIfWifi(datastore);
 
-            if (!datastore.getSyncStatus().isDownloading && this.isFullRanking && !super.isUpdated()) {
-                this.filterRankings = super.getApp().getRankingRepository().fetchRankings();
+            if (!datastore.getSyncStatus().isDownloading && !super.isDataLoaded() && this.isFullRanking) {
+
+                if (!super.isUpdated())
+                    this.filterRankings = super.getApp().getRankingRepository(true).fetchRankings();
+                else
+                    this.filterRankings = super.getApp().getRankingRepository(false).fetchRankings();
 
                 if (this.filterRankings == null || this.filterRankings.isEmpty()) {
                     Toast.makeText(getBaseContext(), "Não existe ranking de utilizadores", Toast.LENGTH_SHORT).show();
@@ -108,6 +112,7 @@ public class RankingsActivity extends BaseRecyclerViewActivity {
                 super.specifyAdapter(new RankingsAdapter(this.filterRankings, super.getApp().getImageCache()));
 
                 this.rankings = this.filterRankings;
+
             }
 
         } else {

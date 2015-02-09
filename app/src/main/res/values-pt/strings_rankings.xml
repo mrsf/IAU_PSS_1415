@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Ranking Activity Strings -->
+    <string name="element_ranking_user_name_text_view_text">Marcio Francisco</string>
+    <string name="element_ranking_user_position_text_view_text">1º</string>
+    <string name="element_ranking_user_email_text_view_text">marciosilva15@hotmail.com</string>
+    <string name="element_ranking_user_score_text_view_text">10 pontos</string>
+    <string name="element_ranking_user_photo_content_description">Fotografia do utilizador</string>
+
+</resources>

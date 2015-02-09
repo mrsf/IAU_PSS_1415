@@ -87,7 +87,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
+            android:label="@string/main_activity_title"
             android:launchMode="singleTop"
             android:parentActivityName=".StartActivity"
             android:screenOrientation="portrait" >
@@ -98,7 +98,7 @@
                 android:value=".StartActivity" />
         </activity>
         <activity
-            android:name=".profile.ProfileActivity"
+            android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
             android:parentActivityName=".StartActivity"
             android:screenOrientation="portrait" >
@@ -111,7 +111,7 @@
         <activity
             android:name=".ParkingSpotActivity"
             android:label="@string/title_activity_parking_spot"
-            android:parentActivityName=".profile.ProfileActivity" >
+            android:parentActivityName=".ProfileActivity" >
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data

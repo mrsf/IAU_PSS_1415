@@ -48,6 +48,9 @@ public class RankingsData extends ESTGParkingData {
 
     public List<Ranking> getRankings() {
 
+        int position = 0;
+        int topScore = 0;
+
         List<Ranking> rankings = new LinkedList<>();
         Cursor cursor = database().query(
                 ESTGParkingDBContract.RankingBase.TABLE_NAME,
@@ -56,13 +59,20 @@ public class RankingsData extends ESTGParkingData {
                         ESTGParkingDBContract.RankingBase.EMAIL,
                         ESTGParkingDBContract.RankingBase.SCORE,
                         ESTGParkingDBContract.RankingBase.IMAGE_PATH }, null, null,
-                null, null, ESTGParkingDBContract.RankingBase.SCORE);
+                null, null, ESTGParkingDBContract.RankingBase.SCORE + " DESC");
 
         if (cursor != null) {
             if (cursor.moveToFirst())
                 do {
-                    rankings.add(new Ranking(1, cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                                                cursor.getInt(3), cursor.getString(4)));
+                    position += 1;
+                    if (position == 1)
+                        topScore = cursor.getInt(3);
+
+                    Ranking ranking = new Ranking(position, cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                            cursor.getInt(3), cursor.getString(4));
+                    ranking.setTopScore(topScore);
+
+                    rankings.add(ranking);
                 } while (cursor.moveToNext());
 
             cursor.close();

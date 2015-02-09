@@ -8,5 +8,4 @@ public interface IRankingRepository {
 
     List<Ranking> fetchRankings();
 
-    List<Ranking> fetchMyRanking(String email);
 }

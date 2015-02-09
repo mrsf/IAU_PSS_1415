@@ -53,13 +53,15 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dropbox);
+        if (savedInstanceState == null) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_dropbox);
 
-        this.app = ESTGParkingApplication.getInstance();
+            this.app = ESTGParkingApplication.getInstance();
 
-        this.containerFrameLayout = (FrameLayout) findViewById(R.id.dropbox_container_frame_layout);
-        this.progressFrameLayout = (FrameLayout) findViewById(R.id.dropbox_progress_frame_layout);
+            this.containerFrameLayout = (FrameLayout) findViewById(R.id.dropbox_container_frame_layout);
+            this.progressFrameLayout = (FrameLayout) findViewById(R.id.dropbox_progress_frame_layout);
+        }
     }
 
     @Override

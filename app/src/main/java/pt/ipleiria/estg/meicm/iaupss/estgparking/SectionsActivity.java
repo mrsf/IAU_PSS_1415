@@ -64,8 +64,14 @@ public class SectionsActivity extends BaseRecyclerViewActivity {
 
             super.updateIfWifi(datastore);
 
-            if (!datastore.getSyncStatus().isDownloading && !super.isUpdated()) {
-                List<Section> sections = super.getApp().getSectionRepository(this.lotId).fetchSections();
+            if (!datastore.getSyncStatus().isDownloading && !super.isDataLoaded()) {
+
+                List<Section> sections;
+
+                if (!super.isUpdated())
+                    sections = super.getApp().getSectionRepository(this.lotId, true).fetchSections();
+                else
+                    sections = super.getApp().getSectionRepository(this.lotId, false).fetchSections();
 
                 if (sections == null || sections.isEmpty()) {
                     Toast.makeText(getBaseContext(), "Não existem Secções", Toast.LENGTH_LONG).show();
@@ -74,6 +80,7 @@ public class SectionsActivity extends BaseRecyclerViewActivity {
 
                 // specify adapter
                 super.specifyAdapter(new SectionsAdapter(sections));
+
             }
 
         } else {

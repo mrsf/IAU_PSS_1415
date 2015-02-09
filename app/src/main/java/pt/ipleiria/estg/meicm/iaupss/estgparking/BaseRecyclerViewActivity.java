@@ -22,7 +22,7 @@ import pt.ipleiria.estg.meicm.iaupss.estgparking.adapter.SpacerItemDecoration;
 
 public abstract class BaseRecyclerViewActivity extends ActionBarActivity implements DbxDatastore.SyncStatusListener {
 
-    private static final String TAG = "BASE_RECYCLER_VIEW_ACTIVITY";
+    private static final String TAG = "RECYCLERVIEW_ACTIVITY";
 
     private ESTGParkingApplication app;
     private RecyclerView recyclerView;
@@ -35,6 +35,7 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
     private boolean isConnected;
     private boolean isWiFi;
     private boolean isUpdated;
+    private boolean isDataLoaded;
 
     public BaseRecyclerViewActivity(int layoutResID, int progressFrameLayoutID, int recyclerViewID, int menuResID) {
 
@@ -69,6 +70,7 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
             recyclerView.setLayoutManager(layoutManager);
 
             this.isUpdated = false;
+            this.isDataLoaded = false;
 
             ConnectivityManager connectivityManager =
                     (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -153,6 +155,7 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
         try {
             this.app.getDatastore().sync();
             this.isUpdated = false;
+            this.isDataLoaded = false;
             this.progressFrameLayout.setVisibility(FrameLayout.VISIBLE);
         } catch (DbxException e) {
             Log.e(TAG, e.getLocalizedMessage());
@@ -160,8 +163,10 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
     }
 
     public void updateIfWifi(DbxDatastore datastore) {
-        if (this.isWiFi && datastore.getSyncStatus().hasIncoming) {
+        if (this.isWiFi && datastore.getSyncStatus().hasIncoming)
             this.updateDatastore();
+        else if (!datastore.getSyncStatus().hasIncoming) {
+            this.isUpdated = true;
         }
     }
 
@@ -176,6 +181,7 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
         this.progressFrameLayout.setVisibility(FrameLayout.GONE);
 
         this.isUpdated = true;
+        this.isDataLoaded = true;
     }
 
     public ESTGParkingApplication getApp() {
@@ -200,6 +206,10 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
 
     public boolean isUpdated() {
         return isUpdated;
+    }
+
+    public boolean isDataLoaded() {
+        return isDataLoaded;
     }
 
     public boolean isConnected() {

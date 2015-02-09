@@ -1,6 +1,6 @@
-package pt.ipleiria.estg.meicm.iaupss.estgparking.profile;
+package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dropbox.sync.android.DbxDatastore;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
@@ -35,12 +36,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.InputStream;
 
-import pt.ipleiria.estg.meicm.iaupss.estgparking.ESTGParkingApplication;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.ParkingSpotActivity;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.R;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.IUserInfoProvider;
 
 public class ProfileActivity extends ActionBarActivity implements GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener {
+        GooglePlayServicesClient.OnConnectionFailedListener, DbxDatastore.SyncStatusListener {
+
+    private static final String TAG = "PROFILE_ACTIVITY";
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
@@ -75,7 +76,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if(actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -127,6 +128,40 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
         parkingLocation = app.getParkingLocation();
         setUpMapIfNeeded();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        this.app.initDatastore();
+        try {
+            this.app.getDatastore().addSyncStatusListener(this);
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+            Toast.makeText(getApplicationContext(), "Problema na conexão com o dropbox.", Toast.LENGTH_SHORT).show();
+            this.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        try {
+            this.app.getDatastore().removeSyncStatusListener(this);
+            this.app.getDatastore().close();
+            this.app.setDatastore(null);
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finish();
     }
 
     private void refreshLabels() {
@@ -188,7 +223,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 //makeUseOfNewLocation(location);
-                Toast.makeText(ProfileActivity.this, "bla", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProfileActivity.this, "Localização Actualizada", Toast.LENGTH_SHORT).show();
 
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -233,6 +268,13 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         locationManager.removeUpdates(locationListener);
         locationManager = null;
         super.onDestroy();
+
+        try {
+            if (!this.app.getDatastoreManager().isShutDown())
+                this.app.getDatastoreManager().shutDown();
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+        }
     }
 
     /**
@@ -268,6 +310,18 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     public void onStart() {
         super.onStart();
         locationClient.connect();
+    }
+
+    @Override
+    public void onDatastoreStatusChange(DbxDatastore datastore) {
+
+        Log.d(TAG, datastore.getSyncStatus().toString());
+
+        if (datastore.getSyncStatus().isUploading)
+            Toast.makeText(getApplicationContext(), "Uploading ...", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getApplicationContext(), "Upload Finish", Toast.LENGTH_SHORT).show();
+
     }
 
     private void fetchUserInfo() {

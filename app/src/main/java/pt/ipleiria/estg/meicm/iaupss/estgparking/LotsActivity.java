@@ -49,8 +49,14 @@ public class LotsActivity extends BaseRecyclerViewActivity {
 
             super.updateIfWifi(datastore);
 
-            if (!datastore.getSyncStatus().isDownloading && !super.isUpdated()) {
-                List<Lot> lots = super.getApp().getLotRepository(true).fetchLots();
+            if (!datastore.getSyncStatus().isDownloading && !super.isDataLoaded()) {
+
+                List<Lot> lots;
+
+                if (!super.isUpdated())
+                    lots = super.getApp().getLotRepository(true).fetchLots();
+                else
+                    lots = super.getApp().getLotRepository(false).fetchLots();
 
                 if (lots == null || lots.isEmpty()) {
                     Toast.makeText(getBaseContext(), "Não existem lotes de estacionamento", Toast.LENGTH_LONG).show();
@@ -59,6 +65,7 @@ public class LotsActivity extends BaseRecyclerViewActivity {
 
                 // specify adapter
                 super.specifyAdapter(new LotsAdapter(lots, super.getApp().getImageCache()));
+
             }
 
         } else {

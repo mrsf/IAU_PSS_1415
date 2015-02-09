@@ -22,10 +22,10 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.DetectionRemover;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.activityrecognition.DetectionRequester;
-import pt.ipleiria.estg.meicm.iaupss.estgparking.profile.ProfileActivity;
-
 
 public class MainActivity extends ActionBarActivity {
+
+    private static final String TAG = "MAIN_ACTIVITY";
 
     /*
      *  Intent filter for incoming broadcasts from the IntentService.
@@ -58,8 +58,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setProgressBarIndeterminateVisibility(true);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setSupportProgressBarIndeterminateVisibility(true);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -143,7 +143,7 @@ public class MainActivity extends ActionBarActivity {
             intent = new Intent(MainActivity.this, RankingsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            setProgressBarIndeterminateVisibility(false);
+            setSupportProgressBarIndeterminateVisibility(false);
             }
         });
 
@@ -170,6 +170,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        try {
+            if (!this.app.getDatastoreManager().isShutDown())
+                this.app.getDatastoreManager().shutDown();
+        } catch (NullPointerException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+        }
 
         progressBar.setVisibility(ProgressBar.GONE);
 

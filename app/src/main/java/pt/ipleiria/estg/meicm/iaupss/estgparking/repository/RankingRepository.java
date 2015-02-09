@@ -21,59 +21,28 @@ public class RankingRepository implements IRankingRepository {
 
     private DbxDatastore datastore;
     private RankingsData rankingsData;
+    private boolean isUpdate;
 
-    public RankingRepository(Context context, DbxDatastore datastore) {
+    public RankingRepository(Context context, DbxDatastore datastore, boolean isUpdate) {
 
         this.datastore = datastore;
-        //this.rankingsData = new RankingsData(context, false);
+        this.isUpdate = isUpdate;
+        this.rankingsData = new RankingsData(context, isUpdate);
     }
 
     @Override
     public List<Ranking> fetchRankings() {
 
-        return this.dataStoreRankings();
+        if (isUpdate || this.dataBaseRankings().isEmpty()) {
+            Log.d(TAG, "DATASTORE");
+            return this.dataStoreRankings();
+        } else {
+            Log.d(TAG, "DATABASE");
+            return this.dataBaseRankings();
+        }
     }
 
-//    @Override
-//    public List<Ranking> fetchMyRanking(String email) {
-//
-//        List<RankingRecord> rankingRecords = new ArrayList<>();
-//
-//        try {
-//            this.datastore.sync();
-//            RankingsTable rankingsTable = new RankingsTable(datastore);
-//            rankingRecords.add(rankingsTable.getMyRanking(email));
-//        } catch (DbxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        List<Ranking> rankings = new LinkedList<>();
-//
-//        for(RankingRecord rankingRecord: rankingRecords) {
-//
-//            Ranking ranking = new Ranking();
-//
-//            ranking.setId(rankingRecord.getId());
-//            ranking.setName(rankingRecord.getName());
-//            ranking.setEmail(rankingRecord.getEmail());
-//            ranking.setScore(rankingRecord.getScore());
-//            ranking.setImagePath(rankingRecord.getImagePath());
-//
-//            rankings.add(ranking);
-//
-//            Log.d(TAG, "Add: " + ranking.getId() + " | " + ranking.getName() + " | " + ranking.getEmail()
-//                    + " | " + ranking.getScore() + " | " + ranking.getImagePath());
-//        }
-//
-//        /*this.rankingsData.open();
-//        this.rankingsData.insertRankings(rankings);
-//        this.rankingsData.close();*/
-//
-//        return rankings;
-//    }
-
-    @Override
-    public List<Ranking> fetchMyRanking(String email) {
+    private List<Ranking> dataStoreRankings() {
 
         List<RankingRecord> rankingRecords = new ArrayList<>();
 
@@ -82,55 +51,7 @@ public class RankingRepository implements IRankingRepository {
             RankingsTable rankingsTable = new RankingsTable(datastore);
             rankingRecords.addAll(rankingsTable.getRankingsSorted());
         } catch (DbxException e) {
-            e.printStackTrace();
-        }
-
-        List<Ranking> rankings = new LinkedList<>();
-        int position = 0;
-        int topScore = 0;
-
-        for(RankingRecord rankingRecord: rankingRecords) {
-
-            position += 1;
-
-            if (position == 1)
-                topScore = rankingRecord.getScore();
-
-            if (rankingRecord.getEmail().equals(email)) {
-                Ranking ranking = new Ranking();
-
-                ranking.setPosition(position);
-                ranking.setId(rankingRecord.getId());
-                ranking.setName(rankingRecord.getName());
-                ranking.setEmail(rankingRecord.getEmail());
-                ranking.setScore(rankingRecord.getScore());
-                ranking.setImagePath(rankingRecord.getImagePath());
-                ranking.setTopScore(topScore);
-
-                rankings.add(ranking);
-
-                Log.d(TAG, "Add: " + ranking.getId() + " | " + ranking.getName() + " | " + ranking.getEmail()
-                        + " | " + ranking.getScore() + " | " + ranking.getImagePath());
-            }
-        }
-
-        /*this.rankingsData.open();
-        this.rankingsData.insertRankings(rankings);
-        this.rankingsData.close();*/
-
-        return rankings;
-    }
-
-    private List<Ranking> dataStoreRankings() {
-
-        List<RankingRecord> rankingRecords = new ArrayList<>();
-
-        try {
-            //this.datastore.sync();
-            RankingsTable rankingsTable = new RankingsTable(datastore);
-            rankingRecords.addAll(rankingsTable.getRankingsSorted());
-        } catch (DbxException e) {
-            e.printStackTrace();
+            Log.d(TAG, e.getLocalizedMessage());
         }
 
         List<Ranking> rankings = new LinkedList<>();
@@ -159,14 +80,20 @@ public class RankingRepository implements IRankingRepository {
                     + " | " + ranking.getScore() + " | " + ranking.getImagePath());
         }
 
-        /*this.rankingsData.open();
+        this.rankingsData.open();
         this.rankingsData.insertRankings(rankings);
-        this.rankingsData.close();*/
+        this.rankingsData.close();
 
         return rankings;
     }
 
     private List<Ranking> dataBaseRankings() {
+
+        try {
+            this.datastore.sync();
+        } catch (DbxException e) {
+            Log.d(TAG, e.getLocalizedMessage());
+        }
 
         this.rankingsData.open();
         List<Ranking> rankings = this.rankingsData.getRankings();

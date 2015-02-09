@@ -1,0 +1,10 @@
+<resources>
+    <string name="title_activity_settings">Definições</string>
+    <string name="pref_header_general">Definições</string>
+
+    <string name="pref_free_parking_title">Modo livre</string>
+    <string name="pref_free_parking_summary">Permitir memorizar o local de estacionamento mesmo que este se encontre fora de um lote controlado pela aplicação</string>
+
+    <string name="pref_activity_service_title">Detetar estado automaticamente</string>
+    <string name="pref_activity_service_summary">Indica se a aplicação irá detetar automáticamente quando o veículo é estacionado ou liberta uma vaga de estacionamento</string>
+</resources>
