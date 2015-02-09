@@ -90,6 +90,7 @@ public class LotDetailsActivity extends ActionBarActivity {
         private ProgressBar imageProgress;
         private TextView nameText;
         private TextView descriptionText;
+        private Button showMapLot;
         private Button showSections;
 
         public PlaceholderFragment() {}
@@ -111,9 +112,21 @@ public class LotDetailsActivity extends ActionBarActivity {
             this.imageProgress = (ProgressBar) rootView.findViewById(R.id.detail_image_progress_bar);
             this.nameText = (TextView) rootView.findViewById(R.id.detail_name_text_view);
             this.descriptionText = (TextView) rootView.findViewById(R.id.detail_description_text_view);
+            this.showMapLot = (Button) rootView.findViewById(R.id.show_map_lot_button);
             this.showSections = (Button) rootView.findViewById(R.id.show_sections_button);
 
             if (lot != null) {
+                this.showMapLot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(v.getContext(), LotMapActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("Lot", lot);
+
+                        v.getContext().startActivity(intent);
+                    }
+                });
+
                 this.showSections.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

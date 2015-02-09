@@ -4,14 +4,27 @@
     package="pt.ipleiria.estg.meicm.iaupss.estgparking" >
 
     <compatible-screens>
+
         <!-- all small size screens -->
-        <screen android:screenSize="small" android:screenDensity="mdpi" />
-        <screen android:screenSize="small" android:screenDensity="hdpi" />
-        <screen android:screenSize="small" android:screenDensity="xhdpi" />
+        <screen
+            android:screenDensity="mdpi"
+            android:screenSize="small" />
+        <screen
+            android:screenDensity="hdpi"
+            android:screenSize="small" />
+        <screen
+            android:screenDensity="xhdpi"
+            android:screenSize="small" />
         <!-- all normal size screens -->
-        <screen android:screenSize="normal" android:screenDensity="mdpi" />
-        <screen android:screenSize="normal" android:screenDensity="hdpi" />
-        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
+        <screen
+            android:screenDensity="mdpi"
+            android:screenSize="normal" />
+        <screen
+            android:screenDensity="hdpi"
+            android:screenSize="normal" />
+        <screen
+            android:screenDensity="xhdpi"
+            android:screenSize="normal" />
     </compatible-screens>
 
     <uses-feature
@@ -50,7 +63,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name="com.facebook.LoginActivity"
@@ -135,9 +148,9 @@
         <activity
             android:name=".DropboxActivity"
             android:label="@string/title_activity_dropbox"
-            android:theme="@style/noAnimation"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimation" >
         </activity>
         <activity
             android:name=".LotsActivity"
@@ -145,8 +158,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" >
-
-            <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
@@ -159,8 +171,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" >
-
-            <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
@@ -180,13 +191,24 @@
                 android:value=".LotsActivity" />
         </activity>
         <activity
+            android:name=".LotMapActivity"
+            android:label="@string/title_activity_lot_map"
+            android:launchMode="singleTop"
+            android:parentActivityName=".LotDetailsActivity"
+            android:screenOrientation="portrait" >
+
+            <!-- Parent activity meta-data to support API level 7+ -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LotDetailsActivity" />
+        </activity>
+        <activity
             android:name=".SectionsActivity"
             android:label="@string/title_activity_parking_sections"
             android:launchMode="singleTop"
             android:parentActivityName=".LotDetailsActivity"
             android:screenOrientation="portrait" >
-
-            <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
             <!-- Parent activity meta-data to support API level 7+ -->
             <meta-data
