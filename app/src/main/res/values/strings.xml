@@ -95,5 +95,6 @@
     <string name="user_parking_lat">"user_parking_lat"</string>
     <string name="user_parking_lng">"user_parking_lng"</string>
     <string name="blank_fragment">Blank fragment</string>
+    <string name="title_activity_lot_map">LotMapActivity</string>
 
 </resources>

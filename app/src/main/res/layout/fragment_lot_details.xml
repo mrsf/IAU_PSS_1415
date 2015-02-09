@@ -101,7 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ver no Mapa"
-            android:id="@+id/button"
+            android:id="@+id/show_map_lot_button"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/button_selector"
             android:clickable="true"
