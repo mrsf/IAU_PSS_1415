@@ -10,5 +10,10 @@
     <string name="main_btn_facebook_post_text">Publicar</string>
     <string name="main_btn_rankings_text">Classificações</string>
     <string name="main_btn_about_text">Sobre</string>
+    <string name="main_activity_recognition_service_finish">Serviço de deteção automática de estacionamento terminado</string>
+    <string name="main_activity_recognition_service_init">Serviço de deteção automática de estacionamento iniciado</string>
+    <string name="main_activity_service_dialog">O serviço de detecção automatica de estacionamento encontra-se activo.\nDeseja manter o serviço em execução?</string>
+    <string name="main_activity_yes_dialog">Sim</string>
+    <string name="main_activity_no_dialog">Não</string>
 
 </resources>

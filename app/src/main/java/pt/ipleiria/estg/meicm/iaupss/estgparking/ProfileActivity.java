@@ -129,11 +129,11 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
                     }
                 } else {
 
-                    CharSequence[] items = {"1 hora","2 hora","4 horas","Indefinido"};
+                    //CharSequence[] items = {"1 hora","2 hora","4 horas","Indefinido"};
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
-                    builder.setMessage("Indique o tempo previsto de ocupação?")
-                            .setItems(items, new DialogInterface.OnClickListener() {
+                    builder.setTitle(R.string.profile_parked_time_dialog_title)
+                            .setItems(R.array.profile_park_time_items, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
@@ -208,7 +208,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
             this.app.getDatastore().addSyncStatusListener(this);
         } catch (NullPointerException e) {
             Log.d(TAG, e.getLocalizedMessage());
-            Toast.makeText(getApplicationContext(), "Problema na conexão com o dropbox.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.dropbox_connection_toas_text, Toast.LENGTH_SHORT).show();
             this.onBackPressed();
         }
     }
@@ -235,13 +235,13 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
     private void refreshLabels() {
         if (app.isParked()) {
-            parkButton.setText("Libertar estacionamento");
-            txtStatus.setText("Estacionado");
-            txtMapHeader.setText("Localização do veículo");
+            parkButton.setText(R.string.profile_depark_button_text);
+            txtStatus.setText(R.string.profile_parked_status_text);
+            txtMapHeader.setText(R.string.profile_car_location_text);
         } else {
-            parkButton.setText("Estacionar");
-            txtStatus.setText("Não Estacionado");
-            txtMapHeader.setText("Localização atual");
+            parkButton.setText(R.string.profile_park_button_text);
+            txtStatus.setText(R.string.profile_deparked_status_text);
+            txtMapHeader.setText(R.string.profile_actual_location_text);
         }
     }
 
@@ -254,15 +254,18 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
     @Override
     public void onConnected(Bundle bundle) {
         Location location = locationClient.getLastLocation();
-        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        if (location != null) {
+            currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
 
-        // if not parked, show current location in the map.
-        if (googleMap != null) {
-            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
-            if (!app.isParked()) {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            // if not parked, show current location in the map.
+            if (googleMap != null) {
+                currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title(getResources().getString(R.string.profile_actual_location_text)));
+                if (!app.isParked()) {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                }
             }
+
         }
     }
 
@@ -321,14 +324,14 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
     private void showGPSAlertMessage() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("É necessária a activação do GPS?")
+        builder.setMessage(R.string.profile_gps_dialog_text)
                 .setCancelable(false)
-                .setPositiveButton("Activar", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.profile_gps_activate_text, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog,  final int id) {
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     }
                 })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.profile_gps_cancel_text, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         dialog.cancel();
                         finish();
@@ -344,7 +347,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
                 currentLocationMarker.setPosition(currentLocation);
             } else {
                 currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation)
-                        .title("Localização atual")
+                        .title(getResources().getString(R.string.profile_actual_location_text))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
@@ -405,10 +408,10 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
 
         Log.d(TAG, datastore.getSyncStatus().toString());
 
-        if (datastore.getSyncStatus().isUploading)
+        /*if (datastore.getSyncStatus().isUploading)
             Toast.makeText(getApplicationContext(), "Uploading ...", Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(getApplicationContext(), "Upload Finish", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Upload Finish", Toast.LENGTH_SHORT).show();*/
 
     }
 
@@ -484,7 +487,7 @@ public class ProfileActivity extends ActionBarActivity implements GooglePlayServ
         if (app.isParked()) {
             if (parkingLocation != null) {
                 parkingLocationMarker = googleMap.addMarker(new MarkerOptions().position(parkingLocation)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title(getResources().getString(R.string.profile_vehicle_mark_text)));
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
             }
         }

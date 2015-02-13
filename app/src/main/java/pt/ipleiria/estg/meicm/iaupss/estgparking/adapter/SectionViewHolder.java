@@ -44,7 +44,7 @@ public class SectionViewHolder extends RecyclerView.ViewHolder implements View.O
         this.statusColorFrame.setBackgroundColor(section.getStatusColor());
         this.nameText.setText(section.getName());
         this.descriptionText.setText(section.getDescription());
-        this.occupationText.setText(section.getOccupation() + "|" + section.getCapacity());
+        this.occupationText.setText(String.valueOf(section.getCapacity() - section.getOccupation()) + ((section.getCapacity() - section.getOccupation()) > 1 ? " Vagas" : " Vaga"));
     }
 
     @Override

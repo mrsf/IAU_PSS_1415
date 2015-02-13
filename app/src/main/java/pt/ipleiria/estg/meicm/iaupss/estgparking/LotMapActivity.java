@@ -56,12 +56,12 @@ public class LotMapActivity extends ActionBarActivity {
 
         googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lotLocation, 30));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lotLocation, 18));
 
         if (this.lot != null) {
 
             googleMap.addMarker(new MarkerOptions().position(lotLocation)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parking_spot_marker)).title((lot != null ? lot.getName() : "Estacionamento")))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.parking_spot_marker)).title((lot != null ? lot.getName() : getResources().getString(R.string.lot_map_activity_mark_text))))
                     .setSnippet((lot != null ? lot.getDescription() : null));
 
             // Instantiates a new Polyline object and adds points to define a rectangle
@@ -96,8 +96,8 @@ public class LotMapActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            finish();
             return true;
         }
 

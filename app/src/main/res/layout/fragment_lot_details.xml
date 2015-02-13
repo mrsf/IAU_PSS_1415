@@ -49,10 +49,10 @@
             android:layout_height="fill_parent">
 
             <TextView
-                android:layout_width="86dp"
+                android:layout_width="94dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearance"
-                android:text="Nome: "
+                android:text="@string/lot_details_activity_name"
                 android:id="@+id/detail_name_text"
                 android:layout_marginBottom="8dp"
                 android:textStyle="bold" />
@@ -72,10 +72,10 @@
             android:layout_height="fill_parent">
 
             <TextView
-                android:layout_width="86dp"
+                android:layout_width="94dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearance"
-                android:text="Descrição: "
+                android:text="@string/lot_details_activity_description"
                 android:id="@+id/detail_description_text"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:textStyle="bold" />
@@ -100,7 +100,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ver no Mapa"
+            android:text="@string/lot_details_activity_view_map"
             android:id="@+id/show_map_lot_button"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/button_selector"
@@ -110,7 +110,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ver Secções"
+            android:text="@string/lot_details_activity_show_sections"
             android:id="@+id/show_sections_button"
             android:background="@drawable/button_selector"
             android:clickable="true"

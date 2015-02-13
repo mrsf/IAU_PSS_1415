@@ -36,7 +36,7 @@
     <string name="action_refresh_lots">Atualizar</string>
     <string name="action_refresh_sections">Atualizar</string>
 
-    <string name="about_msg">2015, Escola Superior de Tecnologia e Gestão de leiria\n\nMárcio Francisco\nPedro Sousa</string>
+    <string name="about_msg">2015, Escola Superior de Tecnologia e Gestão de Leiria\n\nMestrado de Engenharia Informatica - Computação Móvel\nUCs de PSS e IAU\n\nMárcio Francisco - 2131393\nPedro Sousa - 2140048</string>
 
     <!-- User interface labels and strings -->
 
@@ -78,23 +78,28 @@
     <string name="stop_updates">Stop Updates</string>
     <string name="unknown">--Unknown--</string>
     <string name="title_activity_profile">Perfil</string>
-    <string name="title_activity_parking_spot">Mapa</string>
+    <string name="title_activity_parking_spot">Map</string>
     <string name="title_activity_facebook_post_photo">FacebookPostPhoto</string>
-    <string name="title_activity_parking_lots">Lotes de Estacionamento</string>
+    <string name="title_activity_parking_lots">Parking Lots</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_percorse">Percurso</string>
 
     <!-- Login Activity Strings -->
     <string name="login_description">Entrar com:</string>
     <string name="logo_image_content_decription">Logótipo da aplicação ESTG Parking</string>
-    <string name="title_activity_lot_details">Detalhes do Lote</string>
-    <string name="title_activity_parking_sections">Secções do Lote</string>
+    <string name="title_activity_lot_details">Lot Details</string>
+    <string name="lot_details_activity_name">Name: </string>
+    <string name="lot_details_activity_description">Description: </string>
+    <string name="lot_details_activity_view_map">View on Map</string>
+    <string name="lot_details_activity_show_sections">Show Sections</string>
+    <string name="title_activity_parking_sections">Lot Sections</string>
     <string name="title_activity_users_ranking">Ranking</string>
     <string name="title_activity_start">ESTG Parking</string>
     <string name="preference_file_key">"pt.ipleiria.estg.meicm.iaupss.estgparking.profile.PREFERENCE_FILE"</string>
     <string name="user_parking_lat">"user_parking_lat"</string>
     <string name="user_parking_lng">"user_parking_lng"</string>
     <string name="blank_fragment">Blank fragment</string>
-    <string name="title_activity_lot_map">LotMapActivity</string>
+    <string name="title_activity_lot_map">Lot Area</string>
+    <string name="lot_map_activity_mark_text">Parking Lot</string>
 
 </resources>

@@ -36,7 +36,7 @@
     <string name="action_refresh_lots">Atualizar</string>
     <string name="action_refresh_sections">Atualizar</string>
 
-    <string name="about_msg">2015, Escola Superior de Tecnologia e Gestão de leiria\n\nMárcio Francisco\nPedro Sousa</string>
+    <string name="about_msg">2015, Escola Superior de Tecnologia e Gestão de Leiria\n\nMestrado de Engenharia Informática - Computação Móvel\nUCs de PSS e IAU\n\nMárcio Francisco - 2131393\nPedro Sousa - 2140048</string>
 
     <!-- User interface labels and strings -->
 
@@ -88,6 +88,10 @@
     <string name="login_description">Entrar com:</string>
     <string name="logo_image_content_decription">Logótipo da aplicação ESTG Parking</string>
     <string name="title_activity_lot_details">Detalhes do Lote</string>
+    <string name="lot_details_activity_name">Nome: </string>
+    <string name="lot_details_activity_description">Descrição: </string>
+    <string name="lot_details_activity_view_map">Ver no Mapa</string>
+    <string name="lot_details_activity_show_sections">Ver Secções</string>
     <string name="title_activity_parking_sections">Secções do Lote</string>
     <string name="title_activity_users_ranking">Ranking</string>
     <string name="title_activity_start">ESTG Parking</string>
@@ -95,5 +99,7 @@
     <string name="user_parking_lat">"user_parking_lat"</string>
     <string name="user_parking_lng">"user_parking_lng"</string>
     <string name="blank_fragment">Blank fragment</string>
+    <string name="title_activity_lot_map">Área do Lote</string>
+    <string name="lot_map_activity_mark_text">Estacionamento</string>
 
 </resources>

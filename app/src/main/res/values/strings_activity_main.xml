@@ -10,5 +10,10 @@
     <string name="main_btn_facebook_post_text">Post</string>
     <string name="main_btn_rankings_text">Rankings</string>
     <string name="main_btn_about_text">About</string>
+    <string name="main_activity_recognition_service_finish">Automatic parking detection service stop</string>
+    <string name="main_activity_recognition_service_init">Automatic parking detection service start</string>
+    <string name="main_activity_service_dialog">The automatic parking detection service is active. \ NDo you want to keep the service running?</string>
+    <string name="main_activity_yes_dialog">Yes</string>
+    <string name="main_activity_no_dialog">No</string>
 
 </resources>
