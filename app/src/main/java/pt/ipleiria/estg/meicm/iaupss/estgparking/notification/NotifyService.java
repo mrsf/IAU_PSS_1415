@@ -12,6 +12,7 @@ import android.util.Log;
 
 import pt.ipleiria.estg.meicm.iaupss.estgparking.LoginActivity;
 import pt.ipleiria.estg.meicm.iaupss.estgparking.MainActivity;
+import pt.ipleiria.estg.meicm.iaupss.estgparking.ProfileActivity;
 
 /**
  * This service is started when an Alarm has been raised
@@ -78,7 +79,7 @@ public class NotifyService extends Service {
         long time = System.currentTimeMillis();
 
         // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, LoginActivity.class), 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, ProfileActivity.class), 0);
 
         Notification notification = new Notification.Builder(getApplicationContext())
                 .setContentTitle(title)

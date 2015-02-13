@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Profile Activity Strings -->
+    <string name="profile_title">Perfil</string>
+    <string name="profile_vehicle_mark_text">Veículo</string>
+    <string name="profile_actual_location_text">Localização Atual</string>
+    <string name="profile_car_location_text">Localização do Veículo</string>
+    <string name="profile_park_button_text">Estacionar</string>
+    <string name="profile_depark_button_text">Libertar Estacionamento</string>
+    <string name="profile_parked_status_text">Estacionado</string>
+    <string name="profile_deparked_status_text">Não Estacionado</string>
+    <string name="profile_parked_time_dialog_title">Qual é o tempo previsto de ocupação?</string>
+    <string name="profile_gps_dialog_text">É necessária a activação do GPS!</string>
+    <string name="profile_gps_activate_text">Ativar</string>
+    <string name="profile_gps_cancel_text">Cancelar</string>
+    <string-array name="profile_park_time_items">
+        <item>1 Hora</item>
+        <item>2 Horas</item>
+        <item>4 Horas</item>
+        <item>Indefinido</item>
+    </string-array>
+
+</resources>

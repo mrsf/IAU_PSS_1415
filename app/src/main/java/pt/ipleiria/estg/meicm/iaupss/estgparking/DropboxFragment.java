@@ -63,7 +63,7 @@ public class DropboxFragment extends Fragment {
             } else {
                 // Link failed or was cancelled by the user
                 Log.d(TAG, "Link failed or was cancelled by the user");
-                Toast.makeText(this.getActivity(), "A autenticação falhou", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getActivity(), R.string.dropbox_authentication_toas_text, Toast.LENGTH_SHORT).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

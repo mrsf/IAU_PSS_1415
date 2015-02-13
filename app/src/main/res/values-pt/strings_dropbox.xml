@@ -7,5 +7,7 @@
     <string name="activity_dropbox_progress_text_view_text">A sincronizar dados ...</string>
     <string name="fragment_dropbox_image_button_content_description">Botão que permite a conecção com o Dropbox.</string>
     <string name="fragment_dropbox_info_text_view_text">Nota: Para a correcta utilização desta aplicação, é obrigatória a associação a uma conta Dropbox válida.</string>
+    <string name="dropbox_connection_toas_text">Problema na conexão com o dropbox.</string>
+    <string name="dropbox_authentication_toas_text">A autenticação falhou</string>
 
 </resources>

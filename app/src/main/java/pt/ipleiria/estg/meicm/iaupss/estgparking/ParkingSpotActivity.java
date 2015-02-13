@@ -1,19 +1,21 @@
 package pt.ipleiria.estg.meicm.iaupss.estgparking;
 
-import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -60,7 +62,7 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_map);
 
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -198,7 +200,7 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         if (app.isParked()) {
             if (parkingLocation != null) {
                 googleMap.addMarker(new MarkerOptions().position(parkingLocation)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title("Veículo"));
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)).title(getResources().getString(R.string.profile_vehicle_mark_text)));
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(parkingLocation, 15));
             }
         } else {
@@ -227,14 +229,17 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
     @Override
     public void onConnected(Bundle bundle) {
         Location location = locationClient.getLastLocation();
-        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        if (location != null) {
+            currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // if not parked, show current location in the map.
-        if (googleMap != null) {
-            currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title("Localização atual"));
-            if (!app.isParked()) {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+            // if not parked, show current location in the map.
+            if (googleMap != null) {
+                currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation).title(getResources().getString(R.string.profile_actual_location_text)));
+                if (!app.isParked()) {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                }
             }
+
         }
     }
 
@@ -257,7 +262,7 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
             public void onLocationChanged(Location location) {
                 // Called when a new location is found by the network location provider.
                 //makeUseOfNewLocation(location);
-                Toast.makeText(ParkingSpotActivity.this, "bla", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ParkingSpotActivity.this, "bla", Toast.LENGTH_SHORT).show();
 
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -279,8 +284,27 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
         } else if (networkEnabled) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         } else {
-            // Alert
+            showGPSAlertMessage();
         }
+    }
+
+    private void showGPSAlertMessage() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.profile_gps_dialog_text)
+                .setCancelable(false)
+                .setPositiveButton(R.string.profile_gps_activate_text, new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog,  final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton(R.string.profile_gps_cancel_text, new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void refreshCurrentLocationMarker() {
@@ -290,7 +314,7 @@ public class ParkingSpotActivity extends ActionBarActivity implements GooglePlay
                 currentLocationMarker.setPosition(currentLocation);
             } else {
                 currentLocationMarker = googleMap.addMarker(new MarkerOptions().position(currentLocation)
-                        .title("Localização atual")
+                        .title(getResources().getString(R.string.profile_actual_location_text))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
             }
         }

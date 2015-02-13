@@ -2,10 +2,12 @@
 <resources>
 
     <!-- Dropbox Activity and Fragment Strings -->
-    <string name="title_activity_dropbox">Conta Dropbox</string>
-    <string name="activity_dropbox_logo_image_view_content_description">Imagem com o logo da ESTG Parking.</string>
-    <string name="activity_dropbox_progress_text_view_text">A sincronizar dados ...</string>
-    <string name="fragment_dropbox_image_button_content_description">Botão que permite a conecção com o Dropbox.</string>
-    <string name="fragment_dropbox_info_text_view_text">Nota: Para a correcta utilização desta aplicação, é obrigatória a associação a uma conta Dropbox válida.</string>
+    <string name="title_activity_dropbox">Dropbox Account</string>
+    <string name="activity_dropbox_logo_image_view_content_description">Image with the logo of ESTG Parking.</string>
+    <string name="activity_dropbox_progress_text_view_text">Data synchronizing ...</string>
+    <string name="fragment_dropbox_image_button_content_description">Button that allows the connection with Dropbox.</string>
+    <string name="fragment_dropbox_info_text_view_text">Note: For correct use of this application, the association to a valid Dropbox account is required.</string>
+    <string name="dropbox_connection_toas_text">Dropbox connection problem.</string>
+    <string name="dropbox_authentication_toas_text">Authentication fail</string>
 
 </resources>

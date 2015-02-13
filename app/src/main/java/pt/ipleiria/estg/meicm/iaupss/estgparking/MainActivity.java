@@ -212,14 +212,14 @@ public class MainActivity extends ActionBarActivity {
 
     private void stopActivityRecognitionService() {
         Log.i(ESTGParkingApplicationUtils.APPTAG, "Stopping activity recognition service...");
-        Toast.makeText(this, "Serviço de deteção automática de estacionamento terminado", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.main_activity_recognition_service_finish, Toast.LENGTH_SHORT).show();
         detectionRemover.removeUpdates(detectionRequester.getRequestPendingIntent());
         app.setServiceRunning(false);
     }
 
     private void startActivityRecognitionService() {
         Log.i(ESTGParkingApplicationUtils.APPTAG, "Starting activity recognition service...");
-        Toast.makeText(this, "Serviço de deteção automática de estacionamento iniciado", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.main_activity_recognition_service_init, Toast.LENGTH_SHORT).show();
         detectionRequester.requestUpdates();
         app.setServiceRunning(true);
     }
@@ -248,8 +248,9 @@ public class MainActivity extends ActionBarActivity {
             };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("O serviço de detecção de estacionamento xpto encontra-se activo.\nDeseja manter o serviço em execução?").setPositiveButton("Sim", dialogClickListener)
-                    .setNegativeButton("Não", dialogClickListener).show();
+            builder.setMessage(R.string.main_activity_service_dialog)
+                    .setPositiveButton(R.string.main_activity_yes_dialog, dialogClickListener)
+                    .setNegativeButton(R.string.main_activity_no_dialog, dialogClickListener).show();
         } else {
              MainActivity.super.onBackPressed();
         }

@@ -112,7 +112,7 @@
         </activity>
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile"
+            android:label="@string/profile_title"
             android:parentActivityName=".StartActivity"
             android:screenOrientation="portrait" >
 

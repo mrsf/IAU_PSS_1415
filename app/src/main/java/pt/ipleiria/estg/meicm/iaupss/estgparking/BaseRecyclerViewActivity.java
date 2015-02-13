@@ -37,6 +37,8 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
     private boolean isUpdated;
     private boolean isDataLoaded;
 
+    private long time, startTime;
+
     public BaseRecyclerViewActivity(int layoutResID, int progressFrameLayoutID, int recyclerViewID, int menuResID) {
 
         this.layoutResID = layoutResID;
@@ -57,6 +59,9 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
                 actionBar.setDisplayHomeAsUpEnabled(true);
 
             this.app = ESTGParkingApplication.getInstance();
+
+            this.time = 0;
+            this.startTime = 0;
 
             progressFrameLayout = (FrameLayout) findViewById(this.progressFrameLayoutID);
             recyclerView = (RecyclerView) findViewById(this.recyclerViewID);
@@ -89,6 +94,7 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
         this.app.initDatastore();
         try {
             this.app.getDatastore().addSyncStatusListener(this);
+            this.startTime = System.nanoTime();
         } catch (NullPointerException e) {
             Log.d(TAG, e.getLocalizedMessage());
             Toast.makeText(getApplicationContext(), "Problema na conexão com o dropbox.", Toast.LENGTH_SHORT).show();
@@ -182,6 +188,12 @@ public abstract class BaseRecyclerViewActivity extends ActionBarActivity impleme
 
         this.isUpdated = true;
         this.isDataLoaded = true;
+
+        if (startTime != 0) {
+            time = System.nanoTime() - startTime;
+            Log.d(TAG, "Datastore Sync: " + (time / 1000000) + " milliseconds");
+            startTime = 0;
+        }
     }
 
     public ESTGParkingApplication getApp() {
