@@ -27,6 +27,8 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
 
     private Thread thread;
 
+    private long time, startTime;
+
     private DbxAccountManager.AccountListener accountListener = new DbxAccountManager.AccountListener() {
 
         @Override
@@ -58,6 +60,9 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
             setContentView(R.layout.activity_dropbox);
 
             this.app = ESTGParkingApplication.getInstance();
+
+            this.time = 0;
+            this.startTime = 0;
 
             this.containerFrameLayout = (FrameLayout) findViewById(R.id.dropbox_container_frame_layout);
             this.progressFrameLayout = (FrameLayout) findViewById(R.id.dropbox_progress_frame_layout);
@@ -153,19 +158,26 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
 
         Log.d(TAG, datastore.getSyncStatus().toString());
 
-        if (!datastore.getSyncStatus().needsReset) { //&& datastore.getSyncStatus().isConnected) {
+        if (!datastore.getSyncStatus().needsReset) {
+            if (startTime == 0 && datastore.getSyncStatus().isConnected) {
+                startTime = System.nanoTime();
+            }
             if (datastore.getSyncStatus().hasIncoming) {
                 try {
                     datastore.sync();
                 } catch (DbxException e) {
                     Log.e(TAG, "Communication with datastore failed: ", e);
                 }
-            }
-            if (!datastore.getSyncStatus().isDownloading && !datastore.getSyncStatus().isUploading && !datastore.getSyncStatus().hasOutgoing) {
+            } else if (!datastore.getSyncStatus().isDownloading && !datastore.getSyncStatus().isUploading && !datastore.getSyncStatus().hasOutgoing) {
                 if (thread == null) {
                     CreateUserRanking();
                 } else {
                     if (!thread.isAlive()) {
+                        if (startTime != 0) {
+                            time = System.nanoTime() - startTime;
+                            Log.d(TAG, "Datastore Sync: " + (time / 1000000) + " milliseconds");
+                            startTime = 0;
+                        }
                         Intent i = new Intent(getBaseContext(), MainActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
@@ -174,7 +186,7 @@ public class DropboxActivity extends FragmentActivity implements DbxDatastore.Sy
                 }
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Problema na conexão com o dropbox.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.dropbox_connection_toas_text, Toast.LENGTH_SHORT).show();
             containerFrameLayout.setVisibility(FrameLayout.VISIBLE);
             progressFrameLayout.setVisibility(FrameLayout.GONE);
         }
